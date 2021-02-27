@@ -19,6 +19,8 @@ const router = app => {
 
         users.push(message["Username"])
         messages.push(message["Message"])
+
+        console.log(message)
     });
 
 

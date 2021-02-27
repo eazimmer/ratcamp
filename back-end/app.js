@@ -1,6 +1,9 @@
 // http://localhost:3002/
 // Access this link to hit the locally-running-server's homepage
 
+// https://csi330-group2.herokuapp.com/
+// Live Heroku server
+
 // Require packages and set the port
 const express = require('express');
 const bodyParser = require('body-parser');
