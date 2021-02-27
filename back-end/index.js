@@ -23,7 +23,7 @@ const router = app => {
         users.push(user)
         messages.push(message_contents)
 
-        response.send("User: " + user + ", sent: " + message)
+        response.send("User: " + user + ", sent: " + message_contents)
     });
 
 
