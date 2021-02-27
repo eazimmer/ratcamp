@@ -17,10 +17,13 @@ const router = app => {
     app.post('/message', (request, response) => {
         const message = request.body;
 
-        users.push(message["Username"])
-        messages.push(message["Message"])
+        let user = message["Username"]
+        let message_contents = message["Message"]
 
-        console.log(message)
+        users.push(user)
+        messages.push(message_contents)
+
+        response.send("User: " + user + ", sent: " + message)
     });
 
 
