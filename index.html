@@ -17,7 +17,22 @@
 </head>
 <body>
     <main>
-        <p>Sample Text</p>
+        <div>
+            <form action="http://localhost:3002/message" method="POST">
+                <div>
+                    <label for="Username">Username</label>
+                    <input  name="Username">
+                </div>
+
+                <div>
+                    <label for="Message">Message</label>
+                    <input name="Message">
+                </div>
+
+                <!--Other fields-->
+                <button type="submit">Submit</button>
+            </form>
+        </div>
     </main>
     <script src="front-end/js/main.js"></script>
 </body>
