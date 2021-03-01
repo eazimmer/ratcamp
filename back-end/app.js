@@ -40,10 +40,10 @@ const io = require('socket.io')(server);
 function addMsg(name, msg) {
   if (!(name in users)) {
     users[name] = {};
-    // users[name] = {};
     users[name]['nextmsgid']= 0;
   }
-  let data = {id: (name + '-' + users[name].nextmsgid), msg: msg, name: name};
+  let data = { id: (name + '-' + users[name].nextmsgid), msg: msg, name: name };
+  messages.push(data);
   io.emit('msgrecv', JSON.stringify(data));
   users[name].nextmsgid += 1;
 }
