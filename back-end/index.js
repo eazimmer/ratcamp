@@ -18,7 +18,7 @@ const router = app => {
 
     app.get('/front-end/*', (req, res) => {
         console.log(req.originalUrl);
-        res.sendFile("../" + req.originalUrl);
+        res.sendFile(__dirname + req.originalUrl);
     });
 
 
