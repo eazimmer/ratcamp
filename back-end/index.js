@@ -11,7 +11,7 @@ const router = app => {
         //     message: 'Node.js and Express REST API for CSI330-Group2'
         // });
 
-        response.sendFile(__dirname + "/test-index.html");
+        response.sendFile(__dirname + "/front-end/html/messageBoard.html");
 
 
     });
