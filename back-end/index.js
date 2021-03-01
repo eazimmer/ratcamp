@@ -1,4 +1,3 @@
-const path = require('path')
 // Persistently stored data
 let messages = []
 let users = []
@@ -12,9 +11,14 @@ const router = app => {
         //     message: 'Node.js and Express REST API for CSI330-Group2'
         // });
 
-        response.sendFile(__dirname + "/front-end/index.html");
+        response.sendFile(__dirname + "/test-index.html");
 
 
+    });
+
+    app.get('/front-end/*', (req, res) => {
+        console.log(req.originalUrl);
+        res.sendFile("../" + req.originalUrl);
     });
 
 
