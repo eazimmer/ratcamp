@@ -7,7 +7,13 @@
     --clr-grey: #666666;
     --clr-light: #ffffff;
     --clr-accent: #448ee5;
-    --fs-body: 1.175rem;
+    --fs-body: 1.15rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: var(--ff-lato);
 }
 
 html {
@@ -23,7 +29,97 @@ body {
     justify-content: center;
     font-size: var(--fs-body);
     font-weight: var(--fw-reg);
-    font-family: var(--ff-lato);
     color: var(--clr-light);
     background: var(--clr-dark);
+}
+
+.chat-room {
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    padding: 10px;
+    background: var(--clr-dark);
+    border-bottom: 2px solid var(--clr-light);
+}
+
+.other-username {
+    margin-bottom: 10px;
+}
+
+#messages {
+    position: relative;
+    top: 84px;
+    height: calc(100% - 84px - 58px);
+    overflow-y: auto;
+}
+
+#message-list {
+    list-style: none;
+    box-sizing: border-box;
+    padding: 0 10px;
+}
+
+.message-block {
+    margin: 10px 0;
+}
+
+.message {
+    display: inline-block;
+    padding: 8px;
+    border-radius: 8px;
+    max-width: 75%;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+}
+
+.sent-message {
+    background-color: var(--clr-accent);
+    position: relative;
+    left: 100%;
+    transform: translateX(-100%);
+}
+
+.received-message {
+    background-color: var(--clr-grey);
+}
+
+.typing-area {
+    position: fixed;
+    top: 100%; 
+    width: 100%;
+    transform: translateY(-100%);
+    padding: 10px;
+    border-top: 2px solid var(--clr-light);
+    background-color: var(--clr-dark);
+}
+
+#message-input {
+    color: var(--clr-light);
+    width: calc(100% - 100px);
+    height: 30px;
+    background: transparent;
+    outline: none;
+    border: none;
+    border-bottom: 2px solid var(--clr-light);
+    resize: none;
+}
+
+.send-btn {
+    position: fixed;
+    left: calc(100% - 30px);
+    top: calc(100% - 10px);
+    transform: translate(-100%, -100%);
+    width: 70px;
+    padding: 5px;
+    color: var(--clr-dark);
+    background-color: var(--clr-light);
+    border: none;
+    border-radius: 8px;
+    outline: none;
 }
