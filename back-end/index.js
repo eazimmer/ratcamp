@@ -1,6 +1,5 @@
 // Persistently stored data
-let messages = []
-let users = []
+
 
 // Endpoint Routing
 const router = app => {

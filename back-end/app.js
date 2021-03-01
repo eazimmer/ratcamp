@@ -11,7 +11,10 @@ const service = require('./index.js');
 const app = express();
 const port = process.env.PORT || 3002;
 const host = '0.0.0.0';
-const path = require('path')
+const path = require('path');
+
+let messages = [];
+let users = {};
 
 // Use Node.js body parsing middleware
 app.use(bodyParser.json());
@@ -32,12 +35,24 @@ const server = app.listen(port, host, (error) => {
 
 
 
-const io = require('socket.io')(server)
+const io = require('socket.io')(server);
+
+function addMsg(name, msg) {
+  if (!(name in users)) {
+    users[name] = {};
+    // users[name] = {};
+    users[name]['nextmsgid']= 0;
+  }
+  let data = {id: (name + '-' + users[name].nextmsgid), msg: msg, name: name};
+  io.emit('msgrecv', JSON.stringify(data));
+  users[name].nextmsgid += 1;
+}
 
 io.on('connection', socket => {
   console.log('Some client connected');
+
   socket.on('chat', message => {
-      console.log('From client: ', message);
-      io.emit('msgrecv', message);
+    let data = JSON.parse(message);
+    addMsg(data.name, data.msg);
   });
 })

@@ -32,7 +32,7 @@ const sendMessage =
         $('#messages')
             .animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
 
-        let msgData = { name :'', msg : message };
+        let msgData = { name :'tmp', msg : message };
         socket.emit(
             'chat', JSON.stringify(msgData)
         );
