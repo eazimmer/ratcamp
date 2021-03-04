@@ -69,6 +69,13 @@ io.on('connection', socket => {
 
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected"); // undefined
+    for (var i in sockets_to_names) {
+      if (sockets_to_names[i].hasOwnProperty(socket.id.toString())) {
+        sockets_to_names = sockets_to_names.splice(i, 1)
+      }
+    }
+    console.log("Online users: ")
+    console.log(sockets_to_names)
   });
 
 })
