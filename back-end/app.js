@@ -57,8 +57,6 @@ io.on('connection', socket => {
     addMsg(data.name, data.msg);
   });
 
-
-
   socket.on('login-name', name => {
     console.log(`login-name: ${name}`);
   });

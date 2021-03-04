@@ -72,5 +72,6 @@ const updateOnlineUserList = (onlineUsers) => {
 };
 
 function sendUsername(name) {
-  socket.emit('login-name', name);
+  //socket.emit('login-name', name);
+  username = name
 }
