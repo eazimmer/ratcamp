@@ -50,6 +50,17 @@ function addMsg(name, msg) {
   users[name].nextmsgid += 1;
 }
 
+function sendClientOnlineUsers(name, msg) {
+  if (!(name in users)) {
+    users[name] = {};
+    users[name]['nextmsgid']= 0;
+  }
+  let data = { id: (name + '-' + users[name].nextmsgid), msg: msg, name: name };
+  messages.push(data);
+  io.emit('msgrecv', JSON.stringify(data));
+  users[name].nextmsgid += 1;
+}
+
 io.on('connection', socket => {
   console.log('Some client connected');
 
@@ -71,7 +82,7 @@ io.on('connection', socket => {
     console.log(socket.id + " disconnected"); // undefined
     for (var i in sockets_to_names) {
       if (sockets_to_names[i].hasOwnProperty(socket.id.toString())) {
-        sockets_to_names = sockets_to_names.splice(i, 1)
+        sockets_to_names.splice(i, 1)
       }
     }
     console.log("Online users: ")
