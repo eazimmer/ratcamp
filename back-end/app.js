@@ -50,15 +50,17 @@ function addMsg(name, msg) {
   users[name].nextmsgid += 1;
 }
 
-function sendClientOnlineUsers(name, msg) {
-  if (!(name in users)) {
-    users[name] = {};
-    users[name]['nextmsgid']= 0;
+function onlineUsersChanged() {
+  let validated_users = []
+
+  let socket_keys = Object.keys(sockets_to_names)
+
+  for (var key in socket_keys) {
+    validated_users.push(sockets_to_names[socket_keys[key]])
   }
-  let data = { id: (name + '-' + users[name].nextmsgid), msg: msg, name: name };
-  messages.push(data);
-  io.emit('msgrecv', JSON.stringify(data));
-  users[name].nextmsgid += 1;
+
+  //io.emit('msgrecv', JSON.stringify(data));
+  console.log(validated_users)
 }
 
 io.on('connection', socket => {
