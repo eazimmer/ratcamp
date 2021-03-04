@@ -60,7 +60,7 @@ function onlineUsersChanged() {
   }
 
   //io.emit('msgrecv', JSON.stringify(data));
-  console.log(validated_users)
+  console.log("Online users" + validated_users)
 }
 
 io.on('connection', socket => {
@@ -78,6 +78,8 @@ io.on('connection', socket => {
     sockets_to_names.push({[socket_id] :  name})
     console.log("Online users: ")
     console.log(sockets_to_names)
+
+    onlineUsersChanged()
   });
 
   socket.on("disconnect", () => {
@@ -89,6 +91,8 @@ io.on('connection', socket => {
     }
     console.log("Online users: ")
     console.log(sockets_to_names)
+
+    onlineUsersChanged()
   });
 
 })
