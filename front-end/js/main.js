@@ -1,19 +1,10 @@
 const socket = io();
 
-const storeUsername = () => {
-  console.log("setUsername entered")
-  var username = document.getElementById('username-input').value;
-  console.log("Username stored as cookie: " + username)
-  document.cookie = 'name'+username
-  location.href = "/front-end/html/messageBoard.html";
-}
-
+var username = "";
 const setUsername = () => {
-  var start = document.cookie.indexOf('name');
-  var stop = document.cookie.indexOf(';');
-  var username = document.cookie.substring(start+4, stop);
-  console.log("Username grabbed from cookies: " + username)
-  document.getElementById('username-field').value = username;
+  console.log("setUsername entered")
+  username = document.getElementById('username-input').value;
+  console.log("Username stored: " + username)
 }
 
 $(document).ready(function() {
