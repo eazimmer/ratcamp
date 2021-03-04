@@ -13,8 +13,8 @@ const router = app => {
         response.sendFile(__dirname + "/front-end/html/index.html");
     });
 
-    app.post('/front-end/html/messageBoard.html', (request, response) => {
-        console.log("Inside app POST end-point")
+    app.get('/front-end/html/messageBoard.html', (request, response) => {
+        console.log("Inside app GET end-point")
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
 
