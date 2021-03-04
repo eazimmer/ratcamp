@@ -24,8 +24,7 @@ app.use(bodyParser.urlencoded({
 
 service(app);
 
-//app.use(express.static(path.join(__dirname + '/front-end')));
-app.use(express.static(path.join(__dirname + '/index.html')));
+app.use(express.static(path.join(__dirname + '/front-end')));
 
 // Start the server
 const server = app.listen(port, host, (error) => {
