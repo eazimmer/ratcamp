@@ -14,7 +14,12 @@ const router = app => {
     });
 
     app.get('/front-end/html/messageBoard.html', (request, response) => {
-        console.log("Failed inside app end-point")
+        console.log("Failed inside app GET end-point")
+        response.sendFile(__dirname + "/front-end/html/messageBoard.html");
+    });
+
+    app.post('/front-end/html/messageBoard.html', (request, response) => {
+        console.log("Failed inside app POST end-point")
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
 
