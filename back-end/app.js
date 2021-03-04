@@ -24,7 +24,8 @@ app.use(bodyParser.urlencoded({
 
 service(app);
 
-app.use(express.static(path.join(__dirname + '/front-end')));
+//app.use(express.static(path.join(__dirname + '/front-end')));
+app.use(express.static(path.join(__dirname + '/index.html')));
 
 // Start the server
 const server = app.listen(port, host, (error) => {
@@ -52,6 +53,7 @@ io.on('connection', socket => {
   console.log('Some client connected');
 
   socket.on('chat', message => {
+    console.log(`${data.name} sent a message`)
     let data = JSON.parse(message);
     addMsg(data.name, data.msg);
   });
