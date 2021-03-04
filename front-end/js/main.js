@@ -1,5 +1,7 @@
 const socket = io();
 
+const urlParams = new URLSearchParams(window.location.search);
+
 var username = "";
 const setUsername = () => {
   console.log("setUsername entered")
@@ -49,7 +51,7 @@ const outputMessage = (name, message) => {
   let div = document.createElement('div');
   let li = document.createElement('li');
   div.setAttribute('class', 'message-block');
-  
+
   if (name === username)
     li.setAttribute('class', 'message sent-message');
   else {
@@ -67,4 +69,8 @@ const updateOnlineUserList = (onlineUsers) => {
   console.log(onlineUsers);
 
   // TODO: update screen with the new list of online users
+};
+
+function sendUsername(name) {
+  socket.emit('login-name', name);
 }

@@ -56,4 +56,10 @@ io.on('connection', socket => {
     console.log("Username received" + data.name)
     addMsg(data.name, data.msg);
   });
+
+
+
+  socket.on('login-name', name => {
+    console.log(`login-name: ${name}`);
+  });
 })
