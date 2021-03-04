@@ -52,8 +52,8 @@ io.on('connection', socket => {
   console.log('Some client connected');
 
   socket.on('chat', message => {
-    console.log(`${data.name} sent a message`)
     let data = JSON.parse(message);
+    console.log(`${data.name} sent a message`)
     addMsg(data.name, data.msg);
   });
 })
