@@ -8,16 +8,15 @@
 
 <body>
 <h2>Welcome to the Rat Camp Chat Room!</h2>
+<form action="./front-end/html/messageBoard.html" method="get">
     <!-- Create a form here that allows user to imput their username that will show up in the chat room.
         Then, call a function from the submit button that will verify the user input to ensure that it
         a valid username and then it will send them to the chat room.-->
     <label>Please Enter Your Username:</label><br>
     <input id="username-input" name="name" placeholder="Username"><br>
     <input type="submit" value="Submit" onclick="setUsername()"><br>
-
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../js/main.js"></script>
+</form>
+<!--<a href="front-end/html/messageBoard.html"><button>Go To Chat Room!</button></a>-->
 </body>
 
 </html>

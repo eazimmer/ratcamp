@@ -13,6 +13,10 @@ const router = app => {
         response.sendFile(__dirname + "/front-end/html/index.html");
     });
 
+    app.get('/front-end/html/messageBoard.html', (request, response) => {
+        response.sendFile(__dirname + "/front-end/html/messageBoard.html");
+    });
+
     app.get('/front-end/*', (req, res) => {
         console.log(req.originalUrl);
         res.sendFile(__dirname + req.originalUrl);
