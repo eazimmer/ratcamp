@@ -16,6 +16,8 @@ const path = require('path');
 let messages = [];
 let users = {};
 
+let sockets_to_names = [];
+
 // Use Node.js body parsing middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -58,6 +60,10 @@ io.on('connection', socket => {
   });
 
   socket.on('login-name', name => {
-    console.log(`login-name: ${name}`);
+    console.log(`New user joined with login-name: ${name}`);
+    var socket_id = socket.id
+    sockets_to_names.push({[socket_id] :  name})
+    console.log("Online users: ")
+    console.log(sockets_to_names)
   });
 })
