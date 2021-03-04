@@ -14,12 +14,12 @@ const router = app => {
     });
 
     app.get('/front-end/html/messageBoard.html', (request, response) => {
-        console.log("Failed inside app GET end-point")
+        console.log("Inside app GET end-point")
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
 
     app.post('/front-end/html/messageBoard.html', (request, response) => {
-        console.log("Failed inside app POST end-point")
+        console.log("Inside app POST end-point")
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
 
@@ -27,8 +27,6 @@ const router = app => {
         console.log(req.originalUrl);
         res.sendFile(__dirname + req.originalUrl);
     });
-
-
 
     // ENDPOINT POST: Send a message from client to server
     app.post('/message', (request, response) => {
