@@ -13,13 +13,14 @@
         <img id="logo" src="./front-end/Other/RC.png">
         <div class="login-box">
             <h1>RatCamp Chat Room</h1>
-            <form action="./front-end/html/messageBoard.html" method="post">
+            <form method="post">
                 <!-- Create a form here that allows user to imput their username that will show up in the chat room.
                     Then, call a function from the submit button that will verify the user input to ensure that it
                     a valid username and then it will send them to the chat room.-->
                 <label id="input-label">Please Enter Your Username:</label><br>
                 <input id="username-input" name="name" placeholder="Username"><br>
                 <input id="submit-button" type="submit" value="Login" onclick="setUsername()"><br>
+                <!--<button id="submit-button" onclick="setUsername()" onclick="window.location.href='./front-end/html/messageBoard.html'">Login</button><br>-->
             </form>
         </div>
         <div class="footer">
