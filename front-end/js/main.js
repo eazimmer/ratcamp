@@ -2,6 +2,7 @@ const socket = io();
 
 var username = "";
 const setUsername = () => {
+  console.log("setUsername enetered")
   username = document.getElementById('username-input').value;
   console.log("Username stored: " + username)
   location.href = "messageBoard.html";
