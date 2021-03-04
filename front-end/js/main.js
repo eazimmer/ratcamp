@@ -5,6 +5,7 @@ const setUsername = () => {
   console.log("setUsername entered")
   username = document.getElementById('username-input').value;
   console.log("Username stored: " + username)
+  location.href = "messageBoard.html";
 }
 
 $(document).ready(function() {
