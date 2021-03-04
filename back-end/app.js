@@ -53,7 +53,7 @@ io.on('connection', socket => {
 
   socket.on('chat', message => {
     let data = JSON.parse(message);
-    console.log(`${data.name} sent a message`)
+    console.log("Username received" + data.name)
     addMsg(data.name, data.msg);
   });
 })

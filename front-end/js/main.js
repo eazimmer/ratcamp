@@ -3,6 +3,7 @@ const socket = io();
 var username = "";
 const setUsername = () => {
   username = document.getElementById('username-input').value;
+  console.log("Username stored: " + username)
   location.href = "messageBoard.html";
 }
 
@@ -32,6 +33,8 @@ const sendMessage = () => {
     // clear message input field
     document.getElementById('message-input').value = '';
     $('#message-input').outerHeight('32px');
+
+    console.log("Sending username: " + username)
 
     // send message to the server
     let msgData = { name : username, msg : message };
