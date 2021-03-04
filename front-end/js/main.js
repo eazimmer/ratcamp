@@ -3,6 +3,7 @@ const socket = io();
 var username = "";
 const setUsername = () => {
   username = document.getElementById('username-input').value;
+  window.location.href = "../html/messageBoard.html";
 }
 
 $(document).ready(function() {
