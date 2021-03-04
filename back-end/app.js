@@ -61,9 +61,14 @@ io.on('connection', socket => {
 
   socket.on('login-name', name => {
     console.log(`New user joined with login-name: ${name}`);
-    var socket_id = socket.id
+    var socket_id = socket.id.toString()
     sockets_to_names.push({[socket_id] :  name})
     console.log("Online users: ")
     console.log(sockets_to_names)
   });
+
+  socket.on("disconnect", () => {
+    console.log(socket.id + " disconnected"); // undefined
+  });
+
 })
