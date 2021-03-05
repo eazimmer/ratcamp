@@ -10,6 +10,12 @@ const router = app => {
     app.get('/front-end/html/messageBoard.html', (request, response) => {
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
+
+    // Serve clients varying file based on endpoint
+    app.get('/front-end/*', (req, res) => {
+        console.log(req.originalUrl);
+        res.sendFile(__dirname + req.originalUrl);
+    });
 }
 
 // Export the router
