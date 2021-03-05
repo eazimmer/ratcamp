@@ -24,6 +24,11 @@ $(document).ready(function() {
     $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
   });
 
+  socket.on('updateonlineusers', msg => {
+    let online_users = msg;
+    console.log(online_users)
+  });
+
   // TODO: update the array of online users
   // updateOnlineUserList(data.onlineUsers);
 });

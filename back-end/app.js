@@ -57,9 +57,9 @@ function onlineUsersChanged() {
     validated_users.push(sockets_to_names[i]["name"])
   }
 
-  //io.emit('msgrecv', JSON.stringify(data));
   console.log("Online users: ")
   console.log(validated_users)
+  io.emit('updateonlineusers', validated_users);
 }
 
 io.on('connection', socket => {
