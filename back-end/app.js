@@ -54,7 +54,7 @@ function onlineUsersChanged() {
   let validated_users = []
 
   var values = Object.keys(sockets_to_names).map(function(key) {
-    return sockets_to_names[key];
+    return JSON.stringify(sockets_to_names[key]);
   })
 
   let socket_keys = Object.keys(sockets_to_names)
@@ -80,7 +80,7 @@ io.on('connection', socket => {
   socket.on('login-name', name => {
     console.log(`New user joined with login-name: ${name}`);
     var socket_id = socket.id.toString()
-    sockets_to_names.push({[socket_id] :  name})
+    sockets_to_names.push({[socket_id] : name.toString()})
     console.log("Online users: ")
     console.log(sockets_to_names)
 
