@@ -58,7 +58,8 @@ function onlineUsersChanged() {
   }
 
   //io.emit('msgrecv', JSON.stringify(data));
-  console.log("Online users: " + validated_users)
+  console.log("Online users: ")
+  console.log(validated_users)
 }
 
 io.on('connection', socket => {
