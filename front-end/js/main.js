@@ -67,7 +67,8 @@ const outputMessage = (name, message) => {
 };
 
 const updateOnlineUserCount = (onlineUsers) => {
-  document.getElementById('online-num').innerHTML = onlineUsers.length - 1;
+  // Subtract by one to not show self
+  document.getElementById('online-num').innerHTML = onlineUsers.length;
 };
 
 const updateOnlineUserList = (onlineUsers) => {
