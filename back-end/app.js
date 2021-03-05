@@ -61,6 +61,10 @@ function onlineUsersChanged() {
 }
 
 io.on('connection', socket => {
+  socket.join('newbie');
+  messages.map((m) => io.to('newbie').emit('msgrecv', JSON.stringify(m)));
+  socket.leave('newbie');
+
 
   socket.on('chat', message => {
     let data = JSON.parse(message);
