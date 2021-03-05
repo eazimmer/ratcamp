@@ -53,8 +53,9 @@ function addMsg(name, msg) {
 function onlineUsersChanged() {
   let validated_users = []
 
-  var values = Object.keys(sockets_to_names).map(function(key){
+  var values = Object.keys(sockets_to_names).map(function(key) {
     return sockets_to_names[key];
+  })
 
   let socket_keys = Object.keys(sockets_to_names)
 
