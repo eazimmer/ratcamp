@@ -6,15 +6,15 @@ const router = app => {
         response.sendFile(__dirname + "/front-end/html/index.html");
     });
 
+    // Serve clients with message board
+    app.get('/front-end/html/messageBoard.html', (request, response) => {
+        response.sendFile(__dirname + "/front-end/html/messageBoard.html");
+    });
+
     // CURRENTLY UNUSED
     // Serve client with varying file based on URL.
     app.get('/front-end/*', (req, res) => {
         res.sendFile(__dirname + req.originalUrl);
-    });
-
-    // Serve clients with message board
-    app.get('/front-end/html/messageBoard.html', (request, response) => {
-        response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
 
     // CURRENTLY UNUSED
