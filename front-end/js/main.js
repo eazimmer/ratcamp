@@ -1,10 +1,9 @@
 const socket = io();
+var urlParams = new URLSearchParams(window.location.search);
 
-const urlParams = new URLSearchParams(window.location.search);
-
-var username = "";
-const setUsername = () => {
-  username = document.getElementById('username-input').value;
+const setUsername = (name) => {
+  document.getElementById('username-header').innerHTML = name;
+  socket.emit('login-name', name);
 }
 
 $(document).ready(function() {
@@ -15,7 +14,6 @@ $(document).ready(function() {
 
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
-    console.log(data);
     outputMessage(data.name, data.msg);
 
     // scroll to bottom of messages
@@ -24,11 +22,9 @@ $(document).ready(function() {
 
   socket.on('updateonlineusers', msg => {
     let online_users = msg;
-    console.log(online_users)
+    updateOnlineUserCount(online_users);
+    updateOnlineUserList(online_users);
   });
-
-  // TODO: update the array of online users
-  // updateOnlineUserList(data.onlineUsers);
 });
 
 const sendMessage = () => {
@@ -40,7 +36,7 @@ const sendMessage = () => {
     $('#message-input').outerHeight('32px');
 
     // send message to the server
-    let msgData = { name : username, msg : message };
+    let msgData = { name : urlParams.get('name'), msg : message };
     socket.emit(
         'chat', JSON.stringify(msgData)
     );
@@ -53,12 +49,16 @@ const outputMessage = (name, message) => {
   let li = document.createElement('li');
   div.setAttribute('class', 'message-block');
 
-  if (name === username)
+  if (name === urlParams.get('name'))
     li.setAttribute('class', 'message sent-message');
   else {
     li.setAttribute('class', 'message received-message');
 
-    // TODO: print the username above received message
+    // print username above received message
+    let h3 = document.createElement('h3');
+    h3.setAttribute('class', 'received-message-username');
+    h3.appendChild(document.createTextNode(name));
+    div.appendChild(h3);
   }
 
   li.appendChild(document.createTextNode(message));
@@ -66,13 +66,27 @@ const outputMessage = (name, message) => {
   ul.appendChild(div);
 };
 
-const updateOnlineUserList = (onlineUsers) => {
-  console.log(onlineUsers);
-
-  // TODO: update screen with the new list of online users
+const updateOnlineUserCount = (onlineUsers) => {
+  document.getElementById('online-num').innerHTML = onlineUsers.length - 1;
 };
 
-function sendUsername(name) {
-  username = name
-  socket.emit('login-name', name);
-}
+const updateOnlineUserList = (onlineUsers) => {
+  const ul = document.getElementById('online-users-list');
+  ul.innerHTML = '';
+
+  // remove self from array
+  const index = onlineUsers.indexOf(urlParams.get('name'));
+  if (index > -1) {
+    onlineUsers.splice(index, 1);
+  }
+
+  for (let i = 0; i < onlineUsers.length; i++) {
+    let div = document.createElement('div');
+    let li = document.createElement('li');
+    div.setAttribute('class', 'online-user-block');
+    li.setAttribute('class', 'online-user');
+    li.appendChild(document.createTextNode(onlineUsers[i]));
+    div.appendChild(li);
+    ul.appendChild(div);
+  }
+};

@@ -8,6 +8,9 @@
     --clr-light: #ffffff;
     --clr-accent: #448ee5;
     --fs-body: 1.15rem;
+    --fs-h1: 2.5rem;
+    --fs-h2: 1.5rem;
+    --fs-h3: 1.15rem;
 }
 
 * {
@@ -36,24 +39,37 @@ body {
 .chat-room {
     width: 100%;
     height: 100%;
+    display: flex;
 }
 
-.header {
-    position: fixed;
-    width: 100%;
-    padding: 10px;
-    background: var(--clr-dark);
+.chat-area {
+    width: 80%;
+}
+
+.online-users-box {
+    width: 20%;
+    border-left: 2px solid var(--clr-light);
+}
+
+.chat-area-header {
+    width: calc(100% - 30px);
+    padding: 10px 15px;
     border-bottom: 2px solid var(--clr-light);
 }
 
-.other-username {
+#username-header {
+    font-size: var(--fs-h1);
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+#online-status {
+    font-size: var(--fs-h2);
     margin-bottom: 10px;
 }
 
 #messages {
-    position: relative;
-    top: 84px;
-    height: calc(100% - 84px - 58px);
+    height: calc(100% - 110px - 58px);
     overflow-y: auto;
 }
 
@@ -89,10 +105,16 @@ body {
     background-color: var(--clr-grey);
 }
 
+.received-message-username {
+    font-size: var(--fs-h3);
+    color: var(--clr-grey);
+    margin-bottom: 5px;
+}
+
 .typing-area {
     position: fixed;
-    top: 100%; 
-    width: 100%;
+    top: 100%;
+    width: calc(80% - 22px);
     transform: translateY(-100%);
     padding: 10px;
     border-top: 2px solid var(--clr-light);
@@ -101,7 +123,7 @@ body {
 
 #message-input {
     color: var(--clr-light);
-    width: calc(100% - 100px);
+    width: calc(100% - 80px);
     height: 30px;
     background: transparent;
     outline: none;
@@ -111,15 +133,60 @@ body {
 }
 
 .send-btn {
-    position: fixed;
-    left: calc(100% - 30px);
-    top: calc(100% - 10px);
-    transform: translate(-100%, -100%);
+    position: absolute;
+    bottom: 0;
+    right: 0;
     width: 70px;
+    margin: 10px;
     padding: 5px;
     color: var(--clr-dark);
     background-color: var(--clr-light);
     border: none;
     border-radius: 8px;
     outline: none;
+}
+
+.online-users-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 108px;
+    border-bottom: 2px solid var(--clr-light);
+}
+
+.online-users-title {
+    font-size: var(--fs-h1);
+    text-align: center;
+    margin: 0;
+}
+
+#online-users {
+    height: calc(100% - 110px);
+    overflow-y: auto;
+}
+
+#online-users-list {
+    list-style: none;
+    box-sizing: border-box;
+    padding: 0 10px;
+}
+
+.online-user-block {
+    margin: 10px 0;
+    border: 2px solid var(--clr-grey);
+    border-radius: 8px;
+}
+
+.online-user {
+    display: inline-block;
+    color: var(--clr-grey);
+    padding: 8px;
+    max-width: calc(100% - 16px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 800px), (orientation: portrait) {
+    
 }

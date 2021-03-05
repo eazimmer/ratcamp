@@ -12,31 +12,42 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
+    <title>RatCamp Chat Room</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
-    <title>Chat Room</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <link rel="icon" href="./front-end/Other/RC.png">
 </head>
 <body>
     <main class="chat-room">
-        <div class="header">
-            <h2 class="other-username" onload="setUsername()">OtherUser123</h2>
-            <p class="other-status">Online</p>
+        <div class="chat-area">
+            <div class="chat-area-header">
+                <h1 id="username-header"></h1>
+                <h2 id="online-status"><span id="online-num">0</span> Online</h2>
+            </div>
+            <div id="messages">
+                <ul id="message-list">
+                    <!-- Created Dynamically -->
+                </ul>
+            </div>
+            <div class="typing-area">
+                <textarea name="Message" type="text" spellcheck="true" placeholder="Message" id="message-input"></textarea>
+                <button type="button" class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
         </div>
-        <div id="messages">
-            <ul id="message-list">
-                <!-- Created Dynamically -->
-            </ul>
-        </div>
-        <div class="typing-area">
-            <textarea name="Message" type="text" spellcheck="true" placeholder="Message" id="message-input"></textarea>
-            <button type="button" class="send-btn" onclick="sendMessage()">Send</button>
+        <div class="online-users-box">
+            <div class="online-users-header">
+                <h1 class="online-users-title">Online Users</h1>
+            </div>
+            <div id="online-users">
+                <ul id="online-users-list">
+                    <!-- Created Dynamically -->
+                </ul>
+            </div>
         </div>
     </main>
 
-    <!-- jQuery -->
+    <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
     <script src="../js/main.js"></script>
-    <script>sendUsername(urlParams.get('name'))</script>
+    <script>setUsername(urlParams.get('name'))</script>
 </body>
 </html>

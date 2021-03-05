@@ -2,7 +2,14 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Normalize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+        crossorigin="anonymous" />
+    
     <title>RatCamp</title>
     <!-- Create and call the js file here and also create a CSS file to style the welcome page. -->
     <link rel="stylesheet" type="text/css" href="../css/home_style.css">
@@ -14,12 +21,12 @@
         <div class="login-box">
             <h1>RatCamp Chat Room</h1>
 				<form action="./front-end/html/messageBoard.html" method="get">
-                <!-- Create a form here that allows user to imput their username that will show up in the chat room.
+                <!-- Create a form here that allows user to input their username that will show up in the chat room.
                     Then, call a function from the submit button that will verify the user input to ensure that it
                     a valid username and then it will send them to the chat room.-->
                 <label id="input-label">Please Enter Your Username:</label><br>
                 <input id="username-input" name="name" placeholder="Username"><br>
-                <input id="submit-button" type="submit" value="Submit" onclick="setUsername()"><br>
+                <input id="submit-button" type="submit" value="Submit"><br>
                 <!--<button id="submit-button" onclick="setUsername()" onclick="window.location.href='./front-end/html/messageBoard.html'">Login</button><br>-->
             </form>
         </div>
