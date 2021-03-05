@@ -53,6 +53,9 @@ function addMsg(name, msg) {
 function onlineUsersChanged() {
   let validated_users = []
 
+  var values = Object.keys(sockets_to_names).map(function(key){
+    return sockets_to_names[key];
+
   let socket_keys = Object.keys(sockets_to_names)
 
   for (var key in socket_keys) {
@@ -61,7 +64,7 @@ function onlineUsersChanged() {
   }
 
   //io.emit('msgrecv', JSON.stringify(data));
-  console.log("Online users: " + validated_users)
+  console.log("Online users: " + values)
 }
 
 io.on('connection', socket => {
