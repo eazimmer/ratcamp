@@ -53,14 +53,8 @@ function addMsg(name, msg) {
 function onlineUsersChanged() {
   let validated_users = []
 
-  let socket_keys = Object.keys(sockets_to_names)
-  console.log("Socket keys: " + socket_keys)
-
-  for (var key in socket_keys) { // 0
-    console.log("Indnex in socket_keys: " + key)
-    console.log("Item in socket_keys: " + socket_keys[key])
-    validated_users.push(sockets_to_names[socket_keys[key]])
-    console.log("Identified user: " + sockets_to_names[socket_keys[key]])
+  for (var i in sockets_to_names) {
+    validated_users.push(sockets_to_names[i]["name"])
   }
 
   //io.emit('msgrecv', JSON.stringify(data));
@@ -79,7 +73,10 @@ io.on('connection', socket => {
   socket.on('login-name', name => {
     console.log(`New user joined with login-name: ${name}`);
     var socket_id = socket.id.toString()
-    sockets_to_names.push({[socket_id] : name.toString()})
+    sockets_to_names.push({
+      "id" : socket_id,
+      "name" : name
+    })
     console.log("Online users: ")
     console.log(sockets_to_names)
 
@@ -89,7 +86,7 @@ io.on('connection', socket => {
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected"); // undefined
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i].hasOwnProperty(socket.id.toString())) {
+      if (sockets_to_names[i]["id"] === socket.id) {
         sockets_to_names.splice(i, 1)
       }
     }
