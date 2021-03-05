@@ -57,43 +57,31 @@ function onlineUsersChanged() {
     validated_users.push(sockets_to_names[i]["name"])
   }
 
-  console.log("Online users: ")
-  console.log(validated_users)
   io.emit('updateonlineusers', validated_users);
 }
 
 io.on('connection', socket => {
-  console.log('Some client connected');
 
   socket.on('chat', message => {
     let data = JSON.parse(message);
-    console.log("Username received" + data.name)
     addMsg(data.name, data.msg);
   });
 
   socket.on('login-name', name => {
-    console.log(`New user joined with login-name: ${name}`);
     var socket_id = socket.id.toString()
     sockets_to_names.push({
       "id" : socket_id,
       "name" : name
     })
-    console.log("Online users: ")
-    console.log(sockets_to_names)
-
     onlineUsersChanged()
   });
 
   socket.on("disconnect", () => {
-    console.log(socket.id + " disconnected"); // undefined
     for (var i in sockets_to_names) {
       if (sockets_to_names[i]["id"] === socket.id) {
         sockets_to_names.splice(i, 1)
       }
     }
-    console.log("Online users: ")
-    console.log(sockets_to_names)
-
     onlineUsersChanged()
   });
 

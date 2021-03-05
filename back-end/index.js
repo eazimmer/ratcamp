@@ -9,12 +9,10 @@ const router = app => {
         // response.send({
         //     message: 'Node.js and Express REST API for CSI330-Group2'
         // });
-
         response.sendFile(__dirname + "/front-end/html/index.html");
     });
 
     app.get('/front-end/html/messageBoard.html', (request, response) => {
-        console.log("Inside app GET end-point")
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
     });
 

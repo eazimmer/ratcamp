@@ -4,9 +4,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
 var username = "";
 const setUsername = () => {
-  console.log("setUsername entered")
   username = document.getElementById('username-input').value;
-  console.log("Username stored: " + username)
 }
 
 $(document).ready(function() {
@@ -40,8 +38,6 @@ const sendMessage = () => {
     // clear message input field
     document.getElementById('message-input').value = '';
     $('#message-input').outerHeight('32px');
-
-    console.log("Sending username: " + username)
 
     // send message to the server
     let msgData = { name : username, msg : message };
