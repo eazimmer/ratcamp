@@ -75,10 +75,10 @@ const updateOnlineUserList = (onlineUsers) => {
   ul.innerHTML = '';
 
   // remove self from array
-  const index = onlineUsers.indexOf(urlParams.get('name'));
-  if (index > -1) {
-    onlineUsers.splice(index, 1);
-  }
+  //const index = onlineUsers.indexOf(urlParams.get('name'));
+  //if (index > -1) {
+    //onlineUsers.splice(index, 1);
+  //}
 
   for (let i = 0; i < onlineUsers.length; i++) {
     let div = document.createElement('div');
