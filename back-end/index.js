@@ -30,6 +30,8 @@ const router = app => {
             "password" : "unencryptedpassword"
         }
 
+        credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
+
         await menu("store", credentials_object["display-name"], credentials_object);
         res.send("Inserting credentials into database.")
     });
@@ -44,7 +46,6 @@ const router = app => {
         }
 
         credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
-        console.log(credentials_object)
 
         await menu("query", credentials_object["display-name"], credentials_object);
         res.send("Making query of database.")
