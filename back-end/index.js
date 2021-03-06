@@ -99,9 +99,13 @@ async function store_credentials(client, db_name, credentials_object) {
 async function check_credentials(client, db_name, credentials_object) {
     try {
         let creds = await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
-        console.log("Credentials identified successfully:")
-        console.log(creds)
-        return true
+        if (creds == null) {
+            return false
+        } else {
+            console.log("Credentials identified successfully:")
+            console.log(creds)
+            return true
+        }
     } catch (error) {
         console.log(`ERROR: When querying database: ${error}`)
         return false
