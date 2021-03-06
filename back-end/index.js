@@ -81,16 +81,15 @@ async function menu(operation, db_name = "", credentials_object = "") {
 // Create a new database, with a "creds" collection storing a document of user login credentials
 async function store_credentials(client, db_name, credentials_object) {
     try {
-        if (await check_credentials(client, db_name, credentials_object)) {
+        if (await check_credentials(client, db_name, credentials_object)) { // Abort request if these creds already exist
             console.log("An account with these credentials already exists. Cancelling storage.")
-        } else {
+        } else { // Proceed to store credentials if they are not already in database
             await client.db(db_name).collection("creds").insertOne(credentials_object);
             console.log("Credentials stored successfully:")
             console.log(credentials_object)
         }
-    } catch (error) {
+    } catch (error) { // Error handling
         console.log(`ERROR: When storing credentials in database: ${error}`)
-
     }
 }
 
@@ -99,14 +98,15 @@ async function store_credentials(client, db_name, credentials_object) {
 async function check_credentials(client, db_name, credentials_object) {
     try {
         let creds = await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
-        if (creds == null) {
+        if (creds == null) { // No credentials identified
+            console.log("Failed to identify credentials.")
             return false
-        } else {
+        } else { // Credentials identified
             console.log("Credentials identified successfully:")
             console.log(creds)
             return true
         }
-    } catch (error) {
+    } catch (error) { // Error handling
         console.log(`ERROR: When querying database: ${error}`)
         return false
     }
