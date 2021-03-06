@@ -16,6 +16,30 @@ const router = app => {
         console.log(req.originalUrl);
         res.sendFile(__dirname + req.originalUrl);
     });
+
+    // TEST: Store data in database
+    app.get('/store', async (req, res) => {
+
+        let credentials_object = {
+            "email" : "example@gmail.com",
+            "display-name" : "Eric",
+            "password" : "unencryptedpassword"
+        }
+
+        await menu("store", credentials_object["display-name"], credentials_object);
+    });
+
+    // TEST: Query database for data
+    app.get('/store', async (req, res) => {
+
+        let credentials_object = {
+            "email" : "example@gmail.com",
+            "display-name" : "Eric",
+            "password" : "unencryptedpassword"
+        }
+
+        await menu("query", credentials_object["display-name"], credentials_object);
+    });
 }
 
 // Export the router

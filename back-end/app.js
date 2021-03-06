@@ -9,6 +9,8 @@ const app = express();
 const port = process.env.PORT || 3002;
 const host = '0.0.0.0';
 const path = require('path');
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority";
 
 
 // Stored data
@@ -122,3 +124,56 @@ io.on('connection', socket => {
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
 })
+
+
+// Handles database request
+async function menu(operation, db_name = "", credentials_object = "") {
+
+  // Initialize client object for this request
+  const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+  // Execute designated functionality
+  try {
+    // Connect to the MongoDB cluster
+    await client.connect();
+
+    switch (operation) {
+      case "store": { // Creates a new database storing user login credentials
+        await store_credentials(client, db_name, credentials_object)
+        break;
+      }
+      case "query": {  // Queries to check whether credentials are valid
+        await check_credentials(client, db_name, credentials_object)
+        break;
+      }
+    }
+
+  } catch (e) {
+    console.error(e); // Handle potential errors
+  } finally {
+    await client.close(); // Close database connection
+  }
+}
+
+
+// Create a new database, with a "creds" collection storing a document of user login credentials
+async function store_credentials(client, db_name, credentials_object) {
+  try {
+    await client.db(db_name).collection("creds").insertOne(credentials_object);
+    console.log("Credentials stored successfully.")
+  } catch (error) {
+    console.log(`ERROR: When storing credentials in database: ${error}`)
+
+  }
+}
+
+
+// Check user's database to see if provided credentials are valid
+async function check_credentials(client, db_name, credentials_object) {
+  try {
+    await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
+    console.log("Credentials identified successfully.")
+  } catch (error) {
+    console.log(`ERROR: When querying database: ${error}`)
+  }
+}
