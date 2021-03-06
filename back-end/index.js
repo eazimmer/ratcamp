@@ -43,6 +43,8 @@ const router = app => {
             "password" : "unencryptedpassword"
         }
 
+        credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
+
         await menu("query", credentials_object["display-name"], credentials_object);
         res.send("Making query of database.")
     });
@@ -80,8 +82,6 @@ async function menu(operation, db_name = "", credentials_object = "") {
 
 // Create a new database, with a "creds" collection storing a document of user login credentials
 async function store_credentials(client, db_name, credentials_object) {
-    credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
-
     try {
         if (await check_credentials(client, db_name, credentials_object)) { // Abort request if these creds already exist
             console.log("An account with these credentials already exists. Cancelling storage.")
@@ -98,7 +98,6 @@ async function store_credentials(client, db_name, credentials_object) {
 
 // Check user's database to see if provided credentials are valid
 async function check_credentials(client, db_name, credentials_object) {
-    credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
     try {
         let creds = await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
         if (creds == null) { // No credentials identified
