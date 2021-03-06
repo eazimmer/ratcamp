@@ -44,6 +44,7 @@ const router = app => {
         }
 
         credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
+        console.log(credentials_object)
 
         await menu("query", credentials_object["display-name"], credentials_object);
         res.send("Making query of database.")
