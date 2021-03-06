@@ -31,10 +31,11 @@ const router = app => {
         }
 
         await menu("store", credentials_object["display-name"], credentials_object);
+        res.end()
     });
 
     // TEST: Query database for data
-    app.get('/store', async (req, res) => {
+    app.get('/query', async (req, res) => {
 
         let credentials_object = {
             "email" : "example@gmail.com",
@@ -43,6 +44,7 @@ const router = app => {
         }
 
         await menu("query", credentials_object["display-name"], credentials_object);
+        res.end()
     });
 }
 
