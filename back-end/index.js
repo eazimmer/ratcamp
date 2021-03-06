@@ -89,8 +89,6 @@ async function store_credentials(client, db_name, credentials_object) {
             console.log("An account with these credentials already exists. Cancelling storage.")
         } else { // Proceed to store credentials if they are not already in database
             await client.db(db_name).collection("creds").insertOne(credentials_object);
-            console.log("Credentials stored successfully:")
-            console.log(credentials_object)
         }
     } catch (error) { // Error handling
         console.log(`ERROR: When storing credentials in database: ${error}`)
@@ -106,8 +104,7 @@ async function check_credentials(client, db_name, credentials_object) {
             console.log("Failed to identify credentials.")
             return false
         } else { // Credentials identified
-            console.log("Credentials identified successfully:")
-            creds["password"] = encrypt_and_decrypt(credentials_object["password"], false)
+            //creds["password"] = encrypt_and_decrypt(credentials_object["password"], false)
             console.log(creds)
             return true
         }
