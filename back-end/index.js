@@ -31,7 +31,7 @@ const router = app => {
         }
 
         await menu("store", credentials_object["display-name"], credentials_object);
-        res.end()
+        res.send("Inserting credentials into database.")
     });
 
     // TEST: Query database for data
@@ -44,7 +44,7 @@ const router = app => {
         }
 
         await menu("query", credentials_object["display-name"], credentials_object);
-        res.end()
+        res.send("Making query of database.")
     });
 }
 
@@ -81,8 +81,13 @@ async function menu(operation, db_name = "", credentials_object = "") {
 // Create a new database, with a "creds" collection storing a document of user login credentials
 async function store_credentials(client, db_name, credentials_object) {
     try {
-        await client.db(db_name).collection("creds").insertOne(credentials_object);
-        console.log("Credentials stored successfully.")
+        if (await check_credentials(client, db_name, credentials_object)) {
+            console.log("An account with these credentials already exists. Cancelling storage.")
+        } else {
+            await client.db(db_name).collection("creds").insertOne(credentials_object);
+            console.log("Credentials stored successfully:")
+            console.log(credentials_object)
+        }
     } catch (error) {
         console.log(`ERROR: When storing credentials in database: ${error}`)
 
@@ -93,10 +98,13 @@ async function store_credentials(client, db_name, credentials_object) {
 // Check user's database to see if provided credentials are valid
 async function check_credentials(client, db_name, credentials_object) {
     try {
-        await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
-        console.log("Credentials identified successfully.")
+        let creds = await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
+        console.log("Credentials identified successfully:")
+        console.log(creds)
+        return true
     } catch (error) {
         console.log(`ERROR: When querying database: ${error}`)
+        return false
     }
 }
 
