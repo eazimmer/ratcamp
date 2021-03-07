@@ -144,8 +144,6 @@ async function check_credentials(client, db_name, credentials_object) {
       console.log("Failed to identify credentials.")
       return false
     } else { // Credentials identified
-      //creds["password"] = encrypt_and_decrypt(credentials_object["password"], false)
-      console.log(creds)
       return true
     }
   } catch (error) { // Error handling
@@ -160,6 +158,7 @@ function encrypt_and_decrypt(pass, encrypt) {
   const alph = "abcdefghijklmnopqrstuvwxyz"
   let new_pass = []
 
+  // Encrypt
   if (encrypt) {
     for (let index in pass) {
       if (!alph.includes(pass.charAt(index))) {
@@ -174,7 +173,7 @@ function encrypt_and_decrypt(pass, encrypt) {
         new_pass.push(alph.charAt(new_char_index))
       }
     }
-  } else {
+  } else { // Decrypt
     for (let index in pass) {
       if (!alph.includes(pass.charAt(index))) {
         new_pass.push(pass.charAt(index))
@@ -219,14 +218,11 @@ io.on('connection', socket => {
   // Endpoint registering new signup attempt
   socket.on('attempt-signup', async credentials_object => {
 
-    console.log("Signup attempt received by server.")
     credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
 
     if (await menu("store", credentials_object["name"], credentials_object)) {
-      console.log("Valid signup!")
       socket.emit("signup-result", "Success")
     } else {
-      console.log("Invalid signup.")
       socket.emit("signup-result", "Failed")
     }
   });
@@ -235,23 +231,14 @@ io.on('connection', socket => {
   // Endpoint registering new login attempt
   socket.on('attempt-login', async credentials_object => {
 
-    //
-    // WILL FAIL
-    // Need to refactor query function to only match against name and pass, not email
-    //
-
-    console.log("Login attempt received by server.")
     credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
 
     if (await menu("query", credentials_object["name"], credentials_object)) {
-      console.log("Valid login!")
       socket.emit("login-result", "Success")
     } else {
-      console.log("Invalid login.")
       socket.emit("login-result", "Failed")
     }
   });
-
 
 
   // Endpoint handling disconnects
