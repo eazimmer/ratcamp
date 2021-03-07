@@ -7,12 +7,22 @@ const router = app => {
 
     // Serve clients with homepage
     app.get('/', (request, response) => {
-        response.sendFile(__dirname + "/front-end/html/index.html");
+        response.sendFile(__dirname + "/front-end/html/dashboard.html");
     });
 
     // Serve clients with message board
     app.get('/front-end/html/messageBoard.html', (request, response) => {
         response.sendFile(__dirname + "/front-end/html/messageBoard.html");
+    });
+
+    // Serve clients login page
+    app.get('/front-end/html/login.html', (request, response) => {
+        response.sendFile(__dirname + "/front-end/html/login.html");
+    });
+
+    // Serve clients signup page
+    app.get('/front-end/html/signup.html', (request, response) => {
+        response.sendFile(__dirname + "/front-end/html/signup.html");
     });
 
     // Serve clients varying file based on endpoint
@@ -52,11 +62,12 @@ const router = app => {
     });
 }
 
-// Handles database request
+// Handles database requests
 async function menu(operation, db_name = "", credentials_object = "") {
 
     // Initialize client object for this request
     const client = new MongoClient(uri, { useUnifiedTopology: true });
+    let result = false
 
     // Execute designated functionality
     try {
@@ -65,11 +76,11 @@ async function menu(operation, db_name = "", credentials_object = "") {
 
         switch (operation) {
             case "store": { // Creates a new database storing user login credentials
-                await store_credentials(client, db_name, credentials_object)
+                result = await store_credentials(client, db_name, credentials_object)
                 break;
             }
             case "query": {  // Queries to check whether credentials are valid
-                await check_credentials(client, db_name, credentials_object)
+                result = await check_credentials(client, db_name, credentials_object)
                 break;
             }
         }
@@ -78,6 +89,7 @@ async function menu(operation, db_name = "", credentials_object = "") {
         console.error(e); // Handle potential errors
     } finally {
         await client.close(); // Close database connection
+        return result
     }
 }
 
@@ -87,8 +99,10 @@ async function store_credentials(client, db_name, credentials_object) {
     try {
         if (await check_credentials(client, db_name, credentials_object)) { // Abort request if these creds already exist
             console.log("An account with these credentials already exists. Cancelling storage.")
+            return false
         } else { // Proceed to store credentials if they are not already in database
             await client.db(db_name).collection("creds").insertOne(credentials_object);
+            return true
         }
     } catch (error) { // Error handling
         console.log(`ERROR: When storing credentials in database: ${error}`)

@@ -6,6 +6,38 @@ const setUsername = (name) => {
   socket.emit('login-name', name);
 }
 
+function signup() {
+  var email = document.getElementById("email-input").value
+  var name = document.getElementById("name-input").value
+  var password = document.getElementById("password-input").value
+
+  var credentials_object = {
+    "email" : email,
+    "name" : name,
+    "password" : password
+  }
+
+  console.log("Signing up. Credentials:")
+  console.log(credentials_object)
+
+  socket.emit('attempt-signup', credentials_object);
+}
+
+function login() {
+  var name = document.getElementById("name-input").value
+  var password = document.getElementById("password-input").value
+
+  var credentials_object = {
+    "name" : name,
+    "password" : password
+  }
+
+  console.log("Logging in. Credentials:")
+  console.log(credentials_object)
+
+  socket.emit('attempt-login', credentials_object);
+}
+
 $(document).ready(function() {
   // auto resize message text area
   $(document).on('input', 'textarea', function() {
@@ -24,6 +56,30 @@ $(document).ready(function() {
     let online_users = msg;
     updateOnlineUserCount(online_users);
     updateOnlineUserList(online_users);
+  });
+
+  socket.on('signup-result', msg => {
+    console.log(`Server responds that signup attempt is: ${msg}`)
+    if (msg === "Success") {
+      const Http = new XMLHttpRequest();
+      const url='./login.html';
+      Http.open("GET", url);
+      Http.send()
+    } else {
+      document.getElementById("result").innerHTML = "Signup attempt failed, these credentials are already in use. Please try again."
+    }
+  });
+
+  socket.on('login-result', msg => {
+    console.log(`Server responds that signup attempt is: ${msg}`)
+    if (msg === "Success") {
+      const Http = new XMLHttpRequest();
+      const url='./messageBoard.html?name=' + document.getElementById("name-input").value;
+      Http.open("GET", url);
+      Http.send()
+    } else {
+      document.getElementById("result").innerHTML = "Login attempt failed, invalid credentials. Please try again."
+    }
   });
 });
 

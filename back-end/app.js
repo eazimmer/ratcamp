@@ -109,6 +109,37 @@ io.on('connection', socket => {
   });
 
 
+  // Endpoint registering new signup attempt
+  socket.on('attempt-signup', async credentials_object => {
+
+    console.log("Signup attempt received by server.")
+
+    if (await menu("store", credentials_object["name"], credentials_object)) {
+      console.log("Valid signup!")
+      socket.emit("signup-result", "Success")
+    } else {
+      console.log("Invalid signup.")
+      socket.emit("signup-result", "Failed")
+    }
+  });
+
+
+  // Endpoint registering new login attempt
+  socket.on('attempt-login', async credentials_object => {
+
+    console.log("Login attempt received by server.")
+
+    if (await menu("query", credentials_object["name"], credentials_object)) {
+      console.log("Valid login!")
+      socket.emit("login-result", "Success")
+    } else {
+      console.log("Invalid login.")
+      socket.emit("login-result", "Failed")
+    }
+  });
+
+
+
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
 
