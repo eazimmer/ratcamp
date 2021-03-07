@@ -9,6 +9,8 @@ const app = express();
 const port = process.env.PORT || 3002;
 const host = '0.0.0.0';
 const path = require('path');
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority";
 
 
 // Stored data
@@ -86,6 +88,111 @@ function broadcastChangeInOnlineUsers() {
 }
 
 
+// Handles database requests
+async function menu(operation, db_name = "", credentials_object = "") {
+
+  // Initialize client object for this request
+  const client = new MongoClient(uri, { useUnifiedTopology: true });
+  let result = false
+
+  // Execute designated functionality
+  try {
+    // Connect to the MongoDB cluster
+    await client.connect();
+
+    switch (operation) {
+      case "store": { // Creates a new database storing user login credentials
+        result = await store_credentials(client, db_name, credentials_object)
+        break;
+      }
+      case "query": {  // Queries to check whether credentials are valid
+        result = await check_credentials(client, db_name, credentials_object)
+        break;
+      }
+    }
+
+  } catch (e) {
+    console.error(e); // Handle potential errors
+  } finally {
+    await client.close(); // Close database connection
+    return result
+  }
+}
+
+
+// Create a new database, with a "creds" collection storing a document of user login credentials
+async function store_credentials(client, db_name, credentials_object) {
+  try {
+    if (await check_credentials(client, db_name, credentials_object)) { // Abort request if these creds already exist
+      console.log("An account with these credentials already exists. Cancelling storage.")
+      return false
+    } else { // Proceed to store credentials if they are not already in database
+      await client.db(db_name).collection("creds").insertOne(credentials_object);
+      return true
+    }
+  } catch (error) { // Error handling
+    console.log(`ERROR: When storing credentials in database: ${error}`)
+  }
+}
+
+
+// Check user's database to see if provided credentials are valid
+async function check_credentials(client, db_name, credentials_object) {
+  try {
+    let creds = await client.db(credentials_object["display-name"]).collection("creds").findOne(credentials_object);
+    if (creds == null) { // No credentials identified
+      console.log("Failed to identify credentials.")
+      return false
+    } else { // Credentials identified
+      //creds["password"] = encrypt_and_decrypt(credentials_object["password"], false)
+      console.log(creds)
+      return true
+    }
+  } catch (error) { // Error handling
+    console.log(`ERROR: When querying database: ${error}`)
+    return false
+  }
+}
+
+
+// Encrypt and decrypt password depending on parameters
+function encrypt_and_decrypt(pass, encrypt) {
+  const alph = "abcdefghijklmnopqrstuvwxyz"
+  let new_pass = []
+
+  if (encrypt) {
+    for (let index in pass) {
+      if (!alph.includes(pass.charAt(index))) {
+        new_pass.push(pass.charAt(index))
+      } else {
+        let new_char_index = alph.indexOf(pass.charAt(index))+3
+
+        if (new_char_index > 25) {
+          new_char_index -= 26
+        }
+
+        new_pass.push(alph.charAt(new_char_index))
+      }
+    }
+  } else {
+    for (let index in pass) {
+      if (!alph.includes(pass.charAt(index))) {
+        new_pass.push(pass.charAt(index))
+      } else {
+        let new_char_index = alph.indexOf(pass.charAt(index))-3
+
+        if (new_char_index < 0) {
+          new_char_index += 26
+        }
+
+        new_pass.push(alph.charAt(new_char_index))
+      }
+    }
+  }
+  return new_pass.join("")
+}
+
+
 // Socket connection event
 io.on('connection', socket => {
 
@@ -113,6 +220,7 @@ io.on('connection', socket => {
   socket.on('attempt-signup', async credentials_object => {
 
     console.log("Signup attempt received by server.")
+    credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
 
     if (await menu("store", credentials_object["name"], credentials_object)) {
       console.log("Valid signup!")
@@ -128,6 +236,7 @@ io.on('connection', socket => {
   socket.on('attempt-login', async credentials_object => {
 
     console.log("Login attempt received by server.")
+    credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
 
     if (await menu("query", credentials_object["name"], credentials_object)) {
       console.log("Valid login!")
