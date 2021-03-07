@@ -53,9 +53,11 @@ $(document).ready(function() {
   });
 
   socket.on('updateonlineusers', msg => {
-    let online_users = msg;
-    updateOnlineUserCount(online_users);
-    updateOnlineUserList(online_users);
+    if ( document.URL.includes("./messageBoard.html") ) {
+      let online_users = msg;
+      updateOnlineUserCount(online_users);
+      updateOnlineUserList(online_users);
+    }
   });
 
   socket.on('signup-result', msg => {

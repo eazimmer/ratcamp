@@ -235,6 +235,11 @@ io.on('connection', socket => {
   // Endpoint registering new login attempt
   socket.on('attempt-login', async credentials_object => {
 
+    //
+    // WILL FAIL
+    // Need to refactor query function to only match against name and pass, not email
+    //
+
     console.log("Login attempt received by server.")
     credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
 
