@@ -63,10 +63,8 @@ $(document).ready(function() {
   socket.on('signup-result', msg => {
     console.log(`Server responds that signup attempt is: ${msg}`)
     if (msg === "Success") {
-      const Http = new XMLHttpRequest();
-      const url='./login.html';
-      Http.open("GET", url);
-      Http.send()
+      console.log("Redirecting to ./login.html")
+      window.location.replace("./login.html");
     } else {
       document.getElementById("result").innerHTML = "Signup attempt failed, these credentials are already in use. Please try again."
     }
@@ -75,10 +73,9 @@ $(document).ready(function() {
   socket.on('login-result', msg => {
     console.log(`Server responds that signup attempt is: ${msg}`)
     if (msg === "Success") {
-      const Http = new XMLHttpRequest();
-      const url='./messageBoard.html?name=' + document.getElementById("name-input").value;
-      Http.open("GET", url);
-      Http.send()
+      const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
+      console.log(`Redirecting to ${url}`)
+      window.location.replace(url);
     } else {
       document.getElementById("result").innerHTML = "Login attempt failed, invalid credentials. Please try again."
     }
