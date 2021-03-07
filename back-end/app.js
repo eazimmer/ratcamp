@@ -139,7 +139,7 @@ async function store_credentials(client, db_name, credentials_object) {
 // Check user's database to see if provided credentials are valid
 async function check_credentials(client, db_name, credentials_object) {
   try {
-    let creds = await client.db(credentials_object["display-name"]).collection("creds").findOne({$and:[{"name" : credentials_object["name"]}, {"password" : credentials_object["password"]}]});
+    let creds = await client.db(credentials_object["name"]).collection("creds").findOne({$and:[{"name" : credentials_object["name"]}, {"password" : credentials_object["password"]}]});
     if (creds == null) { // No credentials identified
       console.log("Failed to identify credentials.")
       return false
