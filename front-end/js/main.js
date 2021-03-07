@@ -53,7 +53,7 @@ $(document).ready(function() {
   });
 
   socket.on('updateonlineusers', msg => {
-    if ( document.URL.includes("./messageBoard.html") ) {
+    if ( document.URL.includes("messageBoard.html") ) {
       let online_users = msg;
       updateOnlineUserCount(online_users);
       updateOnlineUserList(online_users);
