@@ -211,6 +211,8 @@ io.on('connection', socket => {
       "name" : name
     })
 
+    console.log(`Connection received from: ${name}. Now registered as online.`)
+
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
 
