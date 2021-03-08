@@ -3,7 +3,7 @@ var urlParams = new URLSearchParams(window.location.search);
 
 const setUsername = (name) => {
   document.getElementById('username-header').innerHTML = name;
-  socket.emit('login-name', name);
+  // socket.emit('login-name', name);
 }
 
 function signup() {
@@ -84,6 +84,7 @@ $(document).ready(function() {
   // Handle response to whether or not account is already logged on
   socket.on('online-check-result', found => {
     if (!found) { // Not already logged in; login
+      socket.emit('login-name', document.getElementById("name-input").value);
       const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
       window.location.replace(url);
       } else { // Account already logged in; abort

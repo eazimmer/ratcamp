@@ -8,7 +8,13 @@ const router = app => {
 
     // Serve clients with message board
     app.get('/front-end/html/messageBoard.html', (request, response) => {
-        response.sendFile(__dirname + "/front-end/html/messageBoard.html");
+        if (request.query.name) {
+            console.log("Authenticated user identified")
+            response.sendFile(__dirname + "/front-end/html/messageBoard.html");
+        } else {
+            console.log("Unauthenticated user identified")
+            response.send("ERROR: Please login before attempting to access the message board.");
+        }
     });
 
     // Serve clients login page
