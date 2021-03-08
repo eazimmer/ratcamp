@@ -74,11 +74,21 @@ $(document).ready(function() {
   socket.on('login-result', msg => {
     console.log(`Server responds that signup attempt is: ${msg}`)
     if (msg === "Success") {
-      const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
-      window.location.replace(url);
+      // Check if account is already online
+      socket.emit('already-online-check', document.getElementById("name-input").value)
     } else {
       document.getElementById("result").innerHTML = "Login attempt failed, invalid credentials. Please try again."
     }
+  });
+
+  // Handle check whether account is already logged on
+  socket.on('online-check-result', found => {
+    if (!found) {
+      const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
+      window.location.replace(url);
+      } else { // Account already logged in
+        document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try again."
+      }
   });
 });
 

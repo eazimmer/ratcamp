@@ -241,6 +241,23 @@ io.on('connection', socket => {
   });
 
 
+  // Endpoint registering new login attempt
+  socket.on('already-online-check', name => {
+    let found = false
+    for (var i in sockets_to_names) {
+      if (sockets_to_names[i]["name"] === name) {
+        found = true
+        break
+      }
+    }
+    if (found) {
+      socket.emit('online-check-result', true)
+    } else {
+      socket.emit('online-check-result', false)
+    }
+  });
+
+
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
 
