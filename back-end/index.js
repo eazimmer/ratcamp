@@ -8,7 +8,13 @@ const router = app => {
 
     // Serve clients with message board
     app.get('/front-end/html/messageBoard.html', (request, response) => {
-        if (request.query.name) {
+        let online_users = []
+
+        for (var i in sockets_to_names) {
+            online_users.push(sockets_to_names[i]["name"])
+        }
+
+        if (online_users.includes(request.query.name)) {
             console.log("Authenticated user identified")
             response.sendFile(__dirname + "/front-end/html/messageBoard.html");
         } else {
