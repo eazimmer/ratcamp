@@ -41,6 +41,19 @@ const server = app.listen(port, host, (error) => {
 const io = require('socket.io')(server);
 
 
+// Allow access to online users data elsewhere
+module.exports.getOnlineUsers = function () {
+  let validated_users = []
+
+  // Pull currently online users out of map of socket ids to usernames
+  for (var i in sockets_to_names) {
+    validated_users.push(sockets_to_names[i]["name"])
+  }
+
+  return validated_users
+}
+
+
 // Handle messages received by server
 function registerMessage(user, msg) {
 
