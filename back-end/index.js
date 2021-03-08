@@ -11,6 +11,9 @@ const router = app => {
 
     // Serve clients with message board
     app.get('/front-end/html/messageBoard.html', (request, response) => {
+        console.log("Currently online users:")
+        console.log(tools.getOnlineUsers())
+        console.log(`Attempting connection: ${request.query.name}`)
         if (tools.getOnlineUsers().includes(request.query.name)) {
             console.log("Authenticated user identified")
             response.sendFile(__dirname + "/front-end/html/messageBoard.html");
