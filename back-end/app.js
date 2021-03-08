@@ -79,8 +79,8 @@ function broadcastChangeInOnlineUsers() {
   let validated_users = []
 
   // Pull currently online users out of map of socket ids to usernames
-  for (var i in sockets_to_names) {
-    validated_users.push(sockets_to_names[i]["name"])
+  for (var i in global.sockets_to_names) {
+    validated_users.push(global.sockets_to_names[i]["name"])
   }
 
   // Broadcast new list of online users to all clients
@@ -206,12 +206,10 @@ io.on('connection', socket => {
   socket.on('login-name', name => {
     var socket_id = socket.id.toString()
 
-    sockets_to_names.push({
+    global.sockets_to_names.push({
       "id" : socket_id,
       "name" : name
     })
-
-    console.log(`Connection received from: ${name}. Now registered as online.`)
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
@@ -246,8 +244,8 @@ io.on('connection', socket => {
   // Endpoint verifying whether or not the account logging in is already online
   socket.on('already-online-check', name => {
     let found = false
-    for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["name"] === name) {
+    for (var i in global.sockets_to_names) {
+      if (global.sockets_to_names[i]["name"] === name) {
         found = true
         break
       }
@@ -264,9 +262,9 @@ io.on('connection', socket => {
   socket.on("disconnect", () => {
 
     // Find disconnecting socket and remove its entry in socket -> user map
-    for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["id"] === socket.id) {
-        sockets_to_names.splice(i, 1)
+    for (var i in global.sockets_to_names) {
+      if (global.sockets_to_names[i]["id"] === socket.id) {
+        global.sockets_to_names.splice(i, 1)
       }
     }
 
