@@ -241,7 +241,7 @@ io.on('connection', socket => {
   });
 
 
-  // Endpoint registering new login attempt
+  // Endpoint verifying whether or not the account logging in is already online
   socket.on('already-online-check', name => {
     let found = false
     for (var i in sockets_to_names) {

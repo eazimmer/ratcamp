@@ -81,12 +81,12 @@ $(document).ready(function() {
     }
   });
 
-  // Handle check whether account is already logged on
+  // Handle response to whether or not account is already logged on
   socket.on('online-check-result', found => {
-    if (!found) {
+    if (!found) { // Not already logged in; login
       const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
       window.location.replace(url);
-      } else { // Account already logged in
+      } else { // Account already logged in; abort
         document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try again."
       }
   });
