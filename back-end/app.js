@@ -16,7 +16,7 @@ const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retry
 // Stored data
 let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
-let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
+global.sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
 
 
 // Use Node.js body parsing middleware to help access message contents
@@ -211,7 +211,6 @@ io.on('connection', socket => {
       "name" : name
     })
 
-    app.locals.sockets_map = sockets_to_names
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
 
@@ -269,7 +268,6 @@ io.on('connection', socket => {
       }
     }
 
-    app.locals.sockets_map = sockets_to_names
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
 })
