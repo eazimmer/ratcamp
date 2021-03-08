@@ -87,7 +87,7 @@ $(document).ready(function() {
       const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
       window.location.replace(url);
       } else { // Account already logged in; abort
-        document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try again."
+        document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try a different account."
       }
   });
 });
