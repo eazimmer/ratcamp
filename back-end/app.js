@@ -125,7 +125,6 @@ async function menu(operation, db_name = "", credentials_object = "") {
 async function store_credentials(client, db_name, credentials_object) {
   try {
     if (await check_credentials(client, db_name, credentials_object, "signup")) { // Abort request if these creds already exist
-      console.log("An account with these credentials already exists. Cancelling storage.")
       return false
     } else { // Proceed to store credentials if they are not already in database
       await client.db(db_name).collection("creds").insertOne(credentials_object);
@@ -137,14 +136,12 @@ async function store_credentials(client, db_name, credentials_object) {
 }
 
 
-// Check user's database to see if provided credentials are valid
+// Check users database to see if provided credentials are valid
 async function check_credentials(client, db_name, credentials_object, action) {
-
-  if (action === "login") {
+  if (action === "login") { // Checking whether login credentials are valid
     try {
       let creds = await client.db(credentials_object["name"]).collection("creds").findOne({$and:[{"name" : credentials_object["name"]}, {"password" : credentials_object["password"]}]});
       if (creds == null) { // No credentials identified
-        console.log("Failed to identify credentials.")
         return false
       } else { // Credentials identified, login
         return true
@@ -153,22 +150,19 @@ async function check_credentials(client, db_name, credentials_object, action) {
       console.log(`ERROR: When querying database: ${error}`)
       return false
     }
-  } else {
-    try {
-      let creds = await client.db(credentials_object["name"]).collection("creds").findOne({"name" : credentials_object["name"]});
-      if (creds == null) { // No credentials identified
-        console.log("Failed to identify credentials.")
+  } else { // Checking whether username is available for signup
+      try {
+        let creds = await client.db(credentials_object["name"]).collection("creds").findOne({"name" : credentials_object["name"]});
+        if (creds == null) { // No credentials identified, signup will succeed
+          return false
+        } else { // Credentials identified, will fail
+          return true
+        }
+      } catch (error) { // Error handling
+        console.log(`ERROR: When querying database: ${error}`)
         return false
-      } else { // Credentials identified, signup
-        return true
       }
-    } catch (error) { // Error handling
-      console.log(`ERROR: When querying database: ${error}`)
-      return false
-    }
   }
-
-
 }
 
 
@@ -236,9 +230,7 @@ io.on('connection', socket => {
 
   // Endpoint registering new signup attempt
   socket.on('attempt-signup', async credentials_object => {
-
     credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
-
     if (await menu("store", credentials_object["name"], credentials_object)) {
       socket.emit("signup-result", "Success")
     } else {
@@ -249,9 +241,7 @@ io.on('connection', socket => {
 
   // Endpoint registering new login attempt
   socket.on('attempt-login', async credentials_object => {
-
     credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
-
     if (await menu("query", credentials_object["name"], credentials_object)) {
       socket.emit("login-result", "Success")
     } else {
@@ -283,7 +273,7 @@ io.on('connection', socket => {
   });
 
 
-  // Confirm whether account logged in
+  // Confirm whether user performed a login
   socket.on('verify-login', name => {
     if (verified_logins.includes(name)) {
       socket.emit('verify-login-response', true)

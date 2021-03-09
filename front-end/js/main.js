@@ -17,9 +17,6 @@ function signup() {
     "password" : password
   }
 
-  console.log("Signing up. Credentials:")
-  console.log(credentials_object)
-
   socket.emit('attempt-signup', credentials_object);
 }
 
@@ -31,9 +28,6 @@ function login() {
     "name" : name,
     "password" : password
   }
-
-  console.log("Logging in. Credentials:")
-  console.log(credentials_object)
 
   socket.emit('attempt-login', credentials_object);
 }
@@ -62,17 +56,15 @@ $(document).ready(function() {
 
   // Handle signup attempt response
   socket.on('signup-result', msg => {
-    console.log(`Server responds that signup attempt is: ${msg}`)
     if (msg === "Success") {
       window.location.replace("./login.html");
     } else {
-      document.getElementById("result").innerHTML = "Signup attempt failed, these credentials are already in use. Please try again."
+      document.getElementById("result").innerHTML = "Signup attempt failed, this username is already in use. Please try again."
     }
   });
 
   // Handle login attempt response
   socket.on('login-result', msg => {
-    console.log(`Server responds that signup attempt is: ${msg}`)
     if (msg === "Success") {
       // Check if account is already online
       socket.emit('already-online-check', document.getElementById("name-input").value)
@@ -92,19 +84,19 @@ $(document).ready(function() {
       }
   });
 
-  // Handle response to whether or not account is verified
+  // Handle response to whether or not login was verified
   socket.on('verify-login-response', found => {
     if (!found) { // Not logged in
       const url="./notloggedin"
       window.location.replace(url);
     } else { // Account verified
-      console.log("Account verification successful.")
       socket.emit('login-name', urlParams.get('name'))
       socket.emit('unverify-user', urlParams.get('name'))
     }
   });
 });
 
+// Initiate check to see if login process was completed
 const verifyLogin = (name) => {
   socket.emit("verify-login", name)
 }

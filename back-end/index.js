@@ -21,7 +21,7 @@ const router = app => {
         response.sendFile(__dirname + "/front-end/html/signup.html");
     });
 
-    // Serve clients error message indicating lack of login
+    // Serve clients error message indicating lack of completed login
     app.get('/front-end/html/notloggedin', (request, response) => {
         response.send("Please login before attempting to access the message board.")
     });
