@@ -107,7 +107,7 @@ async function menu(operation, db_name = "", credentials_object = "") {
         break;
       }
       case "query": {  // Queries to check whether credentials are valid
-        result = await check_credentials(client, db_name, credentials_object)
+        result = await check_credentials(client, db_name, credentials_object, "login")
         break;
       }
     }
@@ -124,7 +124,7 @@ async function menu(operation, db_name = "", credentials_object = "") {
 // Create a new database, with a "creds" collection storing a document of user login credentials
 async function store_credentials(client, db_name, credentials_object) {
   try {
-    if (await check_credentials(client, db_name, credentials_object)) { // Abort request if these creds already exist
+    if (await check_credentials(client, db_name, credentials_object, "signup")) { // Abort request if these creds already exist
       console.log("An account with these credentials already exists. Cancelling storage.")
       return false
     } else { // Proceed to store credentials if they are not already in database
@@ -138,19 +138,37 @@ async function store_credentials(client, db_name, credentials_object) {
 
 
 // Check user's database to see if provided credentials are valid
-async function check_credentials(client, db_name, credentials_object) {
-  try {
-    let creds = await client.db(credentials_object["name"]).collection("creds").findOne({$and:[{"name" : credentials_object["name"]}, {"password" : credentials_object["password"]}]});
-    if (creds == null) { // No credentials identified
-      console.log("Failed to identify credentials.")
+async function check_credentials(client, db_name, credentials_object, action) {
+
+  if (action === "login") {
+    try {
+      let creds = await client.db(credentials_object["name"]).collection("creds").findOne({$and:[{"name" : credentials_object["name"]}, {"password" : credentials_object["password"]}]});
+      if (creds == null) { // No credentials identified
+        console.log("Failed to identify credentials.")
+        return false
+      } else { // Credentials identified, login
+        return true
+      }
+    } catch (error) { // Error handling
+      console.log(`ERROR: When querying database: ${error}`)
       return false
-    } else { // Credentials identified
-      return true
     }
-  } catch (error) { // Error handling
-    console.log(`ERROR: When querying database: ${error}`)
-    return false
+  } else {
+    try {
+      let creds = await client.db(credentials_object["name"]).collection("creds").findOne({"name" : credentials_object["name"]});
+      if (creds == null) { // No credentials identified
+        console.log("Failed to identify credentials.")
+        return false
+      } else { // Credentials identified, signup
+        return true
+      }
+    } catch (error) { // Error handling
+      console.log(`ERROR: When querying database: ${error}`)
+      return false
+    }
   }
+
+
 }
 
 
