@@ -16,8 +16,7 @@ const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retry
 // Stored data
 let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
-let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
-global.online_users = []
+global.sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
 
 
 // Use Node.js body parsing middleware to help access message contents
@@ -77,9 +76,15 @@ function broadcastMessage(data_object) {
 
 // Update clients of change in online users
 function broadcastChangeInOnlineUsers() {
+  let validated_users = []
+
+  // Pull currently online users out of map of socket ids to usernames
+  for (var i in global.sockets_to_names) {
+    validated_users.push(global.sockets_to_names[i]["name"])
+  }
 
   // Broadcast new list of online users to all clients
-  io.emit('updateonlineusers', global.online_users);
+  io.emit('updateonlineusers', validated_users);
 }
 
 
@@ -190,30 +195,6 @@ function encrypt_and_decrypt(pass, encrypt) {
 // Socket connection event
 io.on('connection', socket => {
 
-  // Check all connected sockets
-  function removeDisconnectedSockets() {
-
-    let connected = false
-    // Find disconnecting socket and remove its entry in online users
-    for (var user in global.online_users) {
-      for (var i in sockets_to_names) {
-        if (sockets_to_names[i]["name"] === global.online_users[user]) {
-          connected = true
-          break
-        }
-      }
-      if (!connected) {
-        console.log(`${global.online_users[user]} is being disconnected.`)
-        global.online_users.splice(user, 1)
-      } else {
-        connected = false
-      }
-    }
-
-    setTimeout(removeDisconnectedSockets, 3000)
-  }
-
-
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
@@ -225,13 +206,10 @@ io.on('connection', socket => {
   socket.on('login-name', name => {
     var socket_id = socket.id.toString()
 
-    sockets_to_names.push({
+    global.sockets_to_names.push({
       "id" : socket_id,
       "name" : name
     })
-
-    global.online_users.push(name)
-    removeDisconnectedSockets()
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
@@ -266,8 +244,8 @@ io.on('connection', socket => {
   // Endpoint verifying whether or not the account logging in is already online
   socket.on('already-online-check', name => {
     let found = false
-    for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["name"] === name) {
+    for (var i in global.sockets_to_names) {
+      if (global.sockets_to_names[i]["name"] === name) {
         found = true
         break
       }
@@ -284,9 +262,9 @@ io.on('connection', socket => {
   socket.on("disconnect", () => {
 
     // Find disconnecting socket and remove its entry in socket -> user map
-    for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["id"] === socket.id) {
-        sockets_to_names.splice(i, 1)
+    for (var i in global.sockets_to_names) {
+      if (global.sockets_to_names[i]["id"] === socket.id) {
+        global.sockets_to_names.splice(i, 1)
       }
     }
 

@@ -54,8 +54,6 @@ $(document).ready(function() {
 
   socket.on('updateonlineusers', msg => {
     if ( document.URL.includes("messageBoard.html") ) {
-      console.log("Received users list:")
-      console.log(msg)
       let online_users = msg;
       updateOnlineUserCount(online_users);
       updateOnlineUserList(online_users);
@@ -74,7 +72,7 @@ $(document).ready(function() {
 
   // Handle login attempt response
   socket.on('login-result', msg => {
-    console.log(`Server responds that login attempt is: ${msg}`)
+    console.log(`Server responds that signup attempt is: ${msg}`)
     if (msg === "Success") {
       // Check if account is already online
       socket.emit('already-online-check', document.getElementById("name-input").value)
@@ -86,11 +84,8 @@ $(document).ready(function() {
   // Handle response to whether or not account is already logged on
   socket.on('online-check-result', found => {
     if (!found) { // Not already logged in; login
-
-      let name = document.getElementById("name-input").value
-
-      socket.emit('login-name', name);
-      const url="./messageBoard.html?name=" + name;
+      socket.emit('login-name', document.getElementById("name-input").value);
+      const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
       window.location.replace(url);
       } else { // Account already logged in; abort
         document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try a different account."
