@@ -93,8 +93,9 @@ $(document).ready(function() {
   });
 });
 
-const requestOnlineUsers = () => {
-  socket.emit('request-online-users')
+const joinChatRoom = () => {
+  // Request current online users and reactivate socket
+  socket.emit('joined-chat-room')
 }
 
 const sendMessage = () => {
