@@ -99,7 +99,8 @@ $(document).ready(function() {
       window.location.replace(url);
     } else { // Account verified
       console.log("Account verification successful.")
-      socket.emit('login-name', urlParams.get('name'));
+      socket.emit('login-name', urlParams.get('name'))
+      socket.emit('unverify-user', urlParams.get('name'))
     }
   });
 });

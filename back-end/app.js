@@ -275,6 +275,14 @@ io.on('connection', socket => {
   });
 
 
+  // Designate a user's login token as spent
+  socket.on('unverify-user', name => {
+    if (verified_logins.includes(name)) {
+      verified_logins.splice(name, 1)
+    }
+  });
+
+
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
 
