@@ -93,6 +93,10 @@ $(document).ready(function() {
   });
 });
 
+const requestOnlineUsers = () => {
+  socket.emit('request-online-users')
+}
+
 const sendMessage = () => {
   const message = document.getElementById('message-input').value;
 

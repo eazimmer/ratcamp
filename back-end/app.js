@@ -267,6 +267,11 @@ io.on('connection', socket => {
     }
   });
 
+  // Endpoint verifying whether or not the account logging in is already online
+  socket.on('request-online-users', () => {
+    broadcastChangeInOnlineUsers()
+  });
+
 
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
