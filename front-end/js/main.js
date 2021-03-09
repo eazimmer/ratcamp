@@ -99,6 +99,7 @@ $(document).ready(function() {
       window.location.replace(url);
     } else { // Account verified
       console.log("Account verification successful.")
+      socket.emit('login-name', document.getElementById("username-header").value);
     }
   });
 

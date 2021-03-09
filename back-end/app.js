@@ -275,7 +275,6 @@ io.on('connection', socket => {
   });
 
 
-
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
 

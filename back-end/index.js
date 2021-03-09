@@ -22,7 +22,7 @@ const router = app => {
     });
 
     // Serve clients error message indicating lack of login
-    app.get('/notloggedin', (request, response) => {
+    app.get('/front-end/html/notloggedin', (request, response) => {
         response.send("Please login before attempting to access the message board.")
     });
 
