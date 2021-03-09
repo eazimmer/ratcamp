@@ -270,13 +270,13 @@ io.on('connection', socket => {
   });
 
   // Endpoint verifying whether or not the account logging in is already online
-  socket.on('joined-chat-room', () => {
+  socket.on('joined-chat-room', name => {
 
     console.log(`Activating socket ${socket.id}`)
 
     // Find connecting socket and mark it as active
     for (var i in global.sockets_to_names) {
-      if (global.sockets_to_names[i]["id"] === socket.id) {
+      if (global.sockets_to_names[i]["name"] === name) {
         console.log(`Activated socket ${socket.id}`)
         global.sockets_to_names[i]["active"] = true
         break

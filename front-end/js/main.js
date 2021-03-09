@@ -95,7 +95,7 @@ $(document).ready(function() {
 
 const joinChatRoom = () => {
   // Request current online users and reactivate socket
-  socket.emit('joined-chat-room')
+  socket.emit('joined-chat-room', document.getElementById("username-header").value)
 }
 
 const sendMessage = () => {
