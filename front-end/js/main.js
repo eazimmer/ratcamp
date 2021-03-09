@@ -61,7 +61,7 @@ $(document).ready(function() {
     if (msg === "Success") {
       window.location.replace("./login.html");
     } else {
-      document.getElementById("result").innerHTML = "Signup attempt failed, this username is already in use. Please try again."
+      document.getElementById("result").innerHTML = "Signup attempt failed, an account already exists using this username. Please try again and provide a different username."
     }
   });
 
