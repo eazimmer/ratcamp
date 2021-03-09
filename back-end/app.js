@@ -192,22 +192,8 @@ function encrypt_and_decrypt(pass, encrypt) {
 }
 
 
-// Sleep program
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
-
 // Socket connection event
 io.on('connection', socket => {
-
-
-  console.log("Connection occurred:")
-  console.log(global.sockets_to_names)
 
   // Endpoint handling incoming message
   socket.on('chat', message => {
@@ -224,9 +210,6 @@ io.on('connection', socket => {
       "id" : socket_id,
       "name" : name
     })
-
-    console.log("Login occurred:")
-    console.log(global.sockets_to_names)
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
@@ -278,17 +261,12 @@ io.on('connection', socket => {
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
 
-    sleep(2000)
-
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in global.sockets_to_names) {
       if (global.sockets_to_names[i]["id"] === socket.id) {
         global.sockets_to_names.splice(i, 1)
       }
     }
-
-    console.log("Disconnected occurred:")
-    console.log(global.sockets_to_names)
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });

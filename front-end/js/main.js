@@ -83,15 +83,11 @@ $(document).ready(function() {
 
   // Handle response to whether or not account is already logged on
   socket.on('online-check-result', found => {
-
-    let name = document.getElementById("name-input").value
-
     if (!found) { // Not already logged in; login
-      socket.emit('login-name', name);
-      const url="./messageBoard.html?name=" + name;
+      socket.emit('login-name', document.getElementById("name-input").value);
+      const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
       window.location.replace(url);
-      socket.emit('login-name', name);
-    } else { // Account already logged in; abort
+      } else { // Account already logged in; abort
         document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try a different account."
       }
   });
