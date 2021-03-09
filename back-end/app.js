@@ -192,6 +192,16 @@ function encrypt_and_decrypt(pass, encrypt) {
 }
 
 
+// Sleep program
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+
 // Socket connection event
 io.on('connection', socket => {
 
@@ -267,6 +277,8 @@ io.on('connection', socket => {
 
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
+
+    sleep(2000)
 
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in global.sockets_to_names) {
