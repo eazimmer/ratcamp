@@ -90,7 +90,6 @@ $(document).ready(function() {
       socket.emit('login-name', name);
       const url="./messageBoard.html?name=" + name;
       window.location.replace(url);
-      socket.emit('login-name', name)
       } else { // Account already logged in; abort
         document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try a different account."
       }

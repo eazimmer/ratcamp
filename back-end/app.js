@@ -77,15 +77,9 @@ function broadcastMessage(data_object) {
 
 // Update clients of change in online users
 function broadcastChangeInOnlineUsers() {
-  let validated_users = []
-
-  // Pull currently online users out of map of socket ids to usernames
-  for (var i in sockets_to_names) {
-    validated_users.push(sockets_to_names[i]["name"])
-  }
 
   // Broadcast new list of online users to all clients
-  io.emit('updateonlineusers', validated_users);
+  io.emit('updateonlineusers', online_users);
 }
 
 
