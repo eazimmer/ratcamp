@@ -78,6 +78,9 @@ function broadcastMessage(data_object) {
 // Update clients of change in online users
 function broadcastChangeInOnlineUsers() {
 
+  console.log("Broadcasting list of online users:")
+  console.log(online_users)
+
   // Broadcast new list of online users to all clients
   io.emit('updateonlineusers', online_users);
 }
@@ -266,6 +269,8 @@ io.on('connection', socket => {
 
   // Endpoint verifying whether or not the account logging in is already online
   socket.on('joined-chat-room', name => {
+
+    console.log(`Server acknowledged ${name} is joining chatroom`)
 
     online_users.push(name)
     broadcastChangeInOnlineUsers()

@@ -54,6 +54,8 @@ $(document).ready(function() {
 
   socket.on('updateonlineusers', msg => {
     if ( document.URL.includes("messageBoard.html") ) {
+      console.log("Received online list of users from server")
+      console.log(msg)
       let online_users = msg;
       updateOnlineUserCount(online_users);
       updateOnlineUserList(online_users);
@@ -95,7 +97,9 @@ $(document).ready(function() {
 
 const joinChatRoom = () => {
   // Request current online users and reactivate socket
-  socket.emit('joined-chat-room', document.getElementById("username-header").value)
+  let name = document.getElementById("username-header").value
+  console.log(`Joining chatroom with ${name}`)
+  socket.emit('joined-chat-room', name)
 }
 
 const sendMessage = () => {
