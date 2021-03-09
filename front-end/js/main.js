@@ -54,6 +54,8 @@ $(document).ready(function() {
 
   socket.on('updateonlineusers', msg => {
     if ( document.URL.includes("messageBoard.html") ) {
+      console.log("Received users list:")
+      console.log(msg)
       let online_users = msg;
       updateOnlineUserCount(online_users);
       updateOnlineUserList(online_users);
