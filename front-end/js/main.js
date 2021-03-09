@@ -95,9 +95,8 @@ $(document).ready(function() {
   });
 });
 
-const joinChatRoom = () => {
+const joinChatRoom = (name) => {
   // Request current online users and reactivate socket
-  let name = document.getElementById("username-header").value
   console.log(`Joining chatroom with ${name}`)
   socket.emit('joined-chat-room', name)
 }
