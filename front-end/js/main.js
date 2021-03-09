@@ -12,6 +12,14 @@ $(document).ready(function() {
     $(this).outerHeight('34px').outerHeight(this.scrollHeight);
   });
 
+  // hamburger icon functionality
+  $("#hamburger-toggle").click(() => {
+    if ($("body").hasClass("hamburger-open"))
+        document.body.classList.remove("hamburger-open");
+    else
+        document.body.classList.add("hamburger-open");
+  });
+
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
     outputMessage(data.name, data.msg);
@@ -30,7 +38,7 @@ $(document).ready(function() {
 const sendMessage = () => {
   const message = document.getElementById('message-input').value;
 
-  if (message != '') {
+  if ($.trim(message).length !== 0){
     // clear message input field
     document.getElementById('message-input').value = '';
     $('#message-input').outerHeight('32px');
@@ -67,19 +75,12 @@ const outputMessage = (name, message) => {
 };
 
 const updateOnlineUserCount = (onlineUsers) => {
-  // Subtract by one to not show self
   document.getElementById('online-num').innerHTML = onlineUsers.length;
 };
 
 const updateOnlineUserList = (onlineUsers) => {
   const ul = document.getElementById('online-users-list');
   ul.innerHTML = '';
-
-  // remove self from array
-  //const index = onlineUsers.indexOf(urlParams.get('name'));
-  //if (index > -1) {
-    //onlineUsers.splice(index, 1);
-  //}
 
   for (let i = 0; i < onlineUsers.length; i++) {
     let div = document.createElement('div');
