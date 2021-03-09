@@ -17,7 +17,6 @@ const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retry
 let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
 global.sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
-let online_users = []
 
 
 // Use Node.js body parsing middleware to help access message contents
@@ -77,12 +76,15 @@ function broadcastMessage(data_object) {
 
 // Update clients of change in online users
 function broadcastChangeInOnlineUsers() {
+  let validated_users = []
 
-  console.log("Broadcasting list of online users:")
-  console.log(online_users)
+  // Pull currently online users out of map of socket ids to usernames
+  for (var i in global.sockets_to_names) {
+    validated_users.push(global.sockets_to_names[i]["name"])
+  }
 
   // Broadcast new list of online users to all clients
-  io.emit('updateonlineusers', online_users);
+  io.emit('updateonlineusers', validated_users);
 }
 
 
@@ -193,15 +195,6 @@ function encrypt_and_decrypt(pass, encrypt) {
 // Socket connection event
 io.on('connection', socket => {
 
-  console.log(`Connecting socket id: ${socket.id}`)
-  for (var i in global.sockets_to_names) {
-    if ((global.sockets_to_names[i]["id"] === socket.id) && (global.sockets_to_names[i]["active"] === false)) {
-      global.sockets_to_names[i]["active"] = true
-      break
-    }
-  }
-
-
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
@@ -215,11 +208,8 @@ io.on('connection', socket => {
 
     global.sockets_to_names.push({
       "id" : socket_id,
-      "name" : name,
-      "active" : true
+      "name" : name
     })
-
-    online_users.push(name)
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
@@ -267,27 +257,14 @@ io.on('connection', socket => {
     }
   });
 
-  // Endpoint verifying whether or not the account logging in is already online
-  socket.on('joined-chat-room', name => {
-
-    console.log(`Server acknowledged ${name} is joining chatroom`)
-
-    online_users.push(name)
-    broadcastChangeInOnlineUsers()
-  });
-
 
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
 
-    console.log(`Disconnecting socket id: ${socket.id}`)
-
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in global.sockets_to_names) {
       if (global.sockets_to_names[i]["id"] === socket.id) {
-        global.sockets_to_names[i]["active"] = false
-        online_users.splice(global.sockets_to_names[i]["name"], 1)
-        break
+        global.sockets_to_names.splice(i, 1)
       }
     }
 
