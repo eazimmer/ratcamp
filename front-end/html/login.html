@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RatCamp</title>
+</head>
+<body>
+    <div class="containter">
+        <div class="login-box">
+            <h1>RatCamp Chat Room</h1>
+            <label id="input-label">Login:</label><br>
+            <input id="name-input" name="name" placeholder="Name"><br>
+            <input id="password-input" name="password" placeholder="Password"><br>
+            <button id="submit-button" type="button" onclick="login()">Submit</button><br>
+        </div>
+    </div>
+    <span id="result"></span>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../js/main.js"></script></body>
+</html>
