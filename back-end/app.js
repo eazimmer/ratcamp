@@ -195,6 +195,10 @@ function encrypt_and_decrypt(pass, encrypt) {
 // Socket connection event
 io.on('connection', socket => {
 
+
+  console.log("Connection occurred:")
+  console.log(global.sockets_to_names)
+
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
@@ -210,6 +214,9 @@ io.on('connection', socket => {
       "id" : socket_id,
       "name" : name
     })
+
+    console.log("Login occurred:")
+    console.log(global.sockets_to_names)
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
@@ -267,6 +274,9 @@ io.on('connection', socket => {
         global.sockets_to_names.splice(i, 1)
       }
     }
+
+    console.log("Disconnected occurred:")
+    console.log(global.sockets_to_names)
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
