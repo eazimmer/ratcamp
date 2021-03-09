@@ -17,6 +17,7 @@ const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retry
 let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
 global.sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
+let online_users = []
 
 
 // Use Node.js body parsing middleware to help access message contents
@@ -76,17 +77,9 @@ function broadcastMessage(data_object) {
 
 // Update clients of change in online users
 function broadcastChangeInOnlineUsers() {
-  let validated_users = []
-
-  // Pull currently online users out of map of socket ids to usernames
-  for (var i in global.sockets_to_names) {
-    if (global.sockets_to_names[i]["active"] === true) {
-      validated_users.push(global.sockets_to_names[i]["name"])
-    }
-  }
 
   // Broadcast new list of online users to all clients
-  io.emit('updateonlineusers', validated_users);
+  io.emit('updateonlineusers', online_users);
 }
 
 
@@ -223,6 +216,8 @@ io.on('connection', socket => {
       "active" : true
     })
 
+    online_users.push(name)
+
     broadcastChangeInOnlineUsers() // Update clients with new online user list
   });
 
@@ -272,17 +267,7 @@ io.on('connection', socket => {
   // Endpoint verifying whether or not the account logging in is already online
   socket.on('joined-chat-room', name => {
 
-    console.log(`Activating socket ${socket.id}`)
-
-    // Find connecting socket and mark it as active
-    for (var i in global.sockets_to_names) {
-      if (global.sockets_to_names[i]["name"] === name) {
-        console.log(`Activated socket ${socket.id}`)
-        global.sockets_to_names[i]["active"] = true
-        break
-      }
-    }
-
+    online_users.push(name)
     broadcastChangeInOnlineUsers()
   });
 
@@ -296,6 +281,7 @@ io.on('connection', socket => {
     for (var i in global.sockets_to_names) {
       if (global.sockets_to_names[i]["id"] === socket.id) {
         global.sockets_to_names[i]["active"] = false
+        online_users.splice(global.sockets_to_names[i]["name"], 1)
         break
       }
     }
