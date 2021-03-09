@@ -16,7 +16,9 @@ const router = app => {
 
         // Pull currently online users out of map of socket ids to usernames
         for (var i in global.sockets_to_names) {
-            online_users.push(global.sockets_to_names[i]["name"])
+            if (global.sockets_to_names[i]["active"] === true) {
+                online_users.push(global.sockets_to_names[i]["name"])
+            }
         }
 
         console.log("Registered online users: ")

@@ -196,6 +196,12 @@ function encrypt_and_decrypt(pass, encrypt) {
 io.on('connection', socket => {
 
   console.log(`Connecting socket id: ${socket.id}`)
+  for (var i in global.sockets_to_names) {
+    if ((global.sockets_to_names[i]["id"] === socket.id) && (global.sockets_to_names[i]["active"] === false)) {
+      global.sockets_to_names[i]["active"] = true
+      break
+    }
+  }
 
 
   // Endpoint handling incoming message
@@ -211,7 +217,8 @@ io.on('connection', socket => {
 
     global.sockets_to_names.push({
       "id" : socket_id,
-      "name" : name
+      "name" : name,
+      "active" : true
     })
 
     broadcastChangeInOnlineUsers() // Update clients with new online user list
@@ -269,7 +276,8 @@ io.on('connection', socket => {
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in global.sockets_to_names) {
       if (global.sockets_to_names[i]["id"] === socket.id) {
-        global.sockets_to_names.splice(i, 1)
+        global.sockets_to_names[i]["active"] = false
+        break
       }
     }
 
