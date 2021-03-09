@@ -79,7 +79,7 @@ function broadcastMessage(data_object) {
 function broadcastChangeInOnlineUsers() {
 
   // Broadcast new list of online users to all clients
-  io.emit('updateonlineusers', online_users);
+  io.emit('updateonlineusers', global.online_users);
 }
 
 
