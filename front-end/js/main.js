@@ -17,6 +17,7 @@ function signup() {
     "password" : password
   }
 
+  credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
   socket.emit('attempt-signup', credentials_object);
 }
 
@@ -29,6 +30,7 @@ function login() {
     "password" : password
   }
 
+  credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
   socket.emit('attempt-login', credentials_object);
 }
 
@@ -165,3 +167,41 @@ const updateOnlineUserList = (onlineUsers) => {
     ul.appendChild(div);
   }
 };
+
+// Encrypt and decrypt password depending on parameters
+const encrypt_and_decrypt = (pass, encrypt) => {
+  const alph = "abcdefghijklmnopqrstuvwxyz"
+  let new_pass = []
+
+  // Encrypt
+  if (encrypt) {
+    for (let index in pass) {
+      if (!alph.includes(pass.charAt(index))) {
+        new_pass.push(pass.charAt(index))
+      } else {
+        let new_char_index = alph.indexOf(pass.charAt(index))+3
+
+        if (new_char_index > 25) {
+          new_char_index -= 26
+        }
+
+        new_pass.push(alph.charAt(new_char_index))
+      }
+    }
+  } else { // Decrypt
+    for (let index in pass) {
+      if (!alph.includes(pass.charAt(index))) {
+        new_pass.push(pass.charAt(index))
+      } else {
+        let new_char_index = alph.indexOf(pass.charAt(index))-3
+
+        if (new_char_index < 0) {
+          new_char_index += 26
+        }
+
+        new_pass.push(alph.charAt(new_char_index))
+      }
+    }
+  }
+  return new_pass.join("")
+}

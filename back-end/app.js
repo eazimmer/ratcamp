@@ -166,45 +166,6 @@ async function check_credentials(client, db_name, credentials_object, action) {
 }
 
 
-// Encrypt and decrypt password depending on parameters
-function encrypt_and_decrypt(pass, encrypt) {
-  const alph = "abcdefghijklmnopqrstuvwxyz"
-  let new_pass = []
-
-  // Encrypt
-  if (encrypt) {
-    for (let index in pass) {
-      if (!alph.includes(pass.charAt(index))) {
-        new_pass.push(pass.charAt(index))
-      } else {
-        let new_char_index = alph.indexOf(pass.charAt(index))+3
-
-        if (new_char_index > 25) {
-          new_char_index -= 26
-        }
-
-        new_pass.push(alph.charAt(new_char_index))
-      }
-    }
-  } else { // Decrypt
-    for (let index in pass) {
-      if (!alph.includes(pass.charAt(index))) {
-        new_pass.push(pass.charAt(index))
-      } else {
-        let new_char_index = alph.indexOf(pass.charAt(index))-3
-
-        if (new_char_index < 0) {
-          new_char_index += 26
-        }
-
-        new_pass.push(alph.charAt(new_char_index))
-      }
-    }
-  }
-  return new_pass.join("")
-}
-
-
 // Socket connection event
 io.on('connection', socket => {
 
@@ -230,7 +191,6 @@ io.on('connection', socket => {
 
   // Endpoint registering new signup attempt
   socket.on('attempt-signup', async credentials_object => {
-    credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
     if (await menu("store", credentials_object["name"], credentials_object)) {
       socket.emit("signup-result", "Success")
     } else {
@@ -241,7 +201,6 @@ io.on('connection', socket => {
 
   // Endpoint registering new login attempt
   socket.on('attempt-login', async credentials_object => {
-    credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
     if (await menu("query", credentials_object["name"], credentials_object)) {
       socket.emit("login-result", "Success")
     } else {
