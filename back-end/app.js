@@ -17,6 +17,7 @@ const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retry
 let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
 global.sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
+let verified_logins = []
 
 
 // Use Node.js body parsing middleware to help access message contents
@@ -256,6 +257,23 @@ io.on('connection', socket => {
       socket.emit('online-check-result', false)
     }
   });
+
+
+  // Register the account as logged in
+  socket.on('register-login', name => {
+    verified_logins.push(name)
+  });
+
+
+  // Confirm whether account logged in
+  socket.on('verify-login', name => {
+    if (verified_logins.includes(name)) {
+      socket.emit('verify-login-response', true)
+    } else {
+      socket.emit('verify-login-response', false)
+    }
+  });
+
 
 
   // Endpoint handling disconnects

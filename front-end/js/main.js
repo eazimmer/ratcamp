@@ -84,14 +84,29 @@ $(document).ready(function() {
   // Handle response to whether or not account is already logged on
   socket.on('online-check-result', found => {
     if (!found) { // Not already logged in; login
-      socket.emit('login-name', document.getElementById("name-input").value);
+      socket.emit("register-login", document.getElementById("name-input").value)
       const url="./messageBoard.html?name=" + document.getElementById("name-input").value;
       window.location.replace(url);
       } else { // Account already logged in; abort
         document.getElementById("result").innerHTML = "Login attempt failed, this account is already signed in. Please try a different account."
       }
   });
+
+  // Handle response to whether or not account is verified
+  socket.on('verify-login-response', found => {
+    if (!found) { // Not logged in
+      const url="./notloggedin"
+      window.location.replace(url);
+    } else { // Account verified
+      console.log("Account verification successful.")
+    }
+  });
+
 });
+
+const verifyLogin = (name) => {
+  socket.emit("verify-login", name)
+}
 
 const sendMessage = () => {
   const message = document.getElementById('message-input').value;
