@@ -195,6 +195,9 @@ function encrypt_and_decrypt(pass, encrypt) {
 // Socket connection event
 io.on('connection', socket => {
 
+  console.log(`Connecting socket id: ${socket.id}`)
+
+
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
@@ -260,6 +263,8 @@ io.on('connection', socket => {
 
   // Endpoint handling disconnects
   socket.on("disconnect", () => {
+
+    console.log(`Disconnecting socket id: ${socket.id}`)
 
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in global.sockets_to_names) {
