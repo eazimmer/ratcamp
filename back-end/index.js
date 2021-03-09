@@ -9,20 +9,10 @@ const router = app => {
     // Serve clients with message board
     app.get('/front-end/html/messageBoard.html', (request, response) => {
         console.log("Currently online global users:")
-        console.log(global.sockets_to_names)
+        console.log(global.online_users)
         console.log(`Attempting connection: ${request.query.name}`)
 
-        let online_users = []
-
-        // Pull currently online users out of map of socket ids to usernames
-        for (var i in global.sockets_to_names) {
-            online_users.push(global.sockets_to_names[i]["name"])
-        }
-
-        console.log("Registered online users: ")
-        console.log(online_users)
-
-        if (online_users.includes(request.query.name)) {
+        if (global.online_users.includes(request.query.name)) {
             console.log("Authenticated user identified")
             response.sendFile(__dirname + "/front-end/html/messageBoard.html");
         } else {
