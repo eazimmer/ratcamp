@@ -10,8 +10,12 @@ const port = process.env.PORT || 3002;
 const host = '0.0.0.0';
 const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
+const {get} = require('http');
+const https = require('https');
 const uri =
     'mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority';
+const TIME_BETWWEN_QUESTIONS = 20000;
+let triviaRunning = false;
 
 
 // Stored data
@@ -184,12 +188,70 @@ async function check_credentials(client, db_name, credentials_object, action) {
 }
 
 
+function handleTrivia(msgData) {
+  if (triviaRunning) {
+    return false;
+  }
+  triviaRunning = true;
+  let questions = [];
+  const req = https.request(
+      {
+        hostname: 'opentdb.com',
+        port: 443,
+        path: '/api.php?amount=10&type=multiple',
+        method: 'GET'
+      },
+      res => {
+        if (res.statusCode != 200) {
+          return false;
+        }
+
+        res.on('data', async (d) => {
+          jsonStuff = JSON.parse(d.toString());
+          if (jsonStuff.response_code != 0) {
+            return false;
+          }
+          for (i = 0; i < jsonStuff.results.length; i++) {
+            questions[i] = {};
+            questions[i]['code'] = 'q' + i
+            questions[i]['question'] = jsonStuff.results[i].question;
+            questions[i]['answers'] = jsonStuff.results[i].incorrect_answers;
+            questions[i]['correct_index'] = Math.floor(Math.random() * 4);
+            questions[i]['answers'].splice(
+                questions[i]['correct_index'], 0,
+                jsonStuff.results[i].correct_answer);
+          }
+
+          console.log(questions);
+          console.log(questions[0]);
+
+          io.emit('trivia-update', {code: 'start'});
+          await new Promise(resolve => setTimeout(resolve, 5000));
+
+          for (i = 0; i < questions.length; i++) {
+            await new Promise(
+                resolve => setTimeout(resolve, TIME_BETWWEN_QUESTIONS));
+            console.log(i);
+            io.emit('trivia-update', questions[i]);
+          }
+          triviaRunning = false;
+          io.emit('trivia-update', {code: 'end'});
+        });
+      });
+
+  req.on('error', error => {console.error(error)});
+  req.end();
+}
+
 // Socket connection event
 io.on('connection', socket => {
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
+    handleTrivia(data);
+    return;
     if (data.msg == '!trivia') {
+      handleTrivia(data);
     } else {
       registerMessage(data.name, data.msg);
     }
@@ -198,84 +260,84 @@ io.on('connection', socket => {
 
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
-    var socket_id = socket.id.toString()
+    var socket_id = socket.id.toString();
 
-  global.sockets_to_names.push({'id': socket_id, 'name': name})
+    global.sockets_to_names.push({'id': socket_id, 'name': name});
 
-    broadcastChangeInOnlineUsers() // Update clients with new online user list
+    broadcastChangeInOnlineUsers();  // Update clients with new online user list
   });
 
 
-    // Endpoint registering new signup attempt
-    socket.on('attempt-signup', async credentials_object => {
-      if (await menu('store', credentials_object['name'], credentials_object)) {
-        socket.emit('signup-result', 'Success')
-      } else {
-        socket.emit('signup-result', 'Failed')
+  // Endpoint registering new signup attempt
+  socket.on('attempt-signup', async credentials_object => {
+    if (await menu('store', credentials_object['name'], credentials_object)) {
+      socket.emit('signup-result', 'Success')
+    } else {
+      socket.emit('signup-result', 'Failed')
+    }
+  });
+
+
+  // Endpoint registering new login attempt
+  socket.on('attempt-login', async credentials_object => {
+    if (await menu('query', credentials_object['name'], credentials_object)) {
+      socket.emit('login-result', 'Success')
+    } else {
+      socket.emit('login-result', 'Failed')
+    }
+  });
+
+
+  // Endpoint verifying whether or not the account logging in is already
+  // online
+  socket.on('already-online-check', name => {
+    let found = false
+    for (var i in global.sockets_to_names) {
+      if (global.sockets_to_names[i]['name'] === name) {
+        found = true
+        break
       }
-    });
+    }
+    if (found) {
+      socket.emit('online-check-result', true)
+    } else {
+      socket.emit('online-check-result', false)
+    }
+  });
 
 
-    // Endpoint registering new login attempt
-    socket.on('attempt-login', async credentials_object => {
-      if (await menu('query', credentials_object['name'], credentials_object)) {
-        socket.emit('login-result', 'Success')
-      } else {
-        socket.emit('login-result', 'Failed')
+  // Register the account as logged in
+  socket.on('register-login', name => {verified_logins.push(name)});
+
+
+  // Confirm whether user performed a login
+  socket.on('verify-login', name => {
+    if (verified_logins.includes(name)) {
+      socket.emit('verify-login-response', true)
+    } else {
+      socket.emit('verify-login-response', false)
+    }
+  });
+
+
+  // Designate a user's login token as spent
+  socket.on('unverify-user', name => {
+    if (verified_logins.includes(name)) {
+      verified_logins.splice(name, 1)
+    }
+  });
+
+
+  // Endpoint handling disconnects
+  socket.on('disconnect', () => {
+    // Find disconnecting socket and remove its entry in socket -> user map
+    for (var i in global.sockets_to_names) {
+      if (global.sockets_to_names[i]['id'] === socket.id) {
+        global.sockets_to_names.splice(i, 1)
       }
-    });
+    }
 
-
-    // Endpoint verifying whether or not the account logging in is already
-    // online
-    socket.on('already-online-check', name => {
-      let found = false
-      for (var i in global.sockets_to_names) {
-        if (global.sockets_to_names[i]['name'] === name) {
-          found = true
-          break
-        }
-      }
-      if (found) {
-        socket.emit('online-check-result', true)
-      } else {
-        socket.emit('online-check-result', false)
-      }
-    });
-
-
-    // Register the account as logged in
-    socket.on('register-login', name => {verified_logins.push(name)});
-
-
-    // Confirm whether user performed a login
-    socket.on('verify-login', name => {
-      if (verified_logins.includes(name)) {
-        socket.emit('verify-login-response', true)
-      } else {
-        socket.emit('verify-login-response', false)
-      }
-    });
-
-
-    // Designate a user's login token as spent
-    socket.on('unverify-user', name => {
-      if (verified_logins.includes(name)) {
-        verified_logins.splice(name, 1)
-      }
-    });
-
-
-    // Endpoint handling disconnects
-    socket.on('disconnect', () => {
-      // Find disconnecting socket and remove its entry in socket -> user map
-      for (var i in global.sockets_to_names) {
-        if (global.sockets_to_names[i]['id'] === socket.id) {
-          global.sockets_to_names.splice(i, 1)
-        }
-      }
-
-      broadcastChangeInOnlineUsers()  // Update clients with new online user
-                                      // list
-    });
+    broadcastChangeInOnlineUsers()  // Update clients with new online user
+                                    // list
+  });
 })
