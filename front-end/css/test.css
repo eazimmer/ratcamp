@@ -1,0 +1,118 @@
+html {
+  font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+  color: #404040;
+  background: radial-gradient(circle at center,#eeeeee, #6d38ff, #5f5f5f);
+  height: 100%;
+}
+
+.screen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-container {
+    height: 80vh;
+    min-width: 75vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+    background: #00000062;
+    border-radius: 4px;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    width: 95%;
+    height: 90%;
+    margin: 2.5px;
+    border: 3px solid #333;
+    background-color: #dfdfdf;
+    
+}
+
+.header {
+    height: 12vh;
+
+}
+
+.login-box {
+    min-height: 20vh;
+
+}
+
+.footer {
+    height: 5vh;
+}
+
+#input-label {
+    padding: 4px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#ffffffce;
+    border-bottom: 2px solid #000000;
+    border-right: 1px solid #000000;
+    border-top: 1px solid #00000081;
+    border-left: 1px solid #00000081;
+    background-color: #9b9b9b50;
+    border-radius: 0.3em 0.3em 0.3em 0.3em;
+}
+
+#user-input {
+    font-size: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-color:#000000;
+    color: #E0E1DD;
+    background-color: #9b9b9b50;
+    border-radius: 0.45em 0.45em 0.45em 0.45em;
+}  
+
+#user-input:hover {
+  box-shadow: 1.3px 1.3px 1.3px 1.3px #413d4e9f;
+}
+
+#user-input:active {
+  transition-duration: 0s;
+  background-color: #4b4177;
+  box-shadow: 2px 2px #666;
+}
+
+/* gets rid of weird white box around input */
+*:focus {
+    outline: none;
+}
+
+#submit-button {
+    height: 44px;
+    width: 20%;
+    font-family: 'Roboto', sans-serif;
+    border-color:#000000;
+    background-color:#35254481;
+    color: #E0E1DD;
+    border-radius: 1em 1em 1em 1em;
+}  
+
+#submit-button:hover {
+  background-color:#402d5f;
+  color:#E0E1DD;
+  cursor: pointer;
+  box-shadow: 2px 2px #5f5d64d7;
+}
+
+#submit-button:active {
+  transition-duration: 0s;
+  background-color: #4b4177;
+  box-shadow: 2px 2px #666;
+  transform: translateY(2px);
+}
+ 
+::-webkit-input-placeholder {
+  color: #ccc;
+  font-size: 20px;
+  padding: 10px 5px;
+}

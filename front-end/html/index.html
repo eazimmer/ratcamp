@@ -12,29 +12,33 @@
     
     <title>RatCamp</title>
     <!-- Create and call the js file here and also create a CSS file to style the welcome page. -->
-    <link rel="stylesheet" type="text/css" href="../css/home_style.css">
-    <link rel="icon" href="C:/Users/toner/OneDrive/Documents/Programming Classes/Software Dev Methodologies/CSI330-group2/front-end/Other/RC.png">
+    <link rel="stylesheet" type="text/css" href="../css/test.css">
+    <link rel="icon" href="../Other/RC.png">
 </head>
 <body>
-    <div class="containter">
-        <img id="logo" src="C:/Users/toner/OneDrive/Documents/Programming Classes/Software Dev Methodologies/CSI330-group2/front-end/Other/RC.png">
-        <div class="login-box">
-            <h1>RatCamp Chat Room</h1>
-				<form action="./front-end/html/messageBoard.html" method="get">
-                <!-- Create a form here that allows user to input their username that will show up in the chat room.
-                    Then, call a function from the submit button that will verify the user input to ensure that it
-                    a valid username and then it will send them to the chat room.-->
-                <label id="input-label">Please Enter Your Username:</label><br>
-                <input id="username-input" name="name" placeholder="Username"><br>
-                <input id="submit-button" type="submit" value="Submit"><br>
-                <!--<button id="submit-button" onclick="setUsername()" onclick="window.location.href='./front-end/html/messageBoard.html'">Login</button><br>-->
-            </form>
-        </div>
-        <div class="footer">
-            <p>© 2021 RatCamp LLC. All Rights Reserved</p>
+    <div class="screen">
+        <div class="flex-container">
+            <div class="flex header">
+                <!-- <img id="logo" src="../Other/RC.png"> -->
+                <h1>Login</h1>
+            </div>
+            <div class="flex login-box">
+                <form action="./front-end/html/messageBoard.html" method="get">
+                    <!-- Create a form here that allows user to input their username that will show up in the chat room.
+                        Then, call a function from the submit button that will verify the user input to ensure that it
+                        a valid username and then it will send them to the chat room.-->
+                    <label id="input-label">Please Enter Your Login Info:</label><br>
+                    <input id="user-input" name="name" placeholder="Username"><br>
+                    <input id="user-input" name="password" placeholder="Password"><br><br>
+                    <input id="submit-button" type="submit" value="Submit"><br>
+                    <!--<button id="submit-button" onclick="setUsername()" onclick="window.location.href='./front-end/html/messageBoard.html'">Login</button><br>-->
+                </form>
+            </div>
+            <div class="flex footer">
+                <p>© 2021 RatCamp LLC. All Rights Reserved</p>
+            </div>
         </div>
     </div>
-	
 	<script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/main.js"></script>
