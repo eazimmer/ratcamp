@@ -248,8 +248,7 @@ io.on('connection', socket => {
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
-    handleTrivia(data);
-    return;
+
     if (data.msg == '!trivia') {
       handleTrivia(data);
     } else {
