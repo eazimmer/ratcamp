@@ -50,11 +50,56 @@ $(document).ready(function() {
 
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
-    outputMessage(data.name, data.msg);
+    if (data.msg != "!trivia") {
+      outputMessage(data.name, data.msg);
+
+      // scroll to bottom of messages
+      $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+    }
+    else {
+      outputStartNotification(data.name);
+
+      // scroll to bottom of messages
+      $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+
+      var timeLeft = 10;
+      var startTimer = setInterval(function() {
+        if(timeLeft <= 0){
+          $("#messages .start-countdown").last().val("");
+          clearInterval(startTimer);
+        }
+
+        $("#messages .start-countdown").last().val(timeLeft);
+        timeLeft -= 1;
+      }, 1000);
+    }
+  });
+
+
+
+
+  // when a user sends "!trivia"
+  socket.on('triviastart', msg => {
+    let data = JSON.parse(msg);
+    outputStartNotification(data.name);
 
     // scroll to bottom of messages
     $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+
+    var timeLeft = 10;
+    var startTimer = setInterval(function() {
+      if(timeLeft <= 0){
+        $("#messages .start-countdown").last().val("");
+        clearInterval(startTimer);
+      }
+
+      $("#messages .start-countdown").last().val(timeLeft);
+      timeLeft -= 1;
+    }, 1000);
   });
+
+
+
 
   socket.on('updateonlineusers', msg => {
     if ( document.URL.includes("messageBoard.html") ) {
@@ -149,6 +194,21 @@ const outputMessage = (name, message) => {
   div.appendChild(li);
   ul.appendChild(div);
 };
+
+const outputStartNotification = (name) => {
+  const ul = document.getElementById('message-list');
+  let div = document.createElement('div');
+  let li = document.createElement('li');
+  let span = document.createElement('span');
+  div.setAttribute('class', 'message-block');
+  li.setAttribute('class', 'trivia-message');
+  span.setAttribute('class', 'start-countdown');
+  span.appendChild(document.createTextNode("10"));
+  li.appendChild(document.createTextNode(name + "'s game of trivia starts in... "));
+  li.appendChild(span);
+  div.appendChild(li);
+  ul.appendChild(div);
+}
 
 const updateOnlineUserCount = (onlineUsers) => {
   document.getElementById('online-num').innerHTML = onlineUsers.length;

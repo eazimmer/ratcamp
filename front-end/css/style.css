@@ -7,6 +7,7 @@
     --clr-grey: #666666;
     --clr-light: #ffffff;
     --clr-accent: #448ee5;
+    --clr-gold: #C4A427;
     --fs-body: 1.15rem;
     --fs-h1: 2.5rem;
     --fs-h2: 1.5rem;
@@ -185,6 +186,18 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.trivia-message {
+    display: inline-block;
+    padding: 8px;
+    border-radius: 8px;
+    max-width: 75%;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+    background-color: var(--clr-gold);
 }
 
 #hamburger-toggle {
