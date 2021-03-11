@@ -220,7 +220,8 @@ function handleTrivia(msgData) {
           }
           for (i = 0; i < jsonStuff.results.length; i++) {
             questions[i] = {};
-            questions[i]['code'] = 'q' + i
+            questions[i]['code'] = 'q' + i;
+            questions[i]['questionNum'] = i;
             questions[i]['question'] = jsonStuff.results[i].question;
             questions[i]['answers'] = jsonStuff.results[i].incorrect_answers;
             questions[i]['correct_index'] = Math.floor(Math.random() * 4);
@@ -232,7 +233,7 @@ function handleTrivia(msgData) {
           console.log(questions);
           console.log(questions[0]);
 
-          io.emit('trivia-update', {code: 'start'});
+          io.emit('trivia-update', {code: 'start', name: msgData.name});
           await new Promise(resolve => setTimeout(resolve, 5000));
 
           for (i = 0; i < questions.length; i++) {
@@ -266,13 +267,14 @@ io.on('connection', socket => {
   socket.on('trivia', data => {
     let pointdata = JSON.parse(data);  // { name : username, points: points };
 
-    if (leaderboard[pointdata['name']]){
+    if (leaderboard[pointdata['name']]) {
       leaderboard[pointdata['name']] += pointdata['points'];
 
-    }
-    else {
+    } else {
       leaderboard[pointdata['name']] = pointdata['points'];
     }
+
+    io.emit('update-leaderboard', leaderboard);
   });
 
 
