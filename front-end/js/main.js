@@ -1,15 +1,10 @@
 const socket = io();
 var urlParams = new URLSearchParams(window.location.search);
 
-const setUsername = (name) => {
-  document.getElementById('username-header').innerHTML = name;
-  // socket.emit('login-name', name);
-}
-
-function signup() {
-  var email = document.getElementById("email-input").value
-  var name = document.getElementById("name-input").value
-  var password = document.getElementById("password-input").value
+const signup = () => {
+  const email = document.getElementById("email-input").value;
+  const name = document.getElementById("name-input").value;
+  const password = document.getElementById("password-input").value;
 
   var credentials_object = {
     "email" : email,
@@ -21,9 +16,9 @@ function signup() {
   socket.emit('attempt-signup', credentials_object);
 }
 
-function login() {
-  var name = document.getElementById("name-input").value
-  var password = document.getElementById("password-input").value
+const login = () => {
+  const name = document.getElementById("name-input").value
+  const password = document.getElementById("password-input").value
 
   var credentials_object = {
     "name" : name,
@@ -32,6 +27,11 @@ function login() {
 
   credentials_object["password"] = encrypt_and_decrypt(credentials_object["password"], true)
   socket.emit('attempt-login', credentials_object);
+}
+
+const setUsername = (name) => {
+  document.getElementById('username-header').innerHTML = name;
+  // socket.emit('login-name', name);
 }
 
 $(document).ready(function() {
