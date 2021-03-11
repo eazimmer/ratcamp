@@ -38,6 +38,7 @@ html {
 }
 
 .header {
+    align-content: left;
     height: 12vh;
     font-size: 28px;
     text-shadow: 0 1px #bbbbbb;
@@ -50,13 +51,6 @@ html {
     z-index: 3;
 }
 
-.footer {
-    height: 5vh;
-    font-size: 16px;
-    margin-bottom: 8px;
-    border-radius: 0 0 5px 5px;
-}
-
 .form {
   display: flex;
   flex-direction: column;
@@ -64,20 +58,6 @@ html {
   align-items: center;
   z-index: 4;
 }
-
-/* #input-label {
-    padding: 4px;
-    font-size: 12px;
-    font-family: Arial, Helvetica, sans-serif;
-    color:#ffffffce;
-    margin: 10px 5px 5px 10px;
-    border-bottom: 2px solid #000000;
-    border-right: 1px solid #000000;
-    border-top: 1px solid #00000081;
-    border-left: 1px solid #00000081;
-    background-color: #9b9b9b50;
-    border-radius: 0.3em 0.3em 0.3em 0.3em;
-} */
 
 #user-input {
     font-size: 40px;
@@ -101,7 +81,7 @@ html {
 #user-input:active {
   transition-duration: 0s;
   background-color: #58565fb7;
-  box-shadow: 2px 2px #666;
+  box-shadow: 2px 2px #252525;
 }
 
 /* gets rid of weird white box around input */
@@ -134,7 +114,15 @@ html {
   box-shadow: 2px 2px #666;
   transform: translateY(2px);
 }
- 
+
+.footer {
+    height: 5vh;
+    font-size: 16px;
+    margin-bottom: 8px;
+    border-radius: 0 0 5px 5px;
+}
+
+/* Adds styling to placeholders */
 ::-webkit-input-placeholder {
   color: #ccc;
   font-size: 32px;
