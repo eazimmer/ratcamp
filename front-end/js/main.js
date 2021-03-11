@@ -50,33 +50,11 @@ $(document).ready(function() {
 
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
-    if (data.msg != "!trivia") {
-      outputMessage(data.name, data.msg);
-
-      // scroll to bottom of messages
-      $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
-    }
-    else {
-      outputStartNotification(data.name);
-
-      // scroll to bottom of messages
-      $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
-
-      var timeLeft = 10;
-      var startTimer = setInterval(function() {
-        if(timeLeft <= 0){
-          $("#messages .start-countdown").last().val("");
-          clearInterval(startTimer);
-        }
-
-        $("#messages .start-countdown").last().val(timeLeft);
-        timeLeft -= 1;
-      }, 1000);
-    }
+    outputMessage(data.name, data.msg);
+    
+    // scroll to bottom of messages
+    $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
   });
-
-
-
 
   // when a user sends "!trivia"
   socket.on('triviastart', msg => {
@@ -86,20 +64,18 @@ $(document).ready(function() {
     // scroll to bottom of messages
     $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
 
-    var timeLeft = 10;
-    var startTimer = setInterval(function() {
+    // countdown timer
+    var timeLeft = 9;
+    var startTimer = setInterval(() => {
       if(timeLeft <= 0){
-        $("#messages .start-countdown").last().val("");
+        $(".trivia-message")[$(".trivia-message").length-1].remove();
         clearInterval(startTimer);
       }
 
-      $("#messages .start-countdown").last().val(timeLeft);
+      $(".start-countdown")[$(".start-countdown").length-1].textContent = timeLeft;
       timeLeft -= 1;
     }, 1000);
   });
-
-
-
 
   socket.on('updateonlineusers', msg => {
     if ( document.URL.includes("messageBoard.html") ) {
@@ -197,17 +173,28 @@ const outputMessage = (name, message) => {
 
 const outputStartNotification = (name) => {
   const ul = document.getElementById('message-list');
+
+  // message 1
   let div = document.createElement('div');
   let li = document.createElement('li');
-  let span = document.createElement('span');
   div.setAttribute('class', 'message-block');
   li.setAttribute('class', 'trivia-message');
-  span.setAttribute('class', 'start-countdown');
-  span.appendChild(document.createTextNode("10"));
-  li.appendChild(document.createTextNode(name + "'s game of trivia starts in... "));
-  li.appendChild(span);
+  li.appendChild(document.createTextNode(name + " started a game of trivia"));
   div.appendChild(li);
   ul.appendChild(div);
+
+  // message 2
+  let div2 = document.createElement('div');
+  let li2 = document.createElement('li');
+  let span = document.createElement('span');
+  div2.setAttribute('class', 'message-block');
+  li2.setAttribute('class', 'trivia-message');
+  span.setAttribute('class', 'start-countdown');
+  span.appendChild(document.createTextNode("10"));
+  li2.appendChild(document.createTextNode("Starting in... "));
+  li2.appendChild(span);
+  div2.appendChild(li2);
+  ul.appendChild(div2);
 }
 
 const updateOnlineUserCount = (onlineUsers) => {
