@@ -20,9 +20,15 @@ let triviaRunning = false;
 
 // Stored data
 
-let messages = []; // Objects representing messages containing "id", "msg", and "name"
-let users_to_message_ids = {}; // Mapping of users to their respective message id counts
-let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
+let messages = [];  // Objects representing messages
+                    // containing "id", "msg", and "name"
+
+let users_to_message_ids = {};  // Mapping of users to their
+                                // respective message id counts
+
+let sockets_to_names = [];  // List of maps of socket ids
+                            // to usernames: "id", and "name" keys
+
 
 let verified_logins = []
 
@@ -86,9 +92,9 @@ function broadcastMessage(data_object) {
 function broadcastChangeInOnlineUsers() {
   let validated_users = []
 
-  // Pull currently online users out of map of socket ids to usernames
-  for (var i in sockets_to_names) {
-    validated_users.push(sockets_to_names[i]["name"])
+      // Pull currently online users out of map of socket ids to usernames
+      for (var i in sockets_to_names) {
+    validated_users.push(sockets_to_names[i]['name'])
   }
 
   // Broadcast new list of online users to all clients
@@ -291,7 +297,7 @@ io.on('connection', socket => {
   socket.on('already-online-check', name => {
     let found = false
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["name"] === name) {
+      if (sockets_to_names[i]['name'] === name) {
         found = true
         break
       }
@@ -330,7 +336,7 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["id"] === socket.id) {
+      if (sockets_to_names[i]['id'] === socket.id) {
         sockets_to_names.splice(i, 1)
       }
     }
