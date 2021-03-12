@@ -40,7 +40,8 @@ html {
 
 .header {
   align-content: left;
-  min-height: 12vh;
+  height: 12vh;
+  max-height: 15vh;
   font-size: 28px;
   text-shadow: 2px 2px #363636;
   margin-top: 8px;
@@ -49,6 +50,7 @@ html {
 
 .login-box {
   min-height: 20vh;
+  max-height: 60vh;
   z-index: 3;
 }
 
@@ -154,6 +156,7 @@ html {
 
 .footer {
   min-height: 5vh;
+  max-height: 8vh;
   font-size: 16px;
   margin-bottom: 8px;
   border-radius: 0 0 5px 5px;
