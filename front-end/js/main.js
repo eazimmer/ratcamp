@@ -22,7 +22,7 @@ function signup() {
 }
 
 function login() {
-  var name = document.getElementById("username-input").value
+  var name = document.getElementById("name-input").value
   var password = document.getElementById("password-input").value
 
   var credentials_object = {
