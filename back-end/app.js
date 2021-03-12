@@ -20,13 +20,10 @@ let triviaRunning = false;
 let leaderboard = {}
 
 // Stored data
-let messages =
-    [];  // Objects representing messages containing "id", "msg", and "name"
-let users_to_message_ids =
-    {};  // Mapping of users to their respective message id counts
-let sockets_to_names =
-    [];  // List of maps of socket ids to usernames: "id", and "name" keys
-let verified_logins = ["Cameron"]
+let messages = []; // Objects representing messages containing "id", "msg", and "name"
+let users_to_message_ids = {}; // Mapping of users to their respective message id counts
+let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
+let verified_logins = []
 
 // Use Node.js body parsing middleware to help access message contents
 app.use(bodyParser.json());
@@ -87,9 +84,9 @@ function broadcastMessage(data_object) {
 function broadcastChangeInOnlineUsers() {
   let validated_users = []
 
-      // Pull currently online users out of map of socket ids to usernames
-      for (var i in sockets_to_names) {
-    validated_users.push(sockets_to_names[i]['name'])
+  // Pull currently online users out of map of socket ids to usernames
+  for (var i in sockets_to_names) {
+    validated_users.push(sockets_to_names[i]["name"])
   }
 
   // Broadcast new list of online users to all clients
@@ -273,7 +270,7 @@ io.on('connection', socket => {
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
     var socket_id = socket.id.toString();
-
+    
     sockets_to_names.push({'id': socket_id, 'name': name});
 
     broadcastChangeInOnlineUsers();  // Update clients with new online user list

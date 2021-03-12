@@ -5,20 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Normalize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+        crossorigin="anonymous" />
+    
     <title>RatCamp</title>
+    <!-- Create and call the js file here and also create a CSS file to style the welcome page. -->
+    <link rel="stylesheet" type="text/css" href="../css/login.css">
+    <link rel="icon" href="../Other/RC.png">
 </head>
 <body>
-    <div class="containter">
-        <div class="login-box">
-            <h1>RatCamp Chat Room</h1>
-            <label id="input-label">Login:</label><br>
-            <input id="name-input" name="name" placeholder="Name"><br>
-            <input id="password-input" name="password" placeholder="Password"><br>
-            <button id="submit-button" type="button" onclick="login()">Submit</button><br>
+    <div class="screen">
+        <div class="flex-container">
+            <div class="flex header">
+                <h1>Login</h1>
+            </div>
+            <div class="flex login-box">
+                <div class="form">
+                    <input id="name-input" class="user-input" type="text" name="name" placeholder="Enter Username"><br>
+                    <input id="password-input" class="user-input" type="password" name="password" placeholder="Enter Password"><br><br>
+                    <div class="buttons">
+                        <button class="submit-button" onclick="login()">Submit</button>
+                        <a href="../.." class="back-button">&nbsp&nbspBack&nbsp&nbsp</a>
+                    </div>
+                    <span id="result"></span>
+                </div>
+            </div>
+            <div class="flex footer">
+                <p>© 2021 RatCamp LLC. All Rights Reserved</p>
+            </div>
         </div>
     </div>
-    <span id="result"></span>
-    <script src="/socket.io/socket.io.js"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="../js/main.js"></script></body>
+    <script src="../js/main.js"></script>
+</body>
 </html>
+
+<!-- Make sure I create a branch first before pushing so I do not create any conflicts -->

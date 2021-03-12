@@ -28,7 +28,6 @@ const router = app => {
 
     // Serve clients varying file based on endpoint
     app.get('/front-end/*', (req, res) => {
-        console.log(req.originalUrl);
         res.sendFile(__dirname + req.originalUrl);
     });
 }
