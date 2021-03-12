@@ -1,0 +1,186 @@
+html {
+  font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+  color: #dadada;
+  background: radial-gradient(circle at center,#eeeeee, #a07dff, #6d38ff, #4d2fa1, #3f3f3f);
+  height: 100%;
+}
+
+.screen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+}
+
+.flex-container {
+  min-height: 82vh;
+  max-height: 90vh;
+  min-width: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  background: #00000062;
+  border-radius: 6px;
+}
+
+.flex {
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 90vh;
+  margin: 2px;
+  border: 3px solid #c5c5c5b2;
+  background-color: #5c5c5c7c;
+  box-shadow: 4px 4px #363636;
+  z-index: 2;
+}
+
+.header {
+  align-content: left;
+  min-height: 12vh;
+  max-height: 15vh;
+  font-size: 28px;
+  text-shadow: 2px 2px #363636;
+  margin-top: 8px;
+  border-radius: 5px 5px 0 0;
+}
+
+.sign-up-box {
+  min-height: 20vh;
+  max-height: 80vh;
+  z-index: 3;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  z-index: 4;
+}
+
+.input-label {
+  margin: 0 100px 0 0;
+  padding: 5px;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#ffffff;
+  border-bottom: 2px solid #000000;
+  border-right: 1px solid #000000;;
+  background-color: #a8a8a8a2;
+  border-radius: 0.3em 0.3em 0.3em 0.3em;
+    
+}
+
+.user-input {
+  font-size: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 55px;
+  width: 75%;
+  margin: 8px;
+  border-color:#000000;
+  color: #ececec;
+  background-color: #9b9b9b50;
+  border-radius: 0.45em 0.45em 0.45em 0.45em;
+  z-index: 5;
+}  
+
+.user-input:hover {
+  box-shadow: 1.3px 1.3px 1.3px 1.3px #413d4e9f;
+  background-color: #58565fb7;
+}
+
+.user-input:active {
+  transition-duration: 0s;
+  background-color: #58565fb7;
+  box-shadow: 2px 2px #252525;
+}
+
+/* gets rid of weird white box around input */
+*:focus {
+    outline: none;
+}
+
+.buttons {
+  flex-direction: row;
+  width: 90%;
+  height: 60px;
+  margin-left: 50%;
+}
+
+.submit-button {
+  height: 52.5px;
+  width: 35%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 25px;
+  border-color:#000000;
+  background-color:#00000081;
+  color: #f0f0f0;
+  border-radius: 1.5em 1.5em 1.5em 1.5em;
+  text-shadow: 2px 2px #363636;
+  box-shadow: 2px 2px #363636;
+  z-index: 5;
+}  
+
+.submit-button:hover {
+  background-color:#402d5f;
+  color:#E0E1DD;
+  cursor: pointer;
+  box-shadow: 2px 2px #363636;
+}
+
+.submit-button:active {
+  transition-duration: 0s;
+  background-color: #4b4177;
+  box-shadow: 2px 2px #666;
+  transform: translateY(2px);
+}
+
+.back-button {
+  cursor: pointer;
+  text-decoration-line: none;
+  color: #ffffff;
+  background-color: #00000081;
+  font-size: 25px;
+  height: 200px;
+  width: 35%;
+  border-radius: 1.5em 1.5em 1.5em 1.5em;
+  box-shadow: 2px 2px #363636;
+  text-shadow: 2px 2px #363636;
+}
+
+.back-button:hover {
+  background-color:#402d5f;
+  color:#E0E1DD;
+  cursor: pointer;
+  box-shadow: 2px 2px #363636;
+}
+
+.back-button:active {
+  transition-duration: 0s;
+  background-color: #4b4177;
+  box-shadow: 2px 2px #666;
+  transform: translateX(2px);
+}
+
+.footer {
+  min-height: 5vh;
+  max-height: 8vh;
+  font-size: 16px;
+  margin-bottom: 8px;
+  border-radius: 0 0 5px 5px;
+  text-shadow: 2px 2px #363636;
+}
+
+/* Adds styling to placeholders */
+::-webkit-input-placeholder {
+  color: #ccc;
+  font-size: 32px;
+  padding: 10px 10px;
+  align-items: center;
+  text-shadow: 2px 2px #363636;
+}

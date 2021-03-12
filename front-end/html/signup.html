@@ -5,20 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- Normalize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+    crossorigin="anonymous" />
+
     <title>RatCamp</title>
+    <link rel="stylesheet" type="text/css" href="../css/signup.css">
+    <link rel="icon" href="../Other/RC.png">
 </head>
 <body>
-    <div class="containter">
-        <div class="login-box">
-            <h1>RatCamp Chat Room</h1>
-            <label id="input-label">Please Enter Your Account Credentials:</label><br>
-            <input id="email-input" name="email" placeholder="Email"><br>
-            <input id="name-input" name="name" placeholder="Name"><br>
-            <input id="password-input" name="password" placeholder="Password"><br>
-            <button id="submit-button" type="button" onclick="signup()">Submit</button><br>
+    <div class="screen">
+        <div class="flex-container">
+            <div class="flex header">
+                <h1>RatCamp Sign-Up</h1>
+            </div>
+            <div class="flex sign-up-box">
+                <input class="user-input" id="email-input" name="email" placeholder="Email"><br>
+                <input class="user-input" id="name-input" name="name" placeholder="Name"><br>
+                <input class="user-input" id="password-input" name="password" type="password" placeholder="Password"><br>
+                <div class="buttons">
+                    <button class="submit-button" onclick="signup()">Submit</button>
+                    <a href="../.." class="back-button">&nbsp&nbspBack&nbsp&nbsp</a>
+                </div>
+                <span id="result"></span>
+            </div>
+            <div class="flex footer">
+                <p>© 2021 RatCamp LLC. All Rights Reserved</p>
+            </div>
         </div>
     </div>
-    <span id="result"></span>
+    
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="../js/main.js"></script></body>
