@@ -269,15 +269,14 @@ io.on('connection', socket => {
     if (data.msg === '!trivia') {
       handleTrivia(data);
     } else {
-      registerMessage(data.name, data.msg, false);
+      if (data.recipient) {  // Private
+        registerMessage(data.name, data.msg, true, data.recipient);
+      } else {  // Public
+        registerMessage(data.name, data.msg, false);
+      }
     }
   });
 
-  // Endpoint handling incoming private message
-  socket.on('chat-private', message => {
-    let data = JSON.parse(message);
-    registerMessage(data.name, data.msg, true, data.recipient);
-  });
 
   socket.on('trivia', data => {
     let pointdata = JSON.parse(data);  // { name : username, points: points };
