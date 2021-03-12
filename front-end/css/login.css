@@ -27,6 +27,7 @@ html {
 }
 
 .flex {
+  display: flex;
   justify-content: center;
   align-items: center;
   min-width: 95%;
@@ -39,7 +40,7 @@ html {
 }
 
 .header {
-  align-content: left;
+  align-content: center;
   height: 12vh;
   max-height: 15vh;
   font-size: 28px;
@@ -76,12 +77,12 @@ html {
   z-index: 5;
 }  
 
-#user-input:hover {
+.user-input:hover {
   box-shadow: 1.3px 1.3px 1.3px 1.3px #413d4e9f;
   background-color: #58565fb7;
 }
 
-#user-input:active {
+.user-input:active {
   transition-duration: 0s;
   background-color: #58565fb7;
   box-shadow: 2px 2px #252525;
