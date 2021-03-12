@@ -16,7 +16,7 @@ html {
 .flex-container {
   min-height: 82vh;
   max-height: 90vh;
-  min-width: 75vh;
+  min-width: 40vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,7 +43,7 @@ html {
   align-content: left;
   min-height: 12vh;
   max-height: 15vh;
-  font-size: 28px;
+  font-size: 2vw;
   text-shadow: 2px 2px #363636;
   margin-top: 8px;
   border-radius: 5px 5px 0 0;
@@ -66,7 +66,7 @@ html {
 .input-label {
   margin: 0 100px 0 0;
   padding: 5px;
-  font-size: 20px;
+  font-size: 2vw;
   font-family: Arial, Helvetica, sans-serif;
   color:#ffffff;
   border-bottom: 2px solid #000000;
@@ -77,7 +77,7 @@ html {
 }
 
 .user-input {
-  font-size: 40px;
+  font-size: 2vw;
   padding-left: 10px;
   padding-right: 10px;
   height: 55px;
@@ -117,7 +117,7 @@ html {
   height: 52.5px;
   width: 35%;
   font-family: 'Roboto', sans-serif;
-  font-size: 25px;
+  font-size: 1.7vw;
   border-color:#000000;
   background-color:#00000081;
   color: #f0f0f0;
@@ -146,7 +146,7 @@ html {
   text-decoration-line: none;
   color: #ffffff;
   background-color: #00000081;
-  font-size: 25px;
+  font-size: 1.6vw;
   height: 200px;
   width: 35%;
   border-radius: 1.5em 1.5em 1.5em 1.5em;
@@ -171,7 +171,7 @@ html {
 .footer {
   min-height: 5vh;
   max-height: 8vh;
-  font-size: 16px;
+  font-size: 1.5vw;
   margin-bottom: 8px;
   border-radius: 0 0 5px 5px;
   text-shadow: 2px 2px #363636;
@@ -180,7 +180,7 @@ html {
 /* Adds styling to placeholders */
 ::-webkit-input-placeholder {
   color: #ccc;
-  font-size: 32px;
+  font-size: 2vw;
   padding: 10px 10px;
   align-items: center;
   text-shadow: 2px 2px #363636;
