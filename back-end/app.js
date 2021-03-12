@@ -20,7 +20,6 @@ let triviaRunning = false;
 let leaderboard = {}
 
 // Stored data
-let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
 let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
 let verified_logins = []
@@ -49,7 +48,7 @@ const io = require('socket.io')(server);
 
 
 // Handle messages received by server
-function registerMessage(user, msg) {
+function registerMessage(user, msg, private_message, recipient="") {
   // Begin tracking new user and their respective message ids
   if (!(user in users_to_message_ids)) {
     users_to_message_ids[user] = {};
@@ -66,11 +65,31 @@ function registerMessage(user, msg) {
     name: user
   };
 
-  // Update list of messages
-  messages.push(data);
+  // Public message
+  if (!private_message) {
+    // Broadcast message to clients
+    broadcastMessage(data);
 
-  // Broadcast message to clients
-  broadcastMessage(data);
+  } else { // Private message
+    data["recipient"] = recipient
+    let socket_id = ""
+
+    // Grab target socket
+    for (var i in sockets_to_names) {
+      if (sockets_to_names[i]["name"] === recipient) {
+        socket_id = sockets_to_names[i]["id"]
+        break
+      }
+    }
+
+    // If no recipient identified, cancel request
+    if (socket_id === "") {
+      console.log("Recipient for private message could not be identified.")
+    } else { // Private message to target socket
+      console.log("Sending private message to ")
+      io.to(socket_id).emit("msgrecv", data)
+    }
+  }
 }
 
 
@@ -247,11 +266,17 @@ io.on('connection', socket => {
   socket.on('chat', message => {
     let data = JSON.parse(message);
 
-    if (data.msg == '!trivia') {
+    if (data.msg === '!trivia') {
       handleTrivia(data);
     } else {
-      registerMessage(data.name, data.msg);
+      registerMessage(data.name, data.msg, false);
     }
+  });
+
+  // Endpoint handling incoming private message
+  socket.on('chat-private', message => {
+    let data = JSON.parse(message);
+    registerMessage(data.name, data.msg, true, data.recipient);
   });
 
   socket.on('trivia', data => {
