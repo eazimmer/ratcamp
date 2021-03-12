@@ -26,7 +26,7 @@ let users_to_message_ids =
     {};  // Mapping of users to their respective message id counts
 let sockets_to_names =
     [];  // List of maps of socket ids to usernames: "id", and "name" keys
-let verified_logins = []
+let verified_logins = ["Cameron"]
 
 // Use Node.js body parsing middleware to help access message contents
 app.use(bodyParser.json());
@@ -235,6 +235,7 @@ function handleTrivia(msgData) {
             io.emit('trivia-update', questions[i]);
           }
           triviaRunning = false;
+          await new Promise(resolve => setTimeout(resolve, 10000));
           io.emit('trivia-update', {code: 'end', leaderboard: leaderboard});
         });
       });
