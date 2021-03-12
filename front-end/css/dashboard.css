@@ -30,7 +30,7 @@ html {
     justify-content: center;
     align-items: center;
     width: 95%;
-    height: 90%;
+    height: 90vh;
     margin: 2px;
     border: 3px solid #c5c5c5b2;
     background-color: #5c5c5c7c;
@@ -40,7 +40,7 @@ html {
 
 .header {
     align-content: left;
-    height: 22vh;
+    min-height: 12vh;
     font-size: 28px;
     text-shadow: 2px 2px #363636;
     margin-top: 8px;
@@ -48,7 +48,7 @@ html {
 }
 
 .options {
-    height: 25vh;
+    min-height: 25vh;
     display: flex;
     flex-direction: row;
     z-index: 3;
