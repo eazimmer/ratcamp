@@ -17,6 +17,7 @@ const uri =
 const TIME_BETWWEN_QUESTIONS = 20000;
 let triviaRunning = false;
 
+let leaderboard = {}
 
 // Stored data
 let messages =
@@ -234,7 +235,7 @@ function handleTrivia(msgData) {
             io.emit('trivia-update', questions[i]);
           }
           triviaRunning = false;
-          io.emit('trivia-update', {code: 'end'});
+          io.emit('trivia-update', {code: 'end', leaderboard: leaderboard});
         });
       });
 
@@ -255,6 +256,18 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('trivia', data => {
+    let pointdata = JSON.parse(data);  // { name : username, points: points };
+
+    if (leaderboard[pointdata['name']]) {
+      leaderboard[pointdata['name']] += pointdata['points'];
+
+    } else {
+      leaderboard[pointdata['name']] = pointdata['points'];
+    }
+
+    io.emit('update-leaderboard', leaderboard);
+  });
 
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
