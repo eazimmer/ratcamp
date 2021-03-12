@@ -15,10 +15,18 @@
     <link rel="icon" href="../Other/RC.png">
 </head>
 <body>
-    <div class="containter">
-        <div>
-            <a href="./front-end/html/login.html">Login</a><br>
-            <a href="./front-end/html/signup.html">Sign Up</a><br>
+    <div class="screen">
+        <div class="flex-container">
+            <div class="flex header">
+                <h1>Welcome to RatCamp</h1>
+            </div>
+            <div class="flex options">
+                <button class="button" onclick="window.location.href='./login.html'">Login</button><br>
+                <button class="button" onclick="window.location.href='./signup.html'">Sign Up</button><br>
+            </div>
+            <div class="flex footer">
+                <p>© 2021 RatCamp LLC. All Rights Reserved</p>
+            </div>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
