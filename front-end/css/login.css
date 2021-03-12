@@ -6,50 +6,50 @@ html {
 }
 
 .screen {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: -1;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
 }
 
 .flex-container {
-    height: 82vh;
-    min-width: 75vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    background: #00000062;
-    border-radius: 6px;
+  height: 82vh;
+  min-width: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  background: #00000062;
+  border-radius: 6px;
 }
 
 .flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 95%;
-    height: 90%;
-    margin: 2px;
-    border: 3px solid #c5c5c5b2;
-    background-color: #5c5c5c7c;
-    box-shadow: 4px 4px #363636;
-    z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 95%;
+  height: 90vh;
+  margin: 2px;
+  border: 3px solid #c5c5c5b2;
+  background-color: #5c5c5c7c;
+  box-shadow: 4px 4px #363636;
+  z-index: 2;
 }
 
 .header {
-    align-content: left;
-    height: 12vh;
-    font-size: 28px;
-    text-shadow: 2px 2px #363636;
-    margin-top: 8px;
-    border-radius: 5px 5px 0 0;
+  align-content: left;
+  min-height: 12vh;
+  font-size: 28px;
+  text-shadow: 2px 2px #363636;
+  margin-top: 8px;
+  border-radius: 5px 5px 0 0;
 }
 
 .login-box {
-    min-height: 20vh;
-    z-index: 3;
+  min-height: 20vh;
+  z-index: 3;
 }
 
 .form {
@@ -61,17 +61,17 @@ html {
 }
 
 #user-input {
-    font-size: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
-    height: 55px;
-    width: 75%;
-    margin: 8px;
-    border-color:#000000;
-    color: #ececec;
-    background-color: #9b9b9b50;
-    border-radius: 0.45em 0.45em 0.45em 0.45em;
-    z-index: 5;
+  font-size: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 55px;
+  width: 75%;
+  margin: 8px;
+  border-color:#000000;
+  color: #ececec;
+  background-color: #9b9b9b50;
+  border-radius: 0.45em 0.45em 0.45em 0.45em;
+  z-index: 5;
 }  
 
 #user-input:hover {
@@ -87,7 +87,7 @@ html {
 
 /* gets rid of weird white box around input */
 *:focus {
-    outline: none;
+  outline: none;
 }
 
 .buttons {
@@ -98,17 +98,17 @@ html {
 }
 
 .submit-button {
-    height: 52.5px;
-    width: 35%;
-    font-family: 'Roboto', sans-serif;
-    font-size: 25px;
-    border-color:#000000;
-    background-color:#00000081;
-    color: #f0f0f0;
-    border-radius: 1.5em 1.5em 1.5em 1.5em;
-    text-shadow: 2px 2px #363636;
-    box-shadow: 2px 2px #363636;
-    z-index: 5;
+  height: 52.5px;
+  width: 35%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 25px;
+  border-color:#000000;
+  background-color:#00000081;
+  color: #f0f0f0;
+  border-radius: 1.5em 1.5em 1.5em 1.5em;
+  text-shadow: 2px 2px #363636;
+  box-shadow: 2px 2px #363636;
+  z-index: 5;
 }  
 
 .submit-button:hover {
@@ -153,11 +153,11 @@ html {
 }
 
 .footer {
-    height: 5vh;
-    font-size: 16px;
-    margin-bottom: 8px;
-    border-radius: 0 0 5px 5px;
-    text-shadow: 2px 2px #363636;
+  min-height: 5vh;
+  font-size: 16px;
+  margin-bottom: 8px;
+  border-radius: 0 0 5px 5px;
+  text-shadow: 2px 2px #363636;
 }
 
 /* Adds styling to placeholders */
