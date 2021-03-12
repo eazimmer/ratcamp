@@ -52,8 +52,6 @@ html {
 .options {
   min-height: 25vh;
   max-height: 60vh;
-  display: flex;
-  flex-direction: row;
   z-index: 3;
 }
 
@@ -74,14 +72,14 @@ html {
   z-index: 5;
 }  
 
-.button:hover {
+.option-button:hover {
   background-color:#402d5f;
   color:#E0E1DD;
   cursor: pointer;
   box-shadow: 2px 2px #363636;
 }
 
-.button:active {
+.option-button:active {
   transition-duration: 0s;
   background-color: #4b4177;
   box-shadow: 2px 2px #666;
