@@ -7,10 +7,11 @@
     --clr-grey: #666666;
     --clr-light: #ffffff;
     --clr-accent: #448ee5;
+    --clr-gold: #aca063;
     --fs-body: 1.15rem;
     --fs-h1: 2.5rem;
     --fs-h2: 1.5rem;
-    --fs-h3: 1.15rem;
+    --fs-h3: 1.25rem;
 }
 
 * {
@@ -187,6 +188,110 @@ body {
     text-overflow: ellipsis;
 }
 
+.trivia-message {
+    display: inline-block;
+    padding: 8px;
+    border-radius: 8px;
+    max-width: 75%;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+    background-color: var(--clr-gold);
+}
+
+
+
+
+
+.trivia-question {
+    display: inline-block;
+    padding: 8px;
+    padding-bottom: 12px;
+    border-radius: 8px;
+    max-width: 75%;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+    background-color: var(--clr-gold);
+}
+
+.trivia-question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--clr-light);
+}
+
+.trivia-question-header h2 {
+    font-size: var(--fs-h2);
+}
+
+.trivia-question-header h3 {
+    font-size: var(--fs-h3);
+}
+
+.trivia-question-txt {
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-bold);
+    margin-top: 8px;
+}
+
+.trivia-answer {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    margin-top: 12px;
+}
+
+.trivia-answer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33px;
+    height: 33px;
+    margin: 0 8px;
+    color: var(--clr-light);
+    border: 2px solid var(--clr-light);
+    border-radius: 50%;
+    background: transparent;
+    outline: none;
+    transition: 400ms;
+}
+
+.trivia-answer:hover {
+    cursor: pointer;
+}
+
+.trivia-answer:hover .trivia-answer-btn {
+    color: var(--clr-gold);
+    background-color: var(--clr-light);
+    cursor: pointer;
+}
+
+.under-anim:hover, .under-anim:hover:after,
+.trivia-answer:hover .under-anim, .trivia-answer:hover .under-anim:after {
+    right: 0;
+    cursor: pointer;
+}
+
+.under-anim {
+    position: relative;
+}
+
+.under-anim:after {
+    content: "";
+    position: absolute;
+    right: 100%;
+    bottom: .01rem;
+    left: 0;
+    border-radius: 1rem;
+    transition: right 400ms cubic-bezier(0, .5, 0, 1);
+    border-top: .125rem solid var(--clr-light);
+}
+
 #hamburger-toggle {
     display: none;
 }
@@ -282,5 +387,12 @@ body {
 
     .hamburger-open #hamburger::after {
         opacity: 0;
+    }
+}
+
+@media (max-width: 450px) {
+    .trivia-question-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
