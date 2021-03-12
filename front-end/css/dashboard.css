@@ -57,7 +57,7 @@ html {
   z-index: 3;
 }
 
-.button {
+.option-button {
   cursor: pointer;
   height: 52.5px;
   width: 35%;
