@@ -10,15 +10,20 @@ const port = process.env.PORT || 3002;
 const host = '0.0.0.0';
 const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority";
+const {get} = require('http');
+const https = require('https');
+const uri =
+    'mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority';
+const TIME_BETWWEN_QUESTIONS = 20000;
+let triviaRunning = false;
 
+let leaderboard = {}
 
 // Stored data
 let messages = []; // Objects representing messages containing "id", "msg", and "name"
 let users_to_message_ids = {}; // Mapping of users to their respective message id counts
 let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
 let verified_logins = []
-
 
 // Use Node.js body parsing middleware to help access message contents
 app.use(bodyParser.json());
@@ -27,8 +32,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-service(app); // Link endpoints page
-app.use(express.static(path.join(__dirname + '/front-end'))); // Establish working directory in filesystem
+service(app);  // Link endpoints page
+app.use(express.static(path.join(
+    __dirname + '/front-end')));  // Establish working directory in filesystem
 
 
 // Start the server
@@ -44,11 +50,10 @@ const io = require('socket.io')(server);
 
 // Handle messages received by server
 function registerMessage(user, msg) {
-
   // Begin tracking new user and their respective message ids
   if (!(user in users_to_message_ids)) {
     users_to_message_ids[user] = {};
-    users_to_message_ids[user]['nextmsgid']= 0;
+    users_to_message_ids[user]['nextmsgid'] = 0;
   }
 
   // Increment user's message id count
@@ -90,10 +95,9 @@ function broadcastChangeInOnlineUsers() {
 
 
 // Handles database requests
-async function menu(operation, db_name = "", credentials_object = "") {
-
+async function menu(operation, db_name = '', credentials_object = '') {
   // Initialize client object for this request
-  const client = new MongoClient(uri, { useUnifiedTopology: true });
+  const client = new MongoClient(uri, {useUnifiedTopology: true});
   let result = false
 
   // Execute designated functionality
@@ -102,35 +106,41 @@ async function menu(operation, db_name = "", credentials_object = "") {
     await client.connect();
 
     switch (operation) {
-      case "store": { // Creates a new database storing user login credentials
+      case 'store': {  // Cr>eates a new database storing user login credentials
         result = await store_credentials(client, db_name, credentials_object)
         break;
       }
-      case "query": {  // Queries to check whether credentials are valid
-        result = await check_credentials(client, db_name, credentials_object, "login")
+      case 'query': {  // Queries to check whether credentials are valid
+        result = await check_credentials(
+            client, db_name, credentials_object, 'login')
         break;
       }
     }
 
   } catch (e) {
-    console.error(e); // Handle potential errors
+    console.error(e);  // Handle potential errors
   } finally {
-    await client.close(); // Close database connection
+    await client.close();  // Close database connection
     return result
   }
 }
 
 
-// Create a new database, with a "creds" collection storing a document of user login credentials
+// Create a new database, with a "creds" collection storing a document of user
+// login credentials
 async function store_credentials(client, db_name, credentials_object) {
   try {
-    if (await check_credentials(client, db_name, credentials_object, "signup")) { // Abort request if these creds already exist
+    if (await check_credentials(
+            client, db_name, credentials_object,
+            'signup')) {  // Abort request if these creds already exist
       return false
-    } else { // Proceed to store credentials if they are not already in database
-      await client.db(db_name).collection("creds").insertOne(credentials_object);
+    } else {  // Proceed to store credentials if they are not already in
+              // database
+      await client.db(db_name).collection('creds').insertOne(
+          credentials_object);
       return true
     }
-  } catch (error) { // Error handling
+  } catch (error) {  // Error handling
     console.log(`ERROR: When storing credentials in database: ${error}`)
   }
 }
@@ -138,82 +148,161 @@ async function store_credentials(client, db_name, credentials_object) {
 
 // Check users database to see if provided credentials are valid
 async function check_credentials(client, db_name, credentials_object, action) {
-  if (action === "login") { // Checking whether login credentials are valid
+  if (action === 'login') {  // Checking whether login credentials are valid
     try {
-      let creds = await client.db(credentials_object["name"]).collection("creds").findOne({$and:[{"name" : credentials_object["name"]}, {"password" : credentials_object["password"]}]});
-      if (creds == null) { // No credentials identified
+      let creds = await client.db(credentials_object['name'])
+                      .collection('creds')
+                      .findOne({
+                        $and: [
+                          {'name': credentials_object['name']},
+                          {'password': credentials_object['password']}
+                        ]
+                      });
+      if (creds == null) {  // No credentials identified
         return false
-      } else { // Credentials identified, login
+      } else {  // Credentials identified, login
         return true
       }
-    } catch (error) { // Error handling
+    } catch (error) {  // Error handling
       console.log(`ERROR: When querying database: ${error}`)
       return false
     }
-  } else { // Checking whether username is available for signup
-      try {
-        let creds = await client.db(credentials_object["name"]).collection("creds").findOne({"name" : credentials_object["name"]});
-        if (creds == null) { // No credentials identified, signup will succeed
-          return false
-        } else { // Credentials identified, will fail
-          return true
-        }
-      } catch (error) { // Error handling
-        console.log(`ERROR: When querying database: ${error}`)
+  } else {  // Checking whether username is available for signup
+    try {
+      let creds = await client.db(credentials_object['name'])
+                      .collection('creds')
+                      .findOne({'name': credentials_object['name']});
+      if (creds == null) {  // No credentials identified, signup will succeed
         return false
+      } else {  // Credentials identified, will fail
+        return true
       }
+    } catch (error) {  // Error handling
+      console.log(`ERROR: When querying database: ${error}`)
+      return false
+    }
   }
 }
 
 
+function handleTrivia(msgData) {
+  if (triviaRunning) {
+    return false;
+  }
+  triviaRunning = true;
+  let questions = [];
+  const req = https.request(
+      {
+        hostname: 'opentdb.com',
+        port: 443,
+        path: '/api.php?amount=10&type=multiple',
+        method: 'GET'
+      },
+      res => {
+        if (res.statusCode != 200) {
+          return false;
+        }
+
+        res.on('data', async (d) => {
+          jsonStuff = JSON.parse(d.toString());
+          if (jsonStuff.response_code != 0) {
+            return false;
+          }
+          for (i = 0; i < jsonStuff.results.length; i++) {
+            questions[i] = {};
+            questions[i]['code'] = 'q' + i
+            questions[i]['question'] = jsonStuff.results[i].question;
+            questions[i]['answers'] = jsonStuff.results[i].incorrect_answers;
+            questions[i]['correct_index'] = Math.floor(Math.random() * 4);
+            questions[i]['answers'].splice(
+                questions[i]['correct_index'], 0,
+                jsonStuff.results[i].correct_answer);
+          }
+
+          console.log(questions);
+          console.log(questions[0]);
+
+          io.emit('trivia-update', {code: 'start', name: msgData.name});
+          await new Promise(resolve => setTimeout(resolve, 5000));
+
+          for (i = 0; i < questions.length; i++) {
+            await new Promise(
+                resolve => setTimeout(resolve, TIME_BETWWEN_QUESTIONS));
+            console.log(i);
+            io.emit('trivia-update', questions[i]);
+          }
+          triviaRunning = false;
+          await new Promise(resolve => setTimeout(resolve, 10000));
+          io.emit('trivia-update', {code: 'end', leaderboard: leaderboard});
+        });
+      });
+
+  req.on('error', error => {console.error(error)});
+  req.end();
+}
+
 // Socket connection event
 io.on('connection', socket => {
-
   // Endpoint handling incoming message
   socket.on('chat', message => {
     let data = JSON.parse(message);
-    registerMessage(data.name, data.msg);
+
+    if (data.msg == '!trivia') {
+      handleTrivia(data);
+    } else {
+      registerMessage(data.name, data.msg);
+    }
   });
 
+  socket.on('trivia', data => {
+    let pointdata = JSON.parse(data);  // { name : username, points: points };
+
+    if (leaderboard[pointdata['name']]) {
+      leaderboard[pointdata['name']] += pointdata['points'];
+
+    } else {
+      leaderboard[pointdata['name']] = pointdata['points'];
+    }
+
+    io.emit('update-leaderboard', leaderboard);
+  });
 
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
-    var socket_id = socket.id.toString()
+    var socket_id = socket.id.toString();
+    
+    sockets_to_names.push({'id': socket_id, 'name': name});
 
-    sockets_to_names.push({
-      "id" : socket_id,
-      "name" : name
-    })
-
-    broadcastChangeInOnlineUsers() // Update clients with new online user list
+    broadcastChangeInOnlineUsers();  // Update clients with new online user list
   });
 
 
   // Endpoint registering new signup attempt
   socket.on('attempt-signup', async credentials_object => {
-    if (await menu("store", credentials_object["name"], credentials_object)) {
-      socket.emit("signup-result", "Success")
+    if (await menu('store', credentials_object['name'], credentials_object)) {
+      socket.emit('signup-result', 'Success')
     } else {
-      socket.emit("signup-result", "Failed")
+      socket.emit('signup-result', 'Failed')
     }
   });
 
 
   // Endpoint registering new login attempt
   socket.on('attempt-login', async credentials_object => {
-    if (await menu("query", credentials_object["name"], credentials_object)) {
-      socket.emit("login-result", "Success")
+    if (await menu('query', credentials_object['name'], credentials_object)) {
+      socket.emit('login-result', 'Success')
     } else {
-      socket.emit("login-result", "Failed")
+      socket.emit('login-result', 'Failed')
     }
   });
 
 
-  // Endpoint verifying whether or not the account logging in is already online
+  // Endpoint verifying whether or not the account logging in is already
+  // online
   socket.on('already-online-check', name => {
     let found = false
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["name"] === name) {
+      if (sockets_to_names[i]['name'] === name) {
         found = true
         break
       }
@@ -227,9 +316,7 @@ io.on('connection', socket => {
 
 
   // Register the account as logged in
-  socket.on('register-login', name => {
-    verified_logins.push(name)
-  });
+  socket.on('register-login', name => {verified_logins.push(name)});
 
 
   // Confirm whether user performed a login
@@ -251,15 +338,15 @@ io.on('connection', socket => {
 
 
   // Endpoint handling disconnects
-  socket.on("disconnect", () => {
-
+  socket.on('disconnect', () => {
     // Find disconnecting socket and remove its entry in socket -> user map
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["id"] === socket.id) {
+      if (sockets_to_names[i]['id'] === socket.id) {
         sockets_to_names.splice(i, 1)
       }
     }
 
-    broadcastChangeInOnlineUsers() // Update clients with new online user list
+    broadcastChangeInOnlineUsers()  // Update clients with new online user
+                                    // list
   });
 })
