@@ -21,15 +21,14 @@
                 <h1>RatCamp Sign-Up</h1>
             </div>
             <div class="flex sign-up-box">
-                <form class="form" action="." method="get">
+                <form class="form" onsubmit="signup()">
                     <label class="input-label">Please Enter Your Account Credentials:</label><br>
                     <input class="user-input" id="email-input" name="email" placeholder="Email"><br>
                     <input class="user-input" id="name-input" name="name" placeholder="Name"><br>
                     <input class="user-input" id="password-input" name="password" placeholder="Password"><br>
-                    <!-- add button to see password as its being input -->
                     <div class="buttons">
-                        <input class="submit-button" type="submit" onclick="signup()">
-                        <a href="./dashboard.html" class="back-button">&nbsp&nbsp<&nbsp&nbsp</a>
+                        <input class="submit-button" type="submit" value="Submit">
+                        <a href="./dashboard.html" class="back-button">&nbsp&nbspBack&nbsp&nbsp</a>
                     </div>
                 </form>
             </div>

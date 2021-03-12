@@ -19,20 +19,16 @@
     <div class="screen">
         <div class="flex-container">
             <div class="flex header">
-                <h1>Login</h1>
+                <h1>RatCamp Login</h1>
             </div>
             <div class="flex login-box">
-                <form class="form" action="./messageBoard.html" method="get">
-                    <!-- Create a form here that allows user to input their username that will show up in the chat room.
-                        Then, call a function from the submit button that will verify the user input to ensure that it
-                        a valid username and then it will send them to the chat room.-->
-                    <input id="user-input" type="text" name="name" placeholder="Enter Username"><br>
-                    <input id="user-input" type="password" name="password" placeholder="Enter Password"><br><br>
-                    <!-- add button to see password -->
+                <form class="form" onsubmit="login()">
+                    <input id="username-input" class="user-input" type="text" name="name" placeholder="Enter Username"><br>
+                    <input id="password-input" class="user-input" type="password" name="password" placeholder="Enter Password"><br><br>
                     <div class="buttons">
                         <input class="submit-button" type="submit" value="Submit">
-                        <a href="./dashboard.html" class="back-button">&nbsp&nbsp<&nbsp&nbsp</a>
-                    </div> 
+                        <a href="./dashboard.html" class="back-button">&nbsp&nbspBack&nbsp&nbsp</a>
+                    </div>
                 </form>
             </div>
             <div class="flex footer">

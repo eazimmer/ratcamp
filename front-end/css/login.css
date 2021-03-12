@@ -63,7 +63,7 @@ html {
   z-index: 4;
 }
 
-#user-input {
+.user-input {
   font-size: 40px;
   padding-left: 10px;
   padding-right: 10px;
