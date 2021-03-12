@@ -14,7 +14,8 @@ html {
 }
 
 .flex-container {
-  height: 82vh;
+  max-height: 82vh;
+  max-height: 90vh;
   min-width: 75vh;
   display: flex;
   flex-direction: column;

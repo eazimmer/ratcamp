@@ -14,7 +14,8 @@ html {
 }
 
 .flex-container {
-  height: 82vh;
+  min-height: 82vh;
+  max-height: 90vh;
   min-width: 75vh;
   display: flex;
   flex-direction: column;
@@ -50,7 +51,7 @@ html {
 
 .sign-up-box {
   min-height: 20vh;
-  max-height: 60vh;
+  max-height: 80vh;
   z-index: 3;
 }
 
