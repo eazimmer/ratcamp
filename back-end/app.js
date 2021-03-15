@@ -86,8 +86,8 @@ function registerMessage(user, msg, private_message, recipient="") {
     if (socket_id === "") {
       console.log("Recipient for private message could not be identified.")
     } else { // Private message to target socket
-      console.log("Sending private message to ")
-      io.to(socket_id).emit("msgrecv", data)
+      console.log(`Sending private message to ${data.recipient}`)
+      io.emit("msgrecv", data)
     }
   }
 }
