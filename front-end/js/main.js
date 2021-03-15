@@ -96,17 +96,10 @@ $(document).ready(function() {
   // message received
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
-    console.log("Data received: ")
-    console.log(data)
     if (!answeringQuestion)
       outputMessage(data.name, data.msg);
     else
-      if (data.recipient) {
-        console.log(`Private message to ${data.recipient}`)
-      } else {
-        console.log("Public message")
-        messageQueue.push(data);
-      }
+      messageQueue.push(data);
   });
 
   // update online users list
@@ -228,22 +221,6 @@ const sendMessage = () => {
 
     // send message to the server
     let msgData = { name : urlParams.get('name'), msg : message };
-    socket.emit(
-        'chat', JSON.stringify(msgData)
-    );
-  }
-}
-
-const sendPrivateMessage = () => {
-  const message = document.getElementById('message-input').value;
-
-  if ($.trim(message).length !== 0 && !answeringQuestion){
-    // clear message input field
-    document.getElementById('message-input').value = '';
-    $('#message-input').outerHeight('32px');
-
-    // send message to the server
-    let msgData = { name : urlParams.get('name'), msg : message, recipient : 'name' };
     socket.emit(
         'chat', JSON.stringify(msgData)
     );
