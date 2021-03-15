@@ -96,6 +96,7 @@ $(document).ready(function() {
   // message received
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
+    console.log(data)
     if (!answeringQuestion)
       outputMessage(data.name, data.msg);
     else
