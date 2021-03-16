@@ -20,7 +20,6 @@ let triviaRunning = false;
 let leaderboard = {}
 
 // Stored data
-let users_to_message_ids = {}; // Mapping of users to their respective message id counts
 let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
 let verified_logins = []
 
@@ -49,18 +48,9 @@ const io = require('socket.io')(server);
 
 // Handle messages received by server
 function registerMessage(user, msg, private_message, recipient="") {
-  // Begin tracking new user and their respective message ids
-  if (!(user in users_to_message_ids)) {
-    users_to_message_ids[user] = {};
-    users_to_message_ids[user]['nextmsgid'] = 0;
-  }
-
-  // Increment user's message id count
-  users_to_message_ids[user].nextmsgid += 1;
 
   // Construct message object
   let data = {
-    id: (user + '-' + users_to_message_ids[user].nextmsgid),
     msg: msg,
     name: user
   };
