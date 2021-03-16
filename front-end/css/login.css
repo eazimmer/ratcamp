@@ -172,3 +172,39 @@ html {
   align-items: center;
   text-shadow: 2px 2px #363636;
 }
+
+@media only screen and (max-width: 540px){
+	.flex-container {
+    min-width: 75vw;
+  }
+}
+
+@media only screen and (min-width: 540px){
+	.flex-container {
+    min-width: 72.5vw;
+  }
+}
+
+@media only screen and (min-width: 700px){
+  .flex-container {
+    min-width: 70vw;
+  }
+}
+
+@media only screen and (min-width: 900px){
+  .flex-container {
+    min-width: 60vw;
+  }
+}
+
+@media only screen and (min-width: 1050px){
+  .flex-container {
+    min-width: 50vw;
+  }
+}
+
+@media only screen and (min-width: 1200px){
+  .flex-container {
+    min-width: 40vw;
+  }
+}
