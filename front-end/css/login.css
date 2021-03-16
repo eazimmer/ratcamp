@@ -177,6 +177,9 @@ html {
 	.flex-container {
     min-width: 75vw;
   }
+  .header {
+    font-size: 4vw;
+  }
 }
 
 @media only screen and (min-width: 540px){
