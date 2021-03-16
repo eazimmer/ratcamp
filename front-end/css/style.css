@@ -37,7 +37,7 @@ body {
     background: var(--clr-dark);
 }
 
-.chat-room {
+main {
     width: 100%;
     height: 100%;
     display: flex;
@@ -69,15 +69,26 @@ body {
     margin-bottom: 10px;
 }
 
-#messages {
+#chat-rooms {
     height: calc(100% - 110px - 58px);
-    overflow-y: auto;
 }
 
-#message-list {
+.chat-room {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: none;
+}
+
+#public-room {
+    display: block;
+}
+
+.message-list {
     list-style: none;
     box-sizing: border-box;
     padding: 0 10px;
+    width: 100%;
 }
 
 .message-block {
@@ -164,18 +175,24 @@ body {
 #online-users {
     height: calc(100% - 110px);
     overflow-y: auto;
+    padding: 0 10px;
 }
 
 #online-users-list {
     list-style: none;
     box-sizing: border-box;
-    padding: 0 10px;
 }
 
 .online-user-block {
     margin: 10px 0;
     border: 2px solid var(--clr-grey);
     border-radius: 8px;
+    transition: 400ms;
+}
+
+.online-user-block:hover {
+    background-color: rgba(102, 102, 102, 0.25);
+    cursor: pointer;
 }
 
 .online-user {
@@ -186,6 +203,15 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.current-room-list {
+    border: 2px solid var(--clr-light);
+}
+
+.current-room-list .online-user {
+    color: var(--clr-light);
+    transition: 400ms;
 }
 
 .trivia-message {
@@ -206,10 +232,6 @@ body {
     padding-bottom: 12px;
     border-radius: 8px;
     max-width: 75%;
-    word-break: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
     background-color: var(--clr-gold);
 }
 
@@ -240,6 +262,7 @@ body {
     align-items: center;
     width: max-content;
     margin-top: 12px;
+    max-width: 100%;
 }
 
 .trivia-answer-btn {
@@ -396,7 +419,7 @@ body {
     }
 
     .hamburger-open .words-header,
-    .hamburger-open #messages,
+    .hamburger-open #chat-rooms,
     .hamburger-open .typing-area {
         filter: blur(3px);
     }
