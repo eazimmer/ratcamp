@@ -171,7 +171,7 @@ $(document).ready(function() {
         }
       }, 1000);
     }
-    else if (data.question_object.code == 'end') {
+    else if (data.code == 'end') {
       outputLeaderboard(data.leaderboard);
     }
   });
