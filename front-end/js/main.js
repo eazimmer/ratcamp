@@ -458,6 +458,9 @@ const toPublicRoom = () => {
   hideAllRooms();
   document.getElementById('public-room').style.display = 'block';
 
+  if ($('body').hasClass('hamburger-open'))
+    document.body.classList.remove('hamburger-open');
+
   // scroll to bottom of messages
   $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
 }
@@ -466,7 +469,6 @@ const toPrivateRoom = (element) => {
   const username = $(element).children().get(0).innerHTML;
   $(".current-room-list").last().removeClass("current-room-list");
   $(element).addClass("current-room-list");
-
   hideAllRooms();
 
   // create room if it doesn't already exist
@@ -475,6 +477,9 @@ const toPrivateRoom = (element) => {
 
   // go to the room
   document.getElementById(username + '-room').style.display = 'block';
+
+  if ($('body').hasClass('hamburger-open'))
+    document.body.classList.remove('hamburger-open');
 
   // scroll to bottom of messages
   $('#' + username + '-room').animate({scrollTop: $('#' + username + '-room')[0].scrollHeight}, 1000);
