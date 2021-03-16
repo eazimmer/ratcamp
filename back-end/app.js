@@ -216,6 +216,7 @@ function handleTrivia(msgData, players='') {
     if (checkIfPrivateGameIsActive(players)) { // Private game already active
       return false
     } else { // Start private game
+      privateTriviaGames.push(players)
       // Grab target socket
       for (var i in sockets_to_names) {
         if (sockets_to_names[i]["name"] === players[0])
@@ -358,7 +359,6 @@ io.on('connection', socket => {
 
     if (data.recipient) {  // Privately sent
       if (data.msg === '!trivia') { // Private trivia game
-        privateTriviaGames.push([data.name, data.recipient])
         handleTrivia(data, [data.name, data.recipient])
       } else { // Send private message
         registerMessage(data.name, data.msg, true, data.recipient);
