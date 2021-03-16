@@ -96,8 +96,21 @@ $(document).ready(function() {
   // message received
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
-    if (!answeringQuestion)
-      outputMessage(data.name, data.msg);
+    if (!answeringQuestion) {
+      if (data.hasOwnProperty('recipient')) {
+        if (data.recipient == urlParams.get('name')) {// private message received
+          // create room if it doesn't already exist
+          if(document.getElementById(data.name + '-room') == null)
+            createNewRoom(data.name);
+          
+          outputMessage(data.name, data.msg, data.name);
+        }
+        else // private message sent
+          outputMessage(data.name, data.msg, data.recipient);
+      }
+      else // public message
+        outputMessage(data.name, data.msg, 'public');
+    }
     else
       messageQueue.push(data);
   });
@@ -220,9 +233,14 @@ const sendMessage = () => {
     $('#message-input').outerHeight('32px');
 
     // send message to the server
+    let currentRoom = $(".current-room-list").last().children().get(0).innerHTML;
     let msgData = { name : urlParams.get('name'), msg : message };
+
+    if (currentRoom != "Public Chat Room")
+      msgData["recipient"] = currentRoom;
+
     socket.emit(
-        'chat', JSON.stringify(msgData)
+      'chat', JSON.stringify(msgData)
     );
   }
 }
@@ -261,21 +279,40 @@ const updateOnlineUserCount = (onlineUsers) => {
 
 const updateOnlineUserList = (onlineUsers) => {
   const ul = document.getElementById('online-users-list');
-  ul.innerHTML = '';
+  let currentUser = $(".current-room-list").last().children().get(0).innerHTML;
 
+  // replace online users list
+  ul.innerHTML = '';
   for (let i = 0; i < onlineUsers.length; i++) {
     let div = document.createElement('div');
     let li = document.createElement('li');
     div.setAttribute('class', 'online-user-block');
+
+    if (urlParams.get('name') != onlineUsers[i])
+      div.setAttribute('onclick', 'toPrivateRoom(this)');
+    else
+      div.setAttribute('style', 'pointer-events:none;');
+    
     li.setAttribute('class', 'online-user');
     li.appendChild(document.createTextNode(onlineUsers[i]));
     div.appendChild(li);
     ul.appendChild(div);
   }
+
+  if (onlineUsers.includes(currentUser)) {
+    $('.online-user-block').each(function() {
+      const thisUser = $(this).children().get(0).innerHTML
+      if (currentUser == thisUser)
+        $(this).addClass("current-room-list");
+    });
+  }
+  else { // current user got offline
+    toPublicRoom();
+  }
 }
 
-const outputMessage = (name, message) => {
-  const ul = document.getElementById('message-list');
+const outputMessage = (name, message, room) => {
+  const ul = document.getElementById(room + '-message-list');
   let div = document.createElement('div');
   let li = document.createElement('li');
   div.setAttribute('class', 'message-block');
@@ -296,18 +333,18 @@ const outputMessage = (name, message) => {
   ul.appendChild(div);
 
   // scroll to bottom of messages
-  $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
 const outputMessageQueue = () => {
   while (messageQueue.length > 0) {
     let current = messageQueue.shift();
-    outputMessage(current.name, current.msg);
+    outputMessage(current.name, current.msg, "public");
   }
 }
 
 const outputStartNotification = (name) => {
-  const ul = document.getElementById('message-list');
+  const ul = document.getElementById('public-message-list');
   let div = document.createElement('div');
   let li = document.createElement('li');
   let span = document.createElement('span');
@@ -319,13 +356,13 @@ const outputStartNotification = (name) => {
   li.appendChild(span);
   div.appendChild(li);
   ul.appendChild(div);
-
+  
   // scroll to bottom of messages
-  $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
 }
 
 const outputQuestion = (questionNum, question, answers, correct_index) => {
-  const ul = document.getElementById('message-list');
+  const ul = document.getElementById('public-message-list');
   let div1 = document.createElement('div');
   div1.setAttribute('class', 'message-block');
   let div2 = document.createElement('div');
@@ -377,7 +414,7 @@ const outputQuestion = (questionNum, question, answers, correct_index) => {
   ul.appendChild(div1);
 
   // scroll to bottom of messages
-  $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
 }
 
 const outputLeaderboard = (leaderboard) => {
@@ -391,7 +428,7 @@ const outputLeaderboard = (leaderboard) => {
   });
 
   // output leaderboard
-  const ul = document.getElementById('message-list');
+  const ul = document.getElementById('public-message-list');
   let div1 = document.createElement('div');
   div1.setAttribute('class', 'message-block');
   let div2 = document.createElement('div');
@@ -412,5 +449,53 @@ const outputLeaderboard = (leaderboard) => {
   ul.appendChild(div1);
 
   // scroll to bottom of messages
-  $('#messages').animate({scrollTop: $('#messages')[0].scrollHeight}, 1000);
+  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
+}
+
+const toPublicRoom = () => {
+  $(".current-room-list").last().removeClass("current-room-list");
+  $(".online-user-block").first().addClass("current-room-list");
+  hideAllRooms();
+  document.getElementById('public-room').style.display = 'block';
+
+  // scroll to bottom of messages
+  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
+}
+
+const toPrivateRoom = (element) => {
+  const username = $(element).children().get(0).innerHTML;
+  $(".current-room-list").last().removeClass("current-room-list");
+  $(element).addClass("current-room-list");
+
+  hideAllRooms();
+
+  // create room if it doesn't already exist
+  if(document.getElementById(username + '-room') == null)
+    createNewRoom(username);
+
+  // go to the room
+  document.getElementById(username + '-room').style.display = 'block';
+
+  // scroll to bottom of messages
+  $('#' + username + '-room').animate({scrollTop: $('#' + username + '-room')[0].scrollHeight}, 1000);
+}
+
+const hideAllRooms = () => {
+  $('.chat-room').each(function() {
+    $(this).css('display', 'none');
+  });
+}
+
+const createNewRoom = (username) => {
+  const div_id = username + '-room';
+  const ul_id = username + '-message-list';
+  const div1 = document.getElementById('chat-rooms');
+  let div2 = document.createElement('div');
+  let ul = document.createElement('ul');
+  div2.setAttribute('id', div_id);
+  div2.setAttribute('class', 'chat-room');
+  ul.setAttribute('id', ul_id);
+  ul.setAttribute('class', 'message-list');
+  div2.appendChild(ul);
+  div1.appendChild(div2);
 }

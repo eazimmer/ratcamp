@@ -72,22 +72,24 @@ function registerMessage(user, msg, private_message, recipient="") {
 
   } else { // Private message
     data["recipient"] = recipient
-    let socket_id = ""
+    let recipient_socket_id = ""
+    let user_socket_id = ""
 
     // Grab target socket
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["name"] === recipient) {
-        socket_id = sockets_to_names[i]["id"]
-        break
-      }
+      if (sockets_to_names[i]["name"] === recipient)
+        recipient_socket_id = sockets_to_names[i]["id"];
+      else if (sockets_to_names[i]["name"] === user)
+        user_socket_id = sockets_to_names[i]["id"];
     }
 
     // If no recipient identified, cancel request
-    if (socket_id === "") {
+    if (recipient_socket_id === "" || user_socket_id == "") {
       console.log("Recipient for private message could not be identified.")
     } else { // Private message to target socket
       console.log(`Sending private message to ${data.recipient}:`)
-      io.to(socket_id).emit("msgrecv", JSON.stringify(data))
+      io.to(recipient_socket_id).emit("msgrecv", JSON.stringify(data))
+      io.to(user_socket_id).emit("msgrecv", JSON.stringify(data))
     }
   }
 }

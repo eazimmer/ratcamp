@@ -17,7 +17,7 @@
     <link rel="icon" href="./front-end/Other/RC.png">
 </head>
 <body>
-    <main class="chat-room">
+    <main>
         <div class="chat-area">
             <div class="chat-area-header">
                 <button id="hamburger-toggle" aria-label="toggle navigation">
@@ -28,10 +28,12 @@
                     <h2 id="online-status"><span id="online-num">0</span> Online</h2>
                 </div>
             </div>
-            <div id="messages">
-                <ul id="message-list">
-                    <!-- Created Dynamically -->
-                </ul>
+            <div id="chat-rooms">
+                <div id="public-room" class="chat-room">
+                    <ul id="public-message-list" class="message-list">
+                        <!-- Created Dynamically -->
+                    </ul>
+                </div>
             </div>
             <div class="typing-area">
                 <textarea name="Message" type="text" spellcheck="true" placeholder="Message" id="message-input"></textarea>
@@ -43,6 +45,9 @@
                 <h1 class="online-users-title">Online Users</h1>
             </div>
             <div id="online-users">
+                <div class="online-user-block current-room-list" onclick="toPublicRoom()">
+                    <li class="online-user">Public Chat Room</li>
+                </div>
                 <ul id="online-users-list">
                     <!-- Created Dynamically -->
                 </ul>
