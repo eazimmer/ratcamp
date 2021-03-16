@@ -269,8 +269,8 @@ function handleTrivia(msgData, players='') {
           // Send data to everyone, or private participants
           if (players !== '') { // Private Game
             console.log("Routing private trivia updates")
-            io.to(player_one_socket).emit('trivia-update', {code: 'start', name: msgData.name}, players)
-            io.to(player_two_socket).emit('trivia-update', {code: 'start', name: msgData.name}, players)
+            io.to(player_one_socket).emit('trivia-update', {code: 'start', name: msgData.name, players: players})
+            io.to(player_two_socket).emit('trivia-update', {code: 'start', name: msgData.name, players: players})
           } else { // Public game
             console.log("Routing public trivia updates")
             io.emit('trivia-update', {code: 'start', name: msgData.name});
@@ -286,11 +286,11 @@ function handleTrivia(msgData, players='') {
             // Send data to everyone, or private participants
             if (players !== '') { // Private Game
               console.log("Routing private trivia updates")
-              io.to(player_one_socket).emit('trivia-update', questions[i], players)
-              io.to(player_two_socket).emit('trivia-update', questions[i], players)
+              io.to(player_one_socket).emit('trivia-update', {question_object: questions[i], players: players})
+              io.to(player_two_socket).emit('trivia-update', {question_object: questions[i], players: players})
             } else { // Public Game
               console.log("Routing public trivia updates")
-              io.emit('trivia-update', questions[i]);
+              io.emit('trivia-update', {question_object: questions[i]});
             }
           }
 
@@ -299,8 +299,8 @@ function handleTrivia(msgData, players='') {
           // Send data to everyone, or private participants
           if (players!== '') { // Private Game
             console.log("Routing private trivia updates")
-            io.to(player_one_socket).emit('trivia-update', {code: 'end', leaderboard: leaderboard}, players)
-            io.to(player_two_socket).emit('trivia-update', {code: 'end', leaderboard: leaderboard}, players)
+            io.to(player_one_socket).emit('trivia-update', {code: 'end', leaderboard: leaderboard, players: players})
+            io.to(player_two_socket).emit('trivia-update', {code: 'end', leaderboard: leaderboard, players: players})
           } else { // Public Game
             console.log("Routing public trivia updates")
             io.emit('trivia-update', {code: 'end', leaderboard: leaderboard});
