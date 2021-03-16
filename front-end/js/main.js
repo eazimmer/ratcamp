@@ -126,6 +126,9 @@ $(document).ready(function() {
 
   // trivia message received
   socket.on('trivia-update', data => {
+    console.log("Trivia update received:")
+    console.log(data)
+
     if (data.code == 'start') {
       outputStartNotification(data.name);
 
