@@ -240,7 +240,7 @@ function handleTrivia(msgData, players='') {
       {
         hostname: 'opentdb.com',
         port: 443,
-        path: '/api.php?amount=10&type=multiple',
+        path: '/api.php?amount=2&type=multiple',
         method: 'GET'
       },
       res => {

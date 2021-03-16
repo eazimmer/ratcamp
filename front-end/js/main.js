@@ -145,6 +145,9 @@ $(document).ready(function() {
         }
       }, 1000);
     }
+    else if (data.code == 'end') {
+      outputLeaderboard(data.leaderboard);
+    }
     else if (data.question_object.code[0] == 'q') {
       answeringQuestion = true;
       const questionNum = parseInt(data.question_object.code.substring(1)) + 1;
@@ -170,9 +173,6 @@ $(document).ready(function() {
           countdownTimerValue -= 1;
         }
       }, 1000);
-    }
-    else if (data.code == 'end') {
-      outputLeaderboard(data.leaderboard);
     }
   });
   
