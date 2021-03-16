@@ -145,10 +145,10 @@ $(document).ready(function() {
         }
       }, 1000);
     }
-    else if (data.code[0] == 'q') {
+    else if (data.question_object.code[0] == 'q') {
       answeringQuestion = true;
-      const questionNum = parseInt(data.code.substring(1)) + 1;
-      outputQuestion(questionNum, data.question, data.answers, data.correct_index);
+      const questionNum = parseInt(data.question_object.code.substring(1)) + 1;
+      outputQuestion(questionNum, data.question_object.question, data.question_object.answers, data.question_object.correct_index);
 
       // start countdown
       countdownTimerValue = 9;
@@ -171,7 +171,7 @@ $(document).ready(function() {
         }
       }, 1000);
     }
-    else if (data.code == 'end') {
+    else if (data.question_object.code == 'end') {
       outputLeaderboard(data.leaderboard);
     }
   });
