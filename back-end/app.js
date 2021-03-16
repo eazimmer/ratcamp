@@ -213,7 +213,7 @@ function handleTrivia(msgData, players='') {
 
   if (players !== '') { // Private game
     console.log("Attempting to start private trivia game: ")
-    if (checkIfPrivateGameIsActive()) { // Private game already active
+    if (checkIfPrivateGameIsActive(players)) { // Private game already active
       return false
     } else { // Start private game
       // Grab target socket
