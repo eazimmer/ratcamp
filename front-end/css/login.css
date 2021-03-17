@@ -1,5 +1,5 @@
 html {
-  font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
   color: #dadada;
   background: radial-gradient(circle at center,#eeeeee, #a07dff, #6d38ff, #4d2fa1, #3f3f3f);
   height: 100%;
@@ -32,7 +32,7 @@ html {
   align-items: center;
   min-width: 95%;
   height: 90vh;
-  margin: 2px;
+  margin: 0.5vh;
   border: 3px solid #c5c5c5b2;
   background-color: #5c5c5c7c;
   box-shadow: 4px 4px #363636;
@@ -45,7 +45,7 @@ html {
   max-height: 15vh;
   font-size: 2vw;
   text-shadow: 2px 2px #363636;
-  margin-top: 8px;
+  margin-top: 1vh;
   border-radius: 5px 5px 0 0;
 }
 
@@ -67,9 +67,9 @@ html {
   font-size: 2vw;
   padding-left: 10px;
   padding-right: 10px;
-  height: 55px;
+  height: 7.8vh;
   width: 75%;
-  margin: 8px;
+  margin: 1vh;
   border-color:#000000;
   color: #ececec;
   background-color: #9b9b9b50;
@@ -101,7 +101,7 @@ html {
 }
 
 .submit-button {
-  height: 52.5px;
+  height: 7vh;
   width: 35%;
   font-family: 'Roboto', sans-serif;
   font-size: 1.7vw;
@@ -135,7 +135,6 @@ html {
   background-color: #00000081;
   font-size: 1.6vw;
   margin-left: 1.5vw;
-  height: 200px;
   width: 35%;
   border-radius: 1.5em 1.5em 1.5em 1.5em;
   box-shadow: 2px 2px #363636;
@@ -185,37 +184,150 @@ html {
 	.flex-container {
     min-width: 75vw;
   }
+
   .header {
-    font-size: 4vw;
+    font-size: 4.5vw;
+  }
+
+  .user-input {
+    font-size: 4.5vw;
+  }
+
+  .submit-button {
+    font-size: 4.25vw;
+  }
+  
+  .back-button {
+    font-size: 4.1vw;
+  }
+
+  .footer {
+    font-size: 3vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 4.5vw;
   }
 }
 
-@media only screen and (min-width: 540px){
+@media only screen and (min-width: 540px) and (max-width: 700px){
 	.flex-container {
     min-width: 72.5vw;
   }
+
+  .header {
+    font-size: 3.75vw;
+  }
+
+  .user-input {
+    font-size: 3.85vw;
+  }
+
+  .submit-button {
+    font-size: 3.75vw;
+  }
+  
+  .back-button {
+    font-size: 3.6vw;
+  }
+
+  .footer {
+    font-size: 2.8vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 3.85vw;
+  }
 }
 
-@media only screen and (min-width: 700px){
+@media only screen and (min-width: 700px) and (max-width: 900px){
   .flex-container {
     min-width: 70vw;
   }
+  .header {
+    font-size: 3.35vw;
+  }
+
+  .user-input {
+    font-size: 3.35vw;
+  }
+
+  .submit-button {
+    font-size: 3.3vw;
+  }
+  
+  .back-button {
+    font-size: 3.2vw;
+  }
+
+  .footer {
+    font-size: 2.6vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 3.35vw;
+  }
 }
 
-@media only screen and (min-width: 900px){
+@media only screen and (min-width: 900px) and (max-width: 1200px){
   .flex-container {
     min-width: 60vw;
   }
-}
+  .header {
+    font-size: 2.85vw;
+  }
 
-@media only screen and (min-width: 1050px){
-  .flex-container {
-    min-width: 50vw;
+  .user-input {
+    font-size: 2.85vw;
+  }
+
+  .submit-button {
+    font-size: 2.8vw;
+  }
+  
+  .back-button {
+    font-size: 2.65vw;
+  }
+
+  .footer {
+    font-size: 2.25vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 2.85vw;
   }
 }
 
-@media only screen and (min-width: 1200px){
+@media only screen and (min-width: 1050px) and (max-width: 1200px){
   .flex-container {
-    min-width: 40vw;
+    min-width: 50vw;
+  }
+  .header {
+    font-size: 2.35vw;
+  }
+
+  .user-input {
+    font-size: 2.35vw;
+  }
+
+  .submit-button {
+    font-size: 2.3vw;
+  }
+  
+  .back-button {
+    font-size: 2.1vw;
+  }
+
+  .footer {
+    font-size: 2vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 2.35vw;
   }
 }
