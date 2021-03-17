@@ -205,10 +205,13 @@ html {
 
   .user-input {
     font-size: 4.5vw;
+    height: 7.2vh;
+    margin: -0.6vh;
   }
 
   .submit-button {
     font-size: 4.25vw;
+    height: 6.5vh;
   }
   
   .back-button {
@@ -216,7 +219,7 @@ html {
   }
 
   #result {
-    font-size: 4vw;
+    font-size: 3vw;
   }
 
   .footer {
@@ -242,10 +245,13 @@ html {
 
   .user-input {
     font-size: 3.85vw;
+    height: 7.2vh;
+    margin: -0.4vh;
   }
 
   .submit-button {
     font-size: 3.75vw;
+    height: 6.7vh;
   }
   
   .back-button {
@@ -253,7 +259,7 @@ html {
   }
 
   #result {
-    font-size: 3.2vw;
+    font-size: 2.8vw;
   }
 
   .footer {
@@ -278,6 +284,8 @@ html {
 
   .user-input {
     font-size: 3.35vw;
+    height: 7.4vh;
+    margin: -0.25vh;
   }
 
   .submit-button {
@@ -289,7 +297,7 @@ html {
   }
 
   #result {
-    font-size: 2.6vw;
+    font-size: 2.4vw;
   }
 
   .footer {
@@ -312,6 +320,7 @@ html {
 
   .user-input {
     font-size: 2.85vw;
+    margin: 0.25vh;
   }
 
   .submit-button {
@@ -346,6 +355,7 @@ html {
 
   .user-input {
     font-size: 2.35vw;
+    margin: 0.5vh;
   }
 
   .submit-button {

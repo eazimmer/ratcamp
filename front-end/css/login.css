@@ -192,6 +192,8 @@ html {
 
   .user-input {
     font-size: 4.5vw;
+    height: 7.2vh;
+    margin: 0vh;
   }
 
   .submit-button {
@@ -229,6 +231,8 @@ html {
 
   .user-input {
     font-size: 3.85vw;
+    height: 7.2vh;
+    margin: 0.25vh;
   }
 
   .submit-button {
@@ -265,6 +269,8 @@ html {
 
   .user-input {
     font-size: 3.35vw;
+    height: 7.4vh;
+    margin: 0.5vh;
   }
 
   .submit-button {
