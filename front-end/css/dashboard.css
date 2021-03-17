@@ -15,7 +15,7 @@ html {
 
 .flex-container {
   height: 50vh;
-  min-width: 50%;
+  min-width: 50vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -96,4 +96,93 @@ html {
   margin-bottom: 1vh;
   border-radius: 0 0 5px 5px;
   text-shadow: 2px 2px #363636;
+}
+
+@media only screen and (max-width: 540px){
+	.flex-container {
+    min-width: 95vw;
+  }
+
+  .header {
+    font-size: 3.25vw;
+  }
+
+  .option-button {
+    font-size: 4.25vw;
+    margin: 2.8vh;
+  }
+  
+  .footer {
+    font-size: 3.2vw;
+  }
+}
+
+@media only screen and (min-width: 540px) and (max-width: 700px){
+	.flex-container {
+    min-width: 87.5vw;
+  }
+
+  .header {
+    font-size: 3vw;
+  }
+
+  .option-button {
+    font-size: 3.75vw;
+    margin: 3vh;
+  }
+
+  .footer {
+    font-size: 2.8vw;
+  }
+}
+
+@media only screen and (min-width: 700px) and (max-width: 900px){
+  .flex-container {
+    min-width: 80vw;
+  }
+  .header {
+    font-size: 2.6vw;
+  }
+
+  .option-button {
+    font-size: 3.3vw;
+  }
+
+  .footer {
+    font-size: 2.6vw;
+  }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1200px){
+  .flex-container {
+    min-width: 62.5vw;
+  }
+  .header {
+    font-size: 2.35vw;
+  }
+
+  .option-button {
+    font-size: 2.8vw;
+  }
+
+  .footer {
+    font-size: 2vw;
+  }
+}
+
+@media only screen and (min-width: 1050px) and (max-width: 1200px){
+  .flex-container {
+    min-width: 55vw;
+  }
+  .header {
+    font-size: 2.1vw;
+  }
+
+  .option-button {
+    font-size: 2.3vw;
+  }
+  
+  .footer {
+    font-size: 1.8vw;
+  }
 }
