@@ -67,7 +67,7 @@ $(document).ready(function() {
       // Check if account is already online
       socket.emit('already-online-check', document.getElementById('name-input').value);
     } else {
-      document.getElementById('result').innerHTML = 'Login attempt failed, invalid credentials. Please try again.';
+      document.getElementById('result').innerHTML = '*Login attempt failed, invalid credentials. Please try again.';
     }
   });
 

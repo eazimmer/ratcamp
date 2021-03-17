@@ -1,5 +1,5 @@
 html {
-  font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+  font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
   color: #dadada;
   background: radial-gradient(circle at center,#eeeeee, #a07dff, #6d38ff, #4d2fa1, #3f3f3f);
   height: 100%;
@@ -30,9 +30,9 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 95%;
+  width: 95%;
   height: 90vh;
-  margin: 2px;
+  margin: 0.5vh;
   border: 3px solid #c5c5c5b2;
   background-color: #5c5c5c7c;
   box-shadow: 4px 4px #363636;
@@ -45,7 +45,7 @@ html {
   max-height: 15vh;
   font-size: 2vw;
   text-shadow: 2px 2px #363636;
-  margin-top: 8px;
+  margin-top: 1vh;
   border-radius: 5px 5px 0 0;
 }
 
@@ -67,9 +67,9 @@ html {
   font-size: 2vw;
   padding-left: 10px;
   padding-right: 10px;
-  height: 55px;
+  height: 7.8vh;
   width: 75%;
-  margin: 8px;
+  margin: 1vh;
   border-color:#000000;
   color: #ececec;
   background-color: #9b9b9b50;
@@ -96,12 +96,11 @@ html {
 .buttons {
   flex-direction: row;
   width: 90%;
-  height: 60px;
   margin-left: 50%;
 }
 
 .submit-button {
-  height: 52.5px;
+  height: 7vh;
   width: 35%;
   font-family: 'Roboto', sans-serif;
   font-size: 1.7vw;
@@ -112,7 +111,7 @@ html {
   text-shadow: 2px 2px #363636;
   box-shadow: 2px 2px #363636;
   z-index: 5;
-}  
+}
 
 .submit-button:hover {
   background-color:#402d5f;
@@ -134,7 +133,7 @@ html {
   color: #ffffff;
   background-color: #00000081;
   font-size: 1.6vw;
-  height: 200px;
+  margin-left: 1.5vw;
   width: 35%;
   border-radius: 1.5em 1.5em 1.5em 1.5em;
   box-shadow: 2px 2px #363636;
@@ -155,11 +154,18 @@ html {
   transform: translateX(2px);
 }
 
+#result {
+  margin: 2vh;
+  font-size: 1.2vw;
+  color: #ff0000;
+  font-weight: bold;
+}
+
 .footer {
   min-height: 5vh;
   max-height: 8vh;
   font-size: 1.5vw;
-  margin-bottom: 8px;
+  margin-bottom: 1vh;
   border-radius: 0 0 5px 5px;
   text-shadow: 2px 2px #363636;
 }
@@ -171,4 +177,182 @@ html {
   padding: 10px 10px;
   align-items: center;
   text-shadow: 2px 2px #363636;
+}
+
+@media only screen and (max-width: 540px){
+	.flex-container {
+    min-width: 75vw;
+    max-height: 70vh;
+    max-height: 78vh;
+  }
+
+  .header {
+    font-size: 4.5vw;
+  }
+
+  .user-input {
+    font-size: 4.5vw;
+  }
+
+  .submit-button {
+    font-size: 4.25vw;
+  }
+  
+  .back-button {
+    font-size: 4.1vw;
+  }
+
+  #result {
+    font-size: 4vw;
+  }
+
+  .footer {
+    font-size: 3.2vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 4.5vw;
+  }
+}
+
+@media only screen and (min-width: 540px) and (max-width: 700px){
+	.flex-container {
+    min-width: 72.5vw;
+    max-height: 72vh;
+    max-height: 80vh;
+  }
+
+  .header {
+    font-size: 3.75vw;
+  }
+
+  .user-input {
+    font-size: 3.85vw;
+  }
+
+  .submit-button {
+    font-size: 3.75vw;
+  }
+  
+  .back-button {
+    font-size: 3.6vw;
+  }
+
+  #result {
+    font-size: 3.2vw;
+  }
+
+  .footer {
+    font-size: 2.8vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 3.85vw;
+  }
+}
+
+@media only screen and (min-width: 700px) and (max-width: 900px){
+  .flex-container {
+    min-width: 70vw;
+    max-height: 74vh;
+    max-height: 82vh;
+  }
+  .header {
+    font-size: 3.35vw;
+  }
+
+  .user-input {
+    font-size: 3.35vw;
+  }
+
+  .submit-button {
+    font-size: 3.3vw;
+  }
+  
+  .back-button {
+    font-size: 3.2vw;
+  }
+
+  #result {
+    font-size: 2.6vw;
+  }
+
+  .footer {
+    font-size: 2.6vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 3.35vw;
+  }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1200px){
+  .flex-container {
+    min-width: 60vw;
+  }
+  .header {
+    font-size: 2.85vw;
+  }
+
+  .user-input {
+    font-size: 2.85vw;
+  }
+
+  .submit-button {
+    font-size: 2.8vw;
+  }
+  
+  .back-button {
+    font-size: 2.65vw;
+  }
+
+  #result {
+    font-size: 2vw;
+  }
+
+  .footer {
+    font-size: 2.25vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 2.85vw;
+  }
+}
+
+@media only screen and (min-width: 1050px) and (max-width: 1200px){
+  .flex-container {
+    min-width: 50vw;
+  }
+  .header {
+    font-size: 2.35vw;
+  }
+
+  .user-input {
+    font-size: 2.35vw;
+  }
+
+  .submit-button {
+    font-size: 2.3vw;
+  }
+  
+  .back-button {
+    font-size: 2.1vw;
+  }
+
+  #result {
+    font-size: 1.5vw;
+  }
+
+  .footer {
+    font-size: 2vw;
+  }
+
+  /* Adds styling to placeholders */
+  ::-webkit-input-placeholder {
+    font-size: 2.35vw;
+  }
 }
