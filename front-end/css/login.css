@@ -165,7 +165,7 @@ html {
   min-height: 5vh;
   max-height: 8vh;
   font-size: 1.5vw;
-  margin-bottom: 8px;
+  margin-bottom: 1vh;
   border-radius: 0 0 5px 5px;
   text-shadow: 2px 2px #363636;
 }
