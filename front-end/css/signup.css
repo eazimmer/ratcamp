@@ -168,6 +168,13 @@ html {
   transform: translateX(2px);
 }
 
+#result {
+  margin: 10px;
+  font-size: 1.2vw;
+  color: #ff0000;
+  font-weight: bold;
+}
+
 .footer {
   min-height: 5vh;
   max-height: 8vh;
