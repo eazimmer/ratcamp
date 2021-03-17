@@ -16,7 +16,7 @@ html {
 .flex-container {
   max-height: 82vh;
   max-height: 90vh;
-  min-width: 40vw;
+  width: 40vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -181,7 +181,7 @@ html {
 
 @media only screen and (max-width: 540px){
 	.flex-container {
-    min-width: 75vw;
+    width: 85vw;
     max-height: 70vh;
     max-height: 78vh;
   }
@@ -218,7 +218,7 @@ html {
 
 @media only screen and (min-width: 540px) and (max-width: 700px){
 	.flex-container {
-    min-width: 72.5vw;
+    width: 80vw;
     max-height: 72vh;
     max-height: 80vh;
   }
@@ -255,7 +255,7 @@ html {
 
 @media only screen and (min-width: 700px) and (max-width: 900px){
   .flex-container {
-    min-width: 70vw;
+    width: 70vw;
     max-height: 74vh;
     max-height: 82vh;
   }
@@ -291,7 +291,7 @@ html {
 
 @media only screen and (min-width: 900px) and (max-width: 1200px){
   .flex-container {
-    min-width: 60vw;
+    width: 60vw;
   }
   .header {
     font-size: 2.85vw;
@@ -325,7 +325,7 @@ html {
 
 @media only screen and (min-width: 1050px) and (max-width: 1200px){
   .flex-container {
-    min-width: 50vw;
+    width: 50vw;
   }
   .header {
     font-size: 2.35vw;
