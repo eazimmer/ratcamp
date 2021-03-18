@@ -16,6 +16,7 @@ const uri =
     'mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority';
 const TIME_BETWWEN_QUESTIONS = 20000;
 let triviaRunning = false;
+let triviaInstigator = "";
 let pollCats = {
   'Any': 0,
   'Random': 0,
@@ -285,8 +286,8 @@ async function handleTrivia(msgData) {
     if (amount > 25) {
       amount = 25;
     }
-    if (amount < 1) {
-      amount = 1;
+    if (amount < 3) {
+      amount = 3;
     }
   }
 
@@ -295,7 +296,7 @@ async function handleTrivia(msgData) {
   console.log('url: ' + apiUrl);
 
 
-
+  triviaInstigator = msgData.name;
   triviaRunning = true;
   let questions = [];
   const req = https.request(
@@ -329,9 +330,15 @@ async function handleTrivia(msgData) {
 
           for (i = 0; i < questions.length; i++) {
             await new Promise(
-                resolve => setTimeout(resolve, TIME_BETWWEN_QUESTIONS));
+              resolve => setTimeout(resolve, TIME_BETWWEN_QUESTIONS));
+            if (!triviaRunning) {
+              break;
+            }
             console.log(i);
             io.emit('trivia-update', questions[i]);
+            if (!triviaRunning) {
+              break;
+            }
           }
           triviaRunning = false;
           await new Promise(resolve => setTimeout(resolve, 10000));
@@ -349,8 +356,10 @@ io.on('connection', socket => {
   socket.on('chat', message => {
     let data = JSON.parse(message);
 
-    if (data.msg.substring(0,7) === '!trivia') {
+    if (data.msg.substring(0, 7) === '!trivia') {
       handleTrivia(data);
+    } else if (data.msg == '!stop' && data.name == triviaInstigator) {
+      triviaRunning = false;
     } else {
       if (data.recipient) {  // Private
         registerMessage(data.name, data.msg, true, data.recipient);
