@@ -16,11 +16,50 @@ const uri =
     'mongodb+srv://eric:csi330-group2@agile.xa93o.mongodb.net/test?retryWrites=true&w=majority';
 const TIME_BETWWEN_QUESTIONS = 20000;
 let triviaRunning = false;
+let triviaInstigator = "";
+let pollCats = {
+  'Any': 0,
+  'Random': 0,
+  'Entertainment': 0,
+  'Science': 0,
+  'Geography': 0,
+  'Sports': 0,
+  'Art': 0,
+  'History': 0
+};
+
+const CAT_NUM_LOOKUP = {
+  'General Knowledge': 9,
+  'Entertainment: Books': 10,
+  'Entertainment: Film': 11,
+  'Entertainment: Music': 12,
+  'Entertainment: Musicals &amp; Theatres': 13,
+  'Entertainment: Television': 14,
+  'Entertainment: Video Games': 15,
+  'Entertainment: Board Games': 16,
+  'Science &amp; Nature': 17,
+  'Science: Computers': 18,
+  'Science: Mathematics': 19,
+  'Mythology': 20,
+  'Sports': 21,
+  'Geography': 22,
+  'History': 23,
+  'Politics': 24,
+  'Art': 25,
+  'Celebrities': 26,
+  'Animals': 27,
+  'Vehicles': 28,
+  'Entertainment: Comics': 29,
+  'Science: Gadgets': 30,
+  'Entertainment: Japanese Anime &amp; Manga': 31,
+  'Entertainment: Cartoon &amp; Animations': 32
+}
 
 let leaderboard = {}
 
 // Stored data
-let sockets_to_names = []; // List of maps of socket ids to usernames: "id", and "name" keys
+let sockets_to_names =
+    [];  // List of maps of socket ids to usernames: "id", and "name" keys
 let verified_logins = []
 
 // Use Node.js body parsing middleware to help access message contents
@@ -47,39 +86,35 @@ const io = require('socket.io')(server);
 
 
 // Handle messages received by server
-function registerMessage(user, msg, private_message, recipient="") {
-
+function registerMessage(user, msg, private_message, recipient = '') {
   // Construct message object
-  let data = {
-    msg: msg,
-    name: user
-  };
+  let data = {msg: msg, name: user};
 
   // Public message
   if (!private_message) {
     // Broadcast message to clients
     broadcastMessage(data);
 
-  } else { // Private message
-    data["recipient"] = recipient
-    let recipient_socket_id = ""
-    let user_socket_id = ""
+  } else {  // Private message
+    data['recipient'] = recipient
+    let recipient_socket_id = ''
+    let user_socket_id = ''
 
     // Grab target socket
     for (var i in sockets_to_names) {
-      if (sockets_to_names[i]["name"] === recipient)
-        recipient_socket_id = sockets_to_names[i]["id"];
-      else if (sockets_to_names[i]["name"] === user)
-        user_socket_id = sockets_to_names[i]["id"];
+      if (sockets_to_names[i]['name'] === recipient)
+        recipient_socket_id = sockets_to_names[i]['id'];
+      else if (sockets_to_names[i]['name'] === user)
+        user_socket_id = sockets_to_names[i]['id'];
     }
 
     // If no recipient identified, cancel request
-    if (recipient_socket_id === "" || user_socket_id == "") {
-      console.log("Recipient for private message could not be identified.")
-    } else { // Private message to target socket
+    if (recipient_socket_id === '' || user_socket_id == '') {
+      console.log('Recipient for private message could not be identified.')
+    } else {  // Private message to target socket
       console.log(`Sending private message to ${data.recipient}:`)
-      io.to(recipient_socket_id).emit("msgrecv", JSON.stringify(data))
-      io.to(user_socket_id).emit("msgrecv", JSON.stringify(data))
+      io.to(recipient_socket_id).emit('msgrecv', JSON.stringify(data))
+      io.to(user_socket_id).emit('msgrecv', JSON.stringify(data))
     }
   }
 }
@@ -95,9 +130,9 @@ function broadcastMessage(data_object) {
 function broadcastChangeInOnlineUsers() {
   let validated_users = []
 
-  // Pull currently online users out of map of socket ids to usernames
-  for (var i in sockets_to_names) {
-    validated_users.push(sockets_to_names[i]["name"])
+      // Pull currently online users out of map of socket ids to usernames
+      for (var i in sockets_to_names) {
+    validated_users.push(sockets_to_names[i]['name'])
   }
 
   // Broadcast new list of online users to all clients
@@ -195,20 +230,78 @@ async function check_credentials(client, db_name, credentials_object, action) {
   }
 }
 
+function buildAipUrl(amount) {
+  let apiUrl = `/api.php?amount=${amount}&type=multiple`;
+  let bigest = 'Any'
+  for (let v in pollCats) {
+    console.log(v);
+    console.log(pollCats[v]);
+    if (pollCats[v] > pollCats[bigest]) {
+      bigest = v;
+    }
+  }
+  if (bigest == 'Any') {
+    return apiUrl;
+  }
+  let num = 9;
+  if (bigest == 'Random') {
+    num = Math.floor(Math.random() * 23) + 9;
+  } else if (bigest == 'Entertainment') {
+    num = Math.floor(Math.random() * 7) + 10;
+  } else if (bigest == 'Science') {
+    num = Math.floor(Math.random() * 3) + 17;
+  } else if (bigest in CAT_NUM_LOOKUP) {
+    num = CAT_NUM_LOOKUP[bigest];
+  }
 
-function handleTrivia(msgData) {
+  apiUrl += '&category=' + num;
+  console.log(apiUrl);
+  return apiUrl;
+}
+
+async function handleTrivia(msgData) {
   if (triviaRunning) {
     return false;
   }
+  pollCats = {
+    'Any': 0,
+    'Random': 0,
+    'Entertainment': 0,
+    'Science': 0,
+    'Geography': 0,
+    'Sports': 0,
+    'Art': 0,
+    'History': 0
+  };
+  io.emit('trivia-update', {
+    code: 'poll-start',
+  });
+  await new Promise(resolve => setTimeout(resolve, 10000));
+
+  let msgParts = msgData.msg.split(' ');
+  let amount = 10;
+  if (msgParts[1] != null && parseInt(msgParts[1]) != NaN) {
+    console.log(msgParts[1]);
+    amount = parseInt(msgParts[1]);
+    if (amount > 25) {
+      amount = 25;
+    }
+    if (amount < 3) {
+      amount = 3;
+    }
+  }
+
+  let apiUrl = buildAipUrl(amount);
+
+  console.log('url: ' + apiUrl);
+
+
+  triviaInstigator = msgData.name;
   triviaRunning = true;
+  leaderboard = {}
   let questions = [];
   const req = https.request(
-      {
-        hostname: 'opentdb.com',
-        port: 443,
-        path: '/api.php?amount=10&type=multiple',
-        method: 'GET'
-      },
+      {hostname: 'opentdb.com', port: 443, path: apiUrl, method: 'GET'},
       res => {
         if (res.statusCode != 200) {
           return false;
@@ -238,9 +331,15 @@ function handleTrivia(msgData) {
 
           for (i = 0; i < questions.length; i++) {
             await new Promise(
-                resolve => setTimeout(resolve, TIME_BETWWEN_QUESTIONS));
+              resolve => setTimeout(resolve, TIME_BETWWEN_QUESTIONS));
+            if (!triviaRunning) {
+              break;
+            }
             console.log(i);
             io.emit('trivia-update', questions[i]);
+            if (!triviaRunning) {
+              break;
+            }
           }
           triviaRunning = false;
           await new Promise(resolve => setTimeout(resolve, 10000));
@@ -258,14 +357,21 @@ io.on('connection', socket => {
   socket.on('chat', message => {
     let data = JSON.parse(message);
 
-    if (data.msg === '!trivia') {
+    if (data.msg.substring(0, 7) === '!trivia') {
       handleTrivia(data);
+    } else if (data.msg == '!stop' && data.name == triviaInstigator) {
+      triviaRunning = false;
     } else {
       if (data.recipient) {  // Private
         registerMessage(data.name, data.msg, true, data.recipient);
       } else {  // Public
         registerMessage(data.name, data.msg, false);
       }
+    }
+  });
+  socket.on('poll', data => {
+    if (data in pollCats) {
+      pollCats[data] += 1;
     }
   });
 
@@ -286,7 +392,7 @@ io.on('connection', socket => {
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
     var socket_id = socket.id.toString();
-    
+
     sockets_to_names.push({'id': socket_id, 'name': name});
 
     broadcastChangeInOnlineUsers();  // Update clients with new online user list
