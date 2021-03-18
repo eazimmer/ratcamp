@@ -229,10 +229,9 @@ async function check_credentials(client, db_name, credentials_object, action) {
   }
 }
 
-function buildAipUrl() {
-  let apiUrl = '/api.php?amount=10&type=multiple';
+function buildAipUrl(amount) {
+  let apiUrl = `/api.php?amount=${amount}&type=multiple`;
   let bigest = 'Any'
-
   for (let v in pollCats) {
     console.log(v);
     console.log(pollCats[v]);
@@ -278,7 +277,20 @@ async function handleTrivia(msgData) {
   });
   await new Promise(resolve => setTimeout(resolve, 10000));
 
-  let apiUrl = buildAipUrl();
+  let msgParts = msgData.msg.split(' ');
+  let amount = 10;
+  if (msgParts[1] != null && parseInt(msgParts[1]) != NaN) {
+    console.log(msgParts[1]);
+    amount = parseInt(msgParts[1]);
+    if (amount > 25) {
+      amount = 25;
+    }
+    if (amount < 1) {
+      amount = 1;
+    }
+  }
+
+  let apiUrl = buildAipUrl(amount);
 
   console.log('url: ' + apiUrl);
 
@@ -337,7 +349,7 @@ io.on('connection', socket => {
   socket.on('chat', message => {
     let data = JSON.parse(message);
 
-    if (data.msg === '!trivia') {
+    if (data.msg.substring(0,7) === '!trivia') {
       handleTrivia(data);
     } else {
       if (data.recipient) {  // Private
