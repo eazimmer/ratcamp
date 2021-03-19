@@ -267,6 +267,7 @@ const sendMessage = () => {
 }
 
 const sendScore = (username, points) => {
+  updateUserScore(points)
   let ansData = {name: username, points: points};
   socket.emit('trivia', JSON.stringify(ansData));
 }
@@ -607,6 +608,11 @@ const outputPrivateLeaderboard = (leaderboard, players, room) => {
 
   // scroll to bottom of messages
   $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
+}
+
+// update user points
+const updateUserScore = (score) => {
+  document.getElementById('total-points').innerHTML = score;
 }
 
 const toPublicRoom = () => {

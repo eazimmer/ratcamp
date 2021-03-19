@@ -101,6 +101,19 @@ html {
   box-shadow: 2px 2px #252525;
 }
 
+.fa {
+  cursor: pointer;
+  background-color: #000000b4;
+  padding: 2.5px;
+  border-radius: 0.6em;
+  z-index: 6;
+}
+
+.fa:active {
+  transition-duration: 0s;
+  transform: translateY(2px);
+}
+
 /* gets rid of weird white box around input */
 *:focus {
     outline: none;
