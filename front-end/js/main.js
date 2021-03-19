@@ -95,23 +95,23 @@ $(document).ready(function() {
   // message received
   socket.on('msgrecv', msg => {
     let data = JSON.parse(msg);
-    if (!answeringQuestion) {
-      if (data.hasOwnProperty('recipient')) {
-        if (data.recipient == urlParams.get('name')) { // private message received
-          // create room if it doesn't already exist
-          if(document.getElementById(data.name + '-room') == null)
-            createNewRoom(data.name);
-          
-          outputMessage(data.name, data.msg, data.name);
-        }
-        else // private message sent
-          outputMessage(data.name, data.msg, data.recipient);
+    let room = 'public';
+    if (data.hasOwnProperty('recipient')) {
+      if (data.recipient == urlParams.get('name')) { // private message received
+        // create room if it doesn't already exist
+        if(document.getElementById(data.name + '-room') == null)
+          createNewRoom(data.name);
+        
+        room = data.name;
       }
-      else // public message
-        outputMessage(data.name, data.msg, 'public');
+      else // private message sent
+        room = data.recipient;
     }
+
+    if (!answeringQuestion)
+      outputMessage(data.name, data.msg, room);
     else
-      messageQueue.push(data);
+      messageQueue.push({name: data.name, msg: data.msg, room: room});
   });
 
   // update online users list
@@ -126,16 +126,25 @@ $(document).ready(function() {
   // trivia message received
   socket.on('trivia-update', data => {
     console.log("Trivia update received:")
-    console.log(data)
+    console.log(data);
+
+    let room = 'public';
+    if (data.hasOwnProperty('players')) {
+      if (data.players[0] != urlParams.get('name'))
+        room = data.players[0];
+      else
+        room = data.players[1];
+    }
 
     if (data.code == 'start') {
-      outputStartNotification(data.name);
+      outputStartNotification(data.name, 10, room);
+      // outputCategoryPoll(room);
 
       // start countdown
       countdownTimerValue = 24;
       countdownTimer = setInterval(() => {
         if(countdownTimerValue <= 0){
-          $('.trivia-message')[$('.trivia-message').length-1].textContent = data.name + ' started a game of trivia!';
+          $('.trivia-message')[$('.trivia-message').length-1].textContent = data.name + ' started a game of trivia with ' + data.num + ' questions!';
           clearInterval(countdownTimer);
         }
         else {
@@ -145,12 +154,12 @@ $(document).ready(function() {
       }, 1000);
     }
     else if (data.code == 'end') {
-      outputLeaderboard(data.leaderboard);
+      outputLeaderboard(data.leaderboard, room);
     }
     else if (data.question_object.code[0] == 'q') {
       answeringQuestion = true;
       const questionNum = parseInt(data.question_object.code.substring(1)) + 1;
-      outputQuestion(questionNum, data.question_object.question, data.question_object.answers, data.question_object.correct_index);
+      outputQuestion(questionNum, data.question_object.question, data.question_object.answers, data.question_object.correct_index, room);
 
       // start countdown
       countdownTimerValue = 9;
@@ -349,12 +358,12 @@ const outputMessage = (name, message, room) => {
 const outputMessageQueue = () => {
   while (messageQueue.length > 0) {
     let current = messageQueue.shift();
-    outputMessage(current.name, current.msg, "public");
+    outputMessage(current.name, current.msg, current.room);
   }
 }
 
-const outputStartNotification = (name) => {
-  const ul = document.getElementById('public-message-list');
+const outputStartNotification = (name, num, room) => {
+  const ul = document.getElementById(room + '-message-list');
   let div = document.createElement('div');
   let li = document.createElement('li');
   let span = document.createElement('span');
@@ -362,17 +371,17 @@ const outputStartNotification = (name) => {
   li.setAttribute('class', 'trivia-message');
   span.setAttribute('class', 'start-countdown');
   span.appendChild(document.createTextNode('25'));
-  li.appendChild(document.createTextNode(name + ' started a game of trivia! Starting in... '));
+  li.appendChild(document.createTextNode(name + ' started a game of trivia with ' + num + ' questions! Starting in... '));
   li.appendChild(span);
   div.appendChild(li);
   ul.appendChild(div);
   
   // scroll to bottom of messages
-  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
-const outputQuestion = (questionNum, question, answers, correct_index) => {
-  const ul = document.getElementById('public-message-list');
+const outputQuestion = (questionNum, question, answers, correct_index, room) => {
+  const ul = document.getElementById(room + '-message-list');
   let div1 = document.createElement('div');
   div1.setAttribute('class', 'message-block');
   let div2 = document.createElement('div');
@@ -424,10 +433,10 @@ const outputQuestion = (questionNum, question, answers, correct_index) => {
   ul.appendChild(div1);
 
   // scroll to bottom of messages
-  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
-const outputLeaderboard = (leaderboard) => {
+const outputLeaderboard = (leaderboard, room) => {
   // sort leaderboard by points
   var sortedLeaderboard = [];
   for (var user in leaderboard)
@@ -438,7 +447,7 @@ const outputLeaderboard = (leaderboard) => {
   });
 
   // output leaderboard
-  const ul = document.getElementById('public-message-list');
+  const ul = document.getElementById(room + '-message-list');
   let div1 = document.createElement('div');
   div1.setAttribute('class', 'message-block');
   let div2 = document.createElement('div');
@@ -459,7 +468,7 @@ const outputLeaderboard = (leaderboard) => {
   ul.appendChild(div1);
 
   // scroll to bottom of messages
-  $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
 const toPublicRoom = () => {
