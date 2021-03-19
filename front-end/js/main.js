@@ -103,9 +103,21 @@ $(document).ready(function() {
           createNewRoom(data.name);
         
         room = data.name;
+        // notification
+        if (document.getElementById(room + '-room').style.display == 'none') {
+          document.getElementById(room + '-notifications').innerHTML = parseInt(document.getElementById(room + '-notifications').innerHTML) + 1;
+          document.getElementById(room + '-notifications').style.display = 'flex';
+        }
       }
       else // private message sent
         room = data.recipient;
+    }
+    else { // public message
+      // notification
+      if (document.getElementById('public-room').style.display == 'none') {
+        document.getElementById('public-notifications').innerHTML = parseInt(document.getElementById('public-notifications').innerHTML) + 1;
+        document.getElementById('public-notifications').style.display = 'flex';
+      }
     }
 
     if (!answeringQuestion)
@@ -116,7 +128,7 @@ $(document).ready(function() {
 
   // update online users list
   socket.on('updateonlineusers', msg => {
-    if ( document.URL.includes('messageBoard.html') ) {
+    if (document.URL.includes('messageBoard.html')) {
       let online_users = msg;
       updateOnlineUserCount(online_users);
       updateOnlineUserList(online_users);
@@ -125,9 +137,6 @@ $(document).ready(function() {
 
   // trivia message received
   socket.on('trivia-update', data => {
-    console.log("Trivia update received:")
-    console.log(data);
-
     let room = 'public';
     if (data.hasOwnProperty('players')) {
       if (data.players[0] != urlParams.get('name'))
@@ -137,24 +146,32 @@ $(document).ready(function() {
     }
 
     if (data.code == 'start') {
-      outputStartNotification(data.name, 10, room);
-      // outputCategoryPoll(room);
+      outputStartNotification(data.name, data.num, room);
+      outputCategoryPoll(room);
 
       // start countdown
-      countdownTimerValue = 24;
+      countdownTimerValue = 14;
       countdownTimer = setInterval(() => {
         if(countdownTimerValue <= 0){
-          $('.trivia-message')[$('.trivia-message').length-1].textContent = data.name + ' started a game of trivia with ' + data.num + ' questions!';
+          $('.trivia-category-poll').last().children('li').unbind('click');
+          $('.trivia-category-poll').last().children('li').css('pointer-events', 'none');
+          $('.poll-countdown')[$('.poll-countdown').length-1].textContent = 0;
           clearInterval(countdownTimer);
         }
         else {
-          $('.start-countdown')[$('.start-countdown').length-1].textContent = countdownTimerValue;
+          $('.poll-countdown')[$('.poll-countdown').length-1].textContent = countdownTimerValue;
           countdownTimerValue -= 1;
         }
       }, 1000);
     }
     else if (data.code == 'end') {
-      outputLeaderboard(data.leaderboard, room);
+      if (data.hasOwnProperty('players'))
+        outputPrivateLeaderboard(data.leaderboard, data.players, room);
+      else
+        outputLeaderboard(data.leaderboard, room);
+    }
+    else if (data.code == 'stopped') {
+      outputStoppedNotification(data.name, room);
     }
     else if (data.question_object.code[0] == 'q') {
       answeringQuestion = true;
@@ -171,8 +188,8 @@ $(document).ready(function() {
           $('.trivia-question').last().children('li').unbind('click');
           $('.trivia-question').last().children('li').css('pointer-events', 'none');
 
-          sendScore(urlParams.get('name'), 0);
           answeringQuestion = false;
+          sendScore(urlParams.get('name'), 0);
           outputMessageQueue();
           clearInterval(countdownTimer);
         }
@@ -277,6 +294,14 @@ const questionAnswered = (e) => {
   clearInterval(countdownTimer);
 }
 
+const categoryChosen = (e) => {
+  $(e).children('.trivia-answer-btn').css('background', '#ffffff');
+  $(e).children('.trivia-answer-btn').css('color', '#aca063');
+  $(e).parent().children('li').unbind('click');
+  $(e).parent().children('li').css('pointer-events', 'none');
+  socket.emit('poll', $(e).children('.trivia-answer-txt')[0].innerHTML);
+}
+
 const updateOnlineUserCount = (onlineUsers) => {
   document.getElementById('online-num').innerHTML = onlineUsers.length;
 }
@@ -287,9 +312,11 @@ const updateOnlineUserList = (onlineUsers) => {
 
   // get the previous list of online users
   let previousList = [];
+  let notifications = {};
   $('.online-user-block').each(function() {
     const thisUser = $(this).children().get(0).innerHTML;
     previousList.push(thisUser);
+    notifications[thisUser] = $(this).children().get(1).innerHTML
   });
 
   // replace online users list
@@ -297,6 +324,7 @@ const updateOnlineUserList = (onlineUsers) => {
   for (let i = 0; i < onlineUsers.length; i++) {
     let div = document.createElement('div');
     let li = document.createElement('li');
+    let p = document.createElement('p');
     div.setAttribute('class', 'online-user-block');
 
     if (urlParams.get('name') != onlineUsers[i])
@@ -306,7 +334,14 @@ const updateOnlineUserList = (onlineUsers) => {
     
     li.setAttribute('class', 'online-user');
     li.appendChild(document.createTextNode(onlineUsers[i]));
+    p.setAttribute('id', onlineUsers[i] + '-notifications');
+    p.setAttribute('class', 'notification');
+    if (previousList.includes(onlineUsers[i]))
+      p.innerHTML = notifications[onlineUsers[i]];
+    else
+    p.innerHTML = '0';
     div.appendChild(li);
+    div.appendChild(p);
     ul.appendChild(div);
   }
 
@@ -366,13 +401,23 @@ const outputStartNotification = (name, num, room) => {
   const ul = document.getElementById(room + '-message-list');
   let div = document.createElement('div');
   let li = document.createElement('li');
-  let span = document.createElement('span');
   div.setAttribute('class', 'message-block');
   li.setAttribute('class', 'trivia-message');
-  span.setAttribute('class', 'start-countdown');
-  span.appendChild(document.createTextNode('25'));
-  li.appendChild(document.createTextNode(name + ' started a game of trivia with ' + num + ' questions! Starting in... '));
-  li.appendChild(span);
+  li.appendChild(document.createTextNode(name + ' started a game of trivia with ' + num + ' questions!'));
+  div.appendChild(li);
+  ul.appendChild(div);
+  
+  // scroll to bottom of messages
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
+}
+
+const outputStoppedNotification = (name, room) => {
+  const ul = document.getElementById(room + '-message-list');
+  let div = document.createElement('div');
+  let li = document.createElement('li');
+  div.setAttribute('class', 'message-block');
+  li.setAttribute('class', 'trivia-message');
+  li.appendChild(document.createTextNode(name + ' ended the game of trivia'));
   div.appendChild(li);
   ul.appendChild(div);
   
@@ -436,6 +481,64 @@ const outputQuestion = (questionNum, question, answers, correct_index, room) => 
   $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
+const outputCategoryPoll = (room) => {
+  const ul = document.getElementById(room + '-message-list');
+  let div1 = document.createElement('div');
+  div1.setAttribute('class', 'message-block');
+  let div2 = document.createElement('div');
+  div2.setAttribute('class', 'trivia-category-poll');
+
+  let div3 = document.createElement('div');
+  div3.setAttribute('class', 'trivia-question-header');
+  let h2 = document.createElement('h2');
+  h2.appendChild(document.createTextNode('Category Poll'));
+  let h3 = document.createElement('h3');
+  h3.setAttribute('class', 'trivia-question-countdown');
+  let span1 = document.createElement('span');
+  span1.setAttribute('class', 'poll-countdown');
+  span1.appendChild(document.createTextNode('15'));
+  h3.appendChild(document.createTextNode('Time Left: '));
+  h3.appendChild(span1);
+  div3.appendChild(h2);
+  div3.appendChild(h3);
+  div2.appendChild(div3);
+
+  const ALPH = 'ABCDEFGH';
+  const categories = [
+    'Any',
+    'Random',
+    'Entertainment',
+    'Science',
+    'Geography',
+    'Sports',
+    'Art',
+    'History'
+  ];
+
+  for (let i = 0; i < categories.length; i++) {
+    let li = document.createElement('li');
+    let button = document.createElement('button');
+    let p2 = document.createElement('p');
+    li.setAttribute('class', 'trivia-answer');
+    
+    li.setAttribute('onclick', 'categoryChosen(this)');
+    button.setAttribute('class', 'trivia-answer-btn');
+    p2.setAttribute('class', 'trivia-answer-txt under-anim');
+
+    button.appendChild(document.createTextNode(ALPH[i]));
+    p2.innerHTML = categories[i];
+    li.appendChild(button);
+    li.appendChild(p2);
+    div2.appendChild(li);
+  }
+  
+  div1.appendChild(div2);
+  ul.appendChild(div1);
+
+  // scroll to bottom of messages
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
+}
+
 const outputLeaderboard = (leaderboard, room) => {
   // sort leaderboard by points
   var sortedLeaderboard = [];
@@ -471,14 +574,59 @@ const outputLeaderboard = (leaderboard, room) => {
   $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
+const outputPrivateLeaderboard = (leaderboard, players, room) => {
+  // sort leaderboard by points
+  var sortedLeaderboard = [];
+  for (let i = 0; i < players.length; i++)
+    sortedLeaderboard.push([players[i], leaderboard[players[i]]]);
+
+  sortedLeaderboard.sort((a, b) => {
+    return b[1] - a[1];
+  });
+
+  // output leaderboard
+  const ul = document.getElementById(room + '-message-list');
+  let div1 = document.createElement('div');
+  div1.setAttribute('class', 'message-block');
+  let div2 = document.createElement('div');
+  div2.setAttribute('class', 'trivia-leaderboard');
+  let h2 = document.createElement('h2');
+  h2.setAttribute('class', 'leaderboard-header');
+  h2.appendChild(document.createTextNode("Leaderboard"));
+  div2.appendChild(h2);
+
+  for (let i = 1; i <= sortedLeaderboard.length; i++) {
+    let p = document.createElement('p');
+    p.setAttribute('class', 'leaderboard-user');
+    p.appendChild(document.createTextNode(i + ") " + sortedLeaderboard[i-1][0] + " (" + sortedLeaderboard[i-1][1] + " pts)"));
+    div2.appendChild(p);
+  }
+
+  div1.appendChild(div2);
+  ul.appendChild(div1);
+
+  // scroll to bottom of messages
+  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
+}
+
 const toPublicRoom = () => {
   $(".current-room-list").last().removeClass("current-room-list");
   $(".online-user-block").first().addClass("current-room-list");
   hideAllRooms();
+
+  // make room bottom child
+  const parent = document.getElementById('chat-rooms');
+  let div = document.getElementById('public-room');
+  parent.append(div);
+
   document.getElementById('public-room').style.display = 'block';
 
   if ($('body').hasClass('hamburger-open'))
     document.body.classList.remove('hamburger-open');
+
+  // remove notification
+  document.getElementById('public-notifications').innerHTML = 0;
+  document.getElementById('public-notifications').style.display = 'none';
 
   // scroll to bottom of messages
   $('#public-room').animate({scrollTop: $('#public-room')[0].scrollHeight}, 1000);
@@ -494,11 +642,20 @@ const toPrivateRoom = (element) => {
   if(document.getElementById(username + '-room') == null)
     createNewRoom(username);
 
+  // make room bottom child
+  const parent = document.getElementById('chat-rooms');
+  let div = document.getElementById(username + '-room');
+  parent.append(div);
+
   // go to the room
   document.getElementById(username + '-room').style.display = 'block';
 
   if ($('body').hasClass('hamburger-open'))
     document.body.classList.remove('hamburger-open');
+
+  // remove notification
+  document.getElementById(username + '-notifications').innerHTML = 0;
+  document.getElementById(username + '-notifications').style.display = 'none';
 
   // scroll to bottom of messages
   $('#' + username + '-room').animate({scrollTop: $('#' + username + '-room')[0].scrollHeight}, 1000);
