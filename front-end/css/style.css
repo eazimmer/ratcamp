@@ -184,6 +184,9 @@ main {
 }
 
 .online-user-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: 10px 0;
     border: 2px solid var(--clr-grey);
     border-radius: 8px;
@@ -203,6 +206,20 @@ main {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.notification {
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid var(--clr-light);
+    background-color: var(--clr-accent);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    font-size: 0.9rem;
+    margin: 0 5px;
+    display: none;
 }
 
 .current-room-list {
@@ -226,13 +243,18 @@ main {
     background-color: var(--clr-gold);
 }
 
-.trivia-question {
+.trivia-question,
+.trivia-category-poll {
     display: inline-block;
     padding: 8px;
     padding-bottom: 12px;
     border-radius: 8px;
     max-width: 75%;
     background-color: var(--clr-gold);
+}
+
+.trivia-category-poll {
+    width: 300px;
 }
 
 .trivia-question-header {
