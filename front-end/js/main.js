@@ -35,7 +35,6 @@ const login = () => {
 
 const setUsername = (name) => {
   document.getElementById('username-header').innerHTML = name;
-  // socket.emit('login-name', name);
 }
 
 $(document).ready(function() {
@@ -98,7 +97,7 @@ $(document).ready(function() {
     let data = JSON.parse(msg);
     if (!answeringQuestion) {
       if (data.hasOwnProperty('recipient')) {
-        if (data.recipient == urlParams.get('name')) {// private message received
+        if (data.recipient == urlParams.get('name')) { // private message received
           // create room if it doesn't already exist
           if(document.getElementById(data.name + '-room') == null)
             createNewRoom(data.name);
@@ -175,13 +174,6 @@ $(document).ready(function() {
       }, 1000);
     }
   });
-  
-  /*
-  // display updated leaderboard
-  socket.on('update-leaderboard', (leaderboard) => {
-    outputLeaderboard(leaderboard);
-  });
-  */
 });
 
 // Initiate check to see if login process was completed
@@ -254,13 +246,13 @@ const sendScore = (username, points) => {
 }
 
 const questionAnswered = (e) => {
-  if ($(e).hasClass('trivia-correct-answer')) {
+  if ($(e).hasClass('trivia-correct-answer')) { // correct answer chosen
     $(e).children('.trivia-answer-btn').css('background', '#4b7a41');
     $(e).children('.trivia-answer-txt').css('color', '#4b7a41');
     $('.trivia-question-countdown')[$('.trivia-question-countdown').length-1].textContent = 'Points: ' + parseInt(countdownTimerValue + 1);
     sendScore(urlParams.get('name'), countdownTimerValue + 1);
   }
-  else {
+  else { // incorrect answer chosen
     $(e).children('.trivia-answer-btn').css('background', '#ab1f1f');
     $(e).children('.trivia-answer-txt').css('color', '#ab1f1f');
     $(e).siblings('.trivia-correct-answer').children('.trivia-answer-btn').css('background', '#4b7a41');
@@ -282,7 +274,14 @@ const updateOnlineUserCount = (onlineUsers) => {
 
 const updateOnlineUserList = (onlineUsers) => {
   const ul = document.getElementById('online-users-list');
-  let currentUser = $(".current-room-list").last().children().get(0).innerHTML;
+  let currentRoom = $(".current-room-list").last().children().get(0).innerHTML;
+
+  // get the previous list of online users
+  let previousList = [];
+  $('.online-user-block').each(function() {
+    const thisUser = $(this).children().get(0).innerHTML;
+    previousList.push(thisUser);
+  });
 
   // replace online users list
   ul.innerHTML = '';
@@ -302,15 +301,23 @@ const updateOnlineUserList = (onlineUsers) => {
     ul.appendChild(div);
   }
 
-  if (onlineUsers.includes(currentUser)) {
+  if (onlineUsers.includes(currentRoom)) {
     $('.online-user-block').each(function() {
-      const thisUser = $(this).children().get(0).innerHTML
-      if (currentUser == thisUser)
+      const thisUser = $(this).children().get(0).innerHTML;
+      if (thisUser == currentRoom)
         $(this).addClass("current-room-list");
     });
   }
   else { // current user got offline
     toPublicRoom();
+  }
+
+  // delete chat room of users who got offline
+  for (let i = 1; i < previousList.length; i++) {
+    if (!onlineUsers.includes(previousList[i])) {
+      if(document.getElementById(previousList[i] + '-room') != null)
+        $('#' + previousList[i] + '-room').remove();
+    }
   }
 }
 
