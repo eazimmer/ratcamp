@@ -14,6 +14,8 @@
     <!-- Create and call the js file here and also create a CSS file to style the welcome page. -->
     <link rel="stylesheet" type="text/css" href="../css/login.css">
     <link rel="icon" href="../Other/RC.png">
+    <!-- Style sheet containing password reveal eye -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 </head>
 <body>
     <div class="screen">
@@ -23,8 +25,11 @@
             </div>
             <div class="flex login-box">
                 <div class="form">
-                    <input id="name-input" class="user-input" type="text" name="name" placeholder="Enter Username"><br>
-                    <input id="password-input" class="user-input" type="password" name="password" placeholder="Enter Password"><br>
+                    <input id="name-input" class="user-name" type="text" name="name" placeholder="Enter Username"><br>
+                    <div class="password">
+                        <input id="password-input" class="user-pass" type="password" name="password" placeholder="Enter Password">
+                        <p class="fa fa-eye" id="toggle"></p>
+                    </div><br>
                     <div class="buttons">
                         <button class="submit-button" onclick="login()">Submit</button>
                         <a href="../.." class="back-button">&nbsp&nbspBack&nbsp&nbsp</a>

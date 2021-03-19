@@ -88,6 +88,25 @@ html {
   box-shadow: 2px 2px #252525;
 }
 
+#password-input {
+  width: 100%;
+}
+
+.password {
+  display: flex;
+  align-items: center;
+  width: 75%;
+}
+
+.form p {
+    margin-left: -30px;
+    cursor: pointer;
+}
+
+.fa {
+  z-index: 6;
+}
+
 /* gets rid of weird white box around input */
 *:focus {
   outline: none;
