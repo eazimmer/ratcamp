@@ -298,7 +298,7 @@ async function handleTrivia(msgData) {
 
   triviaInstigator = msgData.name;
   triviaRunning = true;
-  leaderboard = {}
+  leaderboard = {};
   let questions = [];
   const req = https.request(
       {hostname: 'opentdb.com', port: 443, path: apiUrl, method: 'GET'},
