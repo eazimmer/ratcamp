@@ -1,2 +1,12 @@
-# CSI330 Group 2
-A local-hosted web app interconnected with other instances of the app via a back-end server facilitating data transfers.
+# RatCamp Trivia
+
+### [Live](https://ratcamp-demo.herokuapp.com/)
+
+## Summary
+Write here...
+
+## Team Members
+- Cameron LaBounty
+- Eric Zimmer
+- Grant Hedley
+- Josh Bogin
