@@ -555,16 +555,16 @@ const outputCategoryPoll = (room) => {
 }
 
 const outputLeaderboard = (leaderboard, room, type='') => {
-  if (leaderboard.length > 0) {
-    // sort leaderboard by points
-    var sortedLeaderboard = [];
-    for (var user in leaderboard)
-      sortedLeaderboard.push([user, leaderboard[user]]);
+  // sort leaderboard by points
+  var sortedLeaderboard = [];
+  for (var user in leaderboard)
+    sortedLeaderboard.push([user, leaderboard[user]]);
 
-    sortedLeaderboard.sort((a, b) => {
-      return b[1] - a[1];
-    });
+  sortedLeaderboard.sort((a, b) => {
+    return b[1] - a[1];
+  });
 
+  if (sortedLeaderboard.length > 0) {
     // output leaderboard
     const ul = document.getElementById(room + '-message-list');
     let div1 = document.createElement('div');
