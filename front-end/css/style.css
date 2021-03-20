@@ -64,15 +64,9 @@ main {
     margin-bottom: 5px;
 }
 
-#user-points {
-    font-size: var(--fs-h3);
-    margin: 0 0 15px 0;
-    margin-bottom: 5px;
-}
-
 #online-status {
     font-size: var(--fs-h2);
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 #chat-rooms {
@@ -172,7 +166,7 @@ main {
 }
 
 .send-btn:active {
-  transition-duration: 0s;
+  transition-duration: 100ms;
   background-color: #4b4177;
   color: #ffffffed;
   box-shadow: 2px 2px #222222;

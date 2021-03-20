@@ -58,6 +58,7 @@ const CAT_NUM_LOOKUP = {
 let privateTriviaGames = []
 
 let leaderboard = {}
+let runningLeaderboard = {}
 
 // Stored data
 let sockets_to_names =
@@ -110,11 +111,8 @@ function registerMessage(user, msg, private_message, recipient = '') {
         user_socket_id = sockets_to_names[i]['id'];
     }
 
-    // If no recipient identified, cancel request
-    if (recipient_socket_id === '' || user_socket_id == '') {
-      console.log('Recipient for private message could not be identified.')
-    } else {  // Private message to target socket
-      console.log(`Sending private message to ${data.recipient}:`)
+    // Private message to target socket
+    if (recipient_socket_id !== '' && user_socket_id !== '') {
       io.to(recipient_socket_id).emit('msgrecv', JSON.stringify(data))
       io.to(user_socket_id).emit('msgrecv', JSON.stringify(data))
     }
@@ -236,8 +234,6 @@ function buildAipUrl(amount) {
   let apiUrl = `/api.php?amount=${amount}&type=multiple`;
   let biggest = 'Any'
   for (let v in pollCats) {
-    console.log(v);
-    console.log(pollCats[v]);
     if (pollCats[v] > pollCats[biggest]) {
       biggest = v;
     }
@@ -257,7 +253,6 @@ function buildAipUrl(amount) {
   }
 
   apiUrl += '&category=' + num;
-  console.log(apiUrl);
   return apiUrl;
 }
 
@@ -278,7 +273,6 @@ async function handleTrivia(msgData, players = '') {
   }
 
   if (players !== '') {  // Private game
-    console.log('Attempting to start private trivia game: ')
     if (checkIfPrivateGameIsActive(players)) {  // Private game already active
       return false
     }
@@ -308,7 +302,6 @@ async function handleTrivia(msgData, players = '') {
     leaderboard[players[1]] = 0;
   }
   else {  // Public Game
-    console.log('Attempting to start public trivia game: ')
     if (globalTriviaRunning) {
       return false;
     }
@@ -368,7 +361,6 @@ async function handleTrivia(msgData, players = '') {
 
             // Send data to everyone, or private participants
             if (players !== '') {  // Private Game
-              console.log('Routing private trivia updates')
               io.to(player_one_socket).emit('trivia-update', {
                 question_object: questions[i],
                 players: players
@@ -379,7 +371,6 @@ async function handleTrivia(msgData, players = '') {
               })
             } else {  // Public Game
               if (!globalTriviaRunning) break;
-              console.log('Routing public trivia updates')
               io.emit('trivia-update', {question_object: questions[i]});
               if (!globalTriviaRunning) break;
             }
@@ -389,7 +380,6 @@ async function handleTrivia(msgData, players = '') {
 
           // Send data to everyone, or private participants
           if (players !== '') {  // Private Game
-            console.log('Routing private trivia updates')
             io.to(player_one_socket).emit('trivia-update', {
               code: 'end',
               leaderboard: leaderboard,
@@ -401,7 +391,6 @@ async function handleTrivia(msgData, players = '') {
               players: players
             })
           } else {  // Public Game
-            console.log('Routing public trivia updates')
             io.emit('trivia-update', {code: 'end', leaderboard: leaderboard});
           }
 
@@ -423,11 +412,9 @@ function checkIfPrivateGameIsActive(players) {
   for (let i = 0; i < privateTriviaGames.length; i++) {
     if (privateTriviaGames[i].includes(players[0]) &&
         privateTriviaGames[i].includes(players[1])) {
-      console.log('Private trivia game already started. Cancelling start.')
       return true
     }
   }
-  console.log('Private trivia game not yet started. Starting now.')
   return false
 }
 
@@ -445,7 +432,6 @@ function endPrivateGame(players) {
   if (index !== -1) {
     privateTriviaGames.splice(index, 1)
   }
-  console.log('Private trivia game ended.')
 }
 
 
@@ -458,6 +444,12 @@ io.on('connection', socket => {
     if (data.msg == '!stop' && data.name == triviaInstigator) {
       globalTriviaRunning = false;
       io.emit('trivia-update', {code: 'stopped', name: data.name});
+    }
+    else if (data.msg == '!leaderboard') {
+      if (data.recipient)
+        io.emit('trivia-leaderboard', {leaderboard: runningLeaderboard, players: [data.name, data.recipient]});
+      else
+        io.emit('trivia-leaderboard', {leaderboard: runningLeaderboard});
     }
     else {
       if (data.recipient) {           // Privately sent
@@ -485,22 +477,21 @@ io.on('connection', socket => {
   socket.on('trivia', data => {
     let pointdata = JSON.parse(data);  // { name : username, points: points };
 
-    if (leaderboard[pointdata['name']]) {
+    if (leaderboard[pointdata['name']])
       leaderboard[pointdata['name']] += pointdata['points'];
-
-    } else {
+    else
       leaderboard[pointdata['name']] = pointdata['points'];
-    }
 
-    io.emit('update-leaderboard', leaderboard);
+    if (runningLeaderboard[pointdata['name']])
+      runningLeaderboard[pointdata['name']] += pointdata['points'];
+    else
+      runningLeaderboard[pointdata['name']] = pointdata['points'];
   });
 
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
     var socket_id = socket.id.toString();
-
     sockets_to_names.push({'id': socket_id, 'name': name});
-
     broadcastChangeInOnlineUsers();  // Update clients with new online user list
   });
 
@@ -574,7 +565,6 @@ io.on('connection', socket => {
       }
     }
 
-    broadcastChangeInOnlineUsers()  // Update clients with new online user
-                                    // list
+    broadcastChangeInOnlineUsers()  // Update clients with new online user list
   });
 })

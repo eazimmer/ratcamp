@@ -101,6 +101,24 @@ html {
   transform: translateY(2px);
 }
 
+#password-div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: calc(75% + 24px);
+  margin: 0.5vh;
+}
+
+#password-div input {
+  width: 100%;
+  margin: 0;
+}
+
+#password-div p {
+  position: absolute;
+  margin-right: 10px;
+}
+
 /* gets rid of weird white box around input */
 *:focus {
   outline: none;
@@ -151,6 +169,7 @@ html {
   border-radius: 1.5em 1.5em 1.5em 1.5em;
   box-shadow: 2px 2px #363636;
   text-shadow: 2px 2px #363636;
+  padding: 5px 0;
 }
 
 .back-button:hover {
