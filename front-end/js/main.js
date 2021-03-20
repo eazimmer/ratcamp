@@ -135,6 +135,21 @@ $(document).ready(function() {
     }
   });
 
+  socket.on('trivia-leaderboard', data => {
+    let room = 'public';
+    if (data.hasOwnProperty('players')) {
+      if (data.players[0] != urlParams.get('name'))
+        room = data.players[0];
+      else
+        room = data.players[1];
+    }
+
+    if (data.hasOwnProperty('players'))
+      outputPrivateLeaderboard(data.leaderboard, data.players, room, 'All Time ');
+    else
+      outputLeaderboard(data.leaderboard, room, 'All Time ');
+  });
+
   // trivia message received
   socket.on('trivia-update', data => {
     let room = 'public';
@@ -267,7 +282,6 @@ const sendMessage = () => {
 }
 
 const sendScore = (username, points) => {
-  updateUserScore(points)
   let ansData = {name: username, points: points};
   socket.emit('trivia', JSON.stringify(ansData));
 }
@@ -540,79 +554,78 @@ const outputCategoryPoll = (room) => {
   $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
 }
 
-const outputLeaderboard = (leaderboard, room) => {
-  // sort leaderboard by points
-  var sortedLeaderboard = [];
-  for (var user in leaderboard)
-    sortedLeaderboard.push([user, leaderboard[user]]);
+const outputLeaderboard = (leaderboard, room, type='') => {
+  if (leaderboard.length > 0) {
+    // sort leaderboard by points
+    var sortedLeaderboard = [];
+    for (var user in leaderboard)
+      sortedLeaderboard.push([user, leaderboard[user]]);
 
-  sortedLeaderboard.sort((a, b) => {
-    return b[1] - a[1];
-  });
+    sortedLeaderboard.sort((a, b) => {
+      return b[1] - a[1];
+    });
 
-  // output leaderboard
-  const ul = document.getElementById(room + '-message-list');
-  let div1 = document.createElement('div');
-  div1.setAttribute('class', 'message-block');
-  let div2 = document.createElement('div');
-  div2.setAttribute('class', 'trivia-leaderboard');
-  let h2 = document.createElement('h2');
-  h2.setAttribute('class', 'leaderboard-header');
-  h2.appendChild(document.createTextNode("Leaderboard"));
-  div2.appendChild(h2);
+    // output leaderboard
+    const ul = document.getElementById(room + '-message-list');
+    let div1 = document.createElement('div');
+    div1.setAttribute('class', 'message-block');
+    let div2 = document.createElement('div');
+    div2.setAttribute('class', 'trivia-leaderboard');
+    let h2 = document.createElement('h2');
+    h2.setAttribute('class', 'leaderboard-header');
+    h2.appendChild(document.createTextNode(type + "Leaderboard"));
+    div2.appendChild(h2);
 
-  for (let i = 1; i <= sortedLeaderboard.length; i++) {
-    let p = document.createElement('p');
-    p.setAttribute('class', 'leaderboard-user');
-    p.appendChild(document.createTextNode(i + ") " + sortedLeaderboard[i-1][0] + " (" + sortedLeaderboard[i-1][1] + " pts)"));
-    div2.appendChild(p);
-  }
+    for (let i = 1; i <= sortedLeaderboard.length; i++) {
+      let p = document.createElement('p');
+      p.setAttribute('class', 'leaderboard-user');
+      p.appendChild(document.createTextNode(i + ") " + sortedLeaderboard[i-1][0] + " (" + sortedLeaderboard[i-1][1] + " pts)"));
+      div2.appendChild(p);
+    }
 
-  div1.appendChild(div2);
-  ul.appendChild(div1);
+    div1.appendChild(div2);
+    ul.appendChild(div1);
 
-  // scroll to bottom of messages
-  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
+    // scroll to bottom of messages
+    $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
+}
 }
 
-const outputPrivateLeaderboard = (leaderboard, players, room) => {
-  // sort leaderboard by points
-  var sortedLeaderboard = [];
-  for (let i = 0; i < players.length; i++)
-    sortedLeaderboard.push([players[i], leaderboard[players[i]]]);
+const outputPrivateLeaderboard = (leaderboard, players, room, type='') => {
+  if (leaderboard[players[0]] != undefined && leaderboard[players[1]] != undefined) {
+    // sort leaderboard by points
+    var sortedLeaderboard = [];
+    for (let i = 0; i < players.length; i++)
+      sortedLeaderboard.push([players[i], leaderboard[players[i]]]);
 
-  sortedLeaderboard.sort((a, b) => {
-    return b[1] - a[1];
-  });
+    sortedLeaderboard.sort((a, b) => {
+      return b[1] - a[1];
+    });
 
-  // output leaderboard
-  const ul = document.getElementById(room + '-message-list');
-  let div1 = document.createElement('div');
-  div1.setAttribute('class', 'message-block');
-  let div2 = document.createElement('div');
-  div2.setAttribute('class', 'trivia-leaderboard');
-  let h2 = document.createElement('h2');
-  h2.setAttribute('class', 'leaderboard-header');
-  h2.appendChild(document.createTextNode("Leaderboard"));
-  div2.appendChild(h2);
+    // output leaderboard
+    const ul = document.getElementById(room + '-message-list');
+    let div1 = document.createElement('div');
+    div1.setAttribute('class', 'message-block');
+    let div2 = document.createElement('div');
+    div2.setAttribute('class', 'trivia-leaderboard');
+    let h2 = document.createElement('h2');
+    h2.setAttribute('class', 'leaderboard-header');
+    h2.appendChild(document.createTextNode(type + "Leaderboard"));
+    div2.appendChild(h2);
 
-  for (let i = 1; i <= sortedLeaderboard.length; i++) {
-    let p = document.createElement('p');
-    p.setAttribute('class', 'leaderboard-user');
-    p.appendChild(document.createTextNode(i + ") " + sortedLeaderboard[i-1][0] + " (" + sortedLeaderboard[i-1][1] + " pts)"));
-    div2.appendChild(p);
+    for (let i = 1; i <= sortedLeaderboard.length; i++) {
+      let p = document.createElement('p');
+      p.setAttribute('class', 'leaderboard-user');
+      p.appendChild(document.createTextNode(i + ") " + sortedLeaderboard[i-1][0] + " (" + sortedLeaderboard[i-1][1] + " pts)"));
+      div2.appendChild(p);
+    }
+
+    div1.appendChild(div2);
+    ul.appendChild(div1);
+
+    // scroll to bottom of messages
+    $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
   }
-
-  div1.appendChild(div2);
-  ul.appendChild(div1);
-
-  // scroll to bottom of messages
-  $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
-}
-
-// update user points
-const updateUserScore = (score) => {
-  document.getElementById('total-points').innerHTML = score;
 }
 
 const toPublicRoom = () => {

@@ -58,6 +58,7 @@ const CAT_NUM_LOOKUP = {
 let privateTriviaGames = []
 
 let leaderboard = {}
+let runningLeaderboard = {}
 
 // Stored data
 let sockets_to_names =
@@ -459,6 +460,12 @@ io.on('connection', socket => {
       globalTriviaRunning = false;
       io.emit('trivia-update', {code: 'stopped', name: data.name});
     }
+    else if (data.msg == '!leaderboard') {
+      if (data.recipient)
+        io.emit('trivia-leaderboard', {leaderboard: runningLeaderboard, players: [data.name, data.recipient]});
+      else
+        io.emit('trivia-leaderboard', {leaderboard: runningLeaderboard});
+    }
     else {
       if (data.recipient) {           // Privately sent
         if (data.msg.substring(0, 7) === '!trivia')  // Private trivia game
@@ -485,22 +492,21 @@ io.on('connection', socket => {
   socket.on('trivia', data => {
     let pointdata = JSON.parse(data);  // { name : username, points: points };
 
-    if (leaderboard[pointdata['name']]) {
+    if (leaderboard[pointdata['name']])
       leaderboard[pointdata['name']] += pointdata['points'];
-
-    } else {
+    else
       leaderboard[pointdata['name']] = pointdata['points'];
-    }
 
-    io.emit('update-leaderboard', leaderboard);
+    if (runningLeaderboard[pointdata['name']])
+      runningLeaderboard[pointdata['name']] += pointdata['points'];
+    else
+      runningLeaderboard[pointdata['name']] = pointdata['points'];
   });
 
   // Endpoint registering new connection with a chosen username
   socket.on('login-name', name => {
     var socket_id = socket.id.toString();
-
     sockets_to_names.push({'id': socket_id, 'name': name});
-
     broadcastChangeInOnlineUsers();  // Update clients with new online user list
   });
 

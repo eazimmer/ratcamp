@@ -116,7 +116,7 @@ html {
 
 #password-div p {
   position: absolute;
-  margin-right: 8px;
+  margin-right: 10px;
 }
 
 /* gets rid of weird white box around input */
