@@ -588,7 +588,7 @@ const outputLeaderboard = (leaderboard, room, type='') => {
 
     // scroll to bottom of messages
     $('#' + room + '-room').animate({scrollTop: $('#' + room + '-room')[0].scrollHeight}, 1000);
-}
+  }
 }
 
 const outputPrivateLeaderboard = (leaderboard, players, room, type='') => {
